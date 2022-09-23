@@ -43,6 +43,20 @@ class Common{
     func lightGray() -> UIColor{
         return self.setColor(hex: "#e6e6e6")
     }
+    func alert(title:String , message: String) -> UIAlertController{
+
+        let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertController.Style.alert)
+        let okAction = UIAlertAction(title: "OK", style: .default) { (action) in
+
+        }
+        alert.addAction(okAction)
+        return alert
+    }
+    func isValidEmail(testStr:String) -> Bool {
+        let emailRegEx = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}"
+        let emailTest = NSPredicate(format:"SELF MATCHES %@", emailRegEx)
+        return emailTest.evaluate(with: testStr)
+    }
 }
 extension UILabel {
     func asFontColor(targetStringList: [String], font: UIFont?, color: UIColor?) {

@@ -15,12 +15,12 @@ class IntroViewController: UIViewController {
     }
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        introView.startBtn.addTarget(self, action: #selector(touchStartBtn), for: .touchUpInside)
     }
     
 
-    func touchStartBtn(){
-
+    @objc func touchStartBtn(){
+        print("hi")
     }
 
 

@@ -10,7 +10,7 @@ import SnapKit
 import Then
 
 class ViewController: UIViewController {
-
+    let common = Common()
     override func viewDidLoad() {
         super.viewDidLoad()
       

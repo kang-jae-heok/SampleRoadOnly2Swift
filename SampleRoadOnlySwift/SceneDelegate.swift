@@ -15,7 +15,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         window = UIWindow(windowScene: windowScene)
-        let mainViewController = IntroViewController() // 이 뷰컨트롤러를 내비게이션 컨트롤러에 담아볼게요!
+        let mainViewController = FindEmailViewController() // 이 뷰컨트롤러를 내비게이션 컨트롤러에 담아볼게요!
         let navigationController = UINavigationController(rootViewController: mainViewController) // 내비게이션 컨트롤러에 처음으로 보여질 화면을 rootView로 지정해주고!
         navigationController.setNavigationBarHidden(true, animated: false)
     

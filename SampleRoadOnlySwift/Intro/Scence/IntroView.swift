@@ -12,7 +12,7 @@ class IntroView: UIView {
     let margin = 50
     let screenBounds = UIScreen.main.bounds
     let common = Common()
-    let vc = IntroViewController()
+//    let vc = IntroViewController()
     lazy var betweenY = (screenBounds.height/2 - screenBounds.width/4 - screenBounds.width/6)/2
     var introIndex = 0{
         didSet {
@@ -47,7 +47,7 @@ class IntroView: UIView {
         $0.backgroundColor = common.lightGray()
         $0.titleLabel!.font = common.setFont(font: "bold", size: 18)
         $0.layer.cornerRadius = 8
-        $0.addTarget(self, action: #selector(touchStartBtn), for: .touchUpInside)
+//        $0.addTarget(self, action: #selector(touchStartBtn), for: .touchUpInside)
     }
     let pageViewStackView: UIStackView = {
         let stackView = UIStackView()
@@ -99,64 +99,64 @@ class IntroView: UIView {
         $0.translatesAutoresizingMaskIntoConstraints = false
         stackView.addArrangedSubview($0)
     }
-    lazy var stackViewData: [UIView] = {
-        var views = [UIView]()
-        var imgviews = [UIImageView]()
-        let imgArr = ["2.-Onboarding-2","2.-Onboarding-3","2.-Onboarding-4"]
-        let textArr = [["사서 고생 말고", "AI에게 추천받고!"],["구매 전에", "샘플 발라보고!"],["최저가로", "구매하자!"]]
-        for i in 0...2 {
-            let view = UIView()
-            let imgView = UIImageView()
-            let label1 = UILabel().then{
-                $0.font = common.setFont(font: "light", size: 23)
-                $0.textColor = common.pointColor()
-            }
-            let label2 = UILabel().then{
-                $0.font = common.setFont(font: "light", size: 23)
-                $0.textColor = common.pointColor()
-            }
-            imgView.tag = i
-            imgView.image = UIImage(named: imgArr[i])
-            imgView.contentMode = .scaleAspectFill
-            if i == 0 {
-                label1.text = textArr[i][0]
-                label1.asFont(targetStringList: ["사서 고생"], font: common.setFont(font: "bold", size: 27))
-                label2.text = textArr[i][1]
-                label2.asFont(targetStringList: ["AI에게 추천"], font: common.setFont(font: "bold", size: 27))
-            }else if i == 1{
-                label1.text = textArr[i][0]
-                label1.asFont(targetStringList: ["구매 전"], font: common.setFont(font: "bold", size: 27))
-                label2.text = textArr[i][1]
-                label2.asFont(targetStringList: ["발라보고!"], font: common.setFont(font: "bold", size: 27))
-            }else{
-                label1.text = textArr[i][0]
-                label1.asFont(targetStringList: ["최저가"], font: common.setFont(font: "bold", size: 27))
-                label2.text = textArr[i][1]
-                label2.asFont(targetStringList: ["구매"], font: common.setFont(font: "bold", size: 27))
-            }
-            [label1, label2, imgView].forEach{
-                view.addSubview($0)
-            }
-            views.append(view)
-            stackView.addArrangedSubview(views[i])
+        lazy var stackViewData: [UIView] = {
+            var views = [UIView]()
+            var imgviews = [UIImageView]()
+            let imgArr = ["2.-Onboarding-2","2.-Onboarding-3","2.-Onboarding-4"]
+            let textArr = [["사서 고생 말고", "AI에게 추천받고!"],["구매 전에", "샘플 발라보고!"],["최저가로", "구매하자!"]]
+            for i in 0...2 {
+                let view = UIView()
+                let imgView = UIImageView()
+                let label1 = UILabel().then{
+                    $0.font = common.setFont(font: "light", size: 23)
+                    $0.textColor = common.pointColor()
+                }
+                let label2 = UILabel().then{
+                    $0.font = common.setFont(font: "light", size: 23)
+                    $0.textColor = common.pointColor()
+                }
+                imgView.tag = i
+                imgView.image = UIImage(named: imgArr[i])
+                imgView.contentMode = .scaleAspectFill
+                if i == 0 {
+                    label1.text = textArr[i][0]
+                    label1.asFont(targetStringList: ["사서 고생"], font: common.setFont(font: "bold", size: 27))
+                    label2.text = textArr[i][1]
+                    label2.asFont(targetStringList: ["AI에게 추천"], font: common.setFont(font: "bold", size: 27))
+                }else if i == 1{
+                    label1.text = textArr[i][0]
+                    label1.asFont(targetStringList: ["구매 전"], font: common.setFont(font: "bold", size: 27))
+                    label2.text = textArr[i][1]
+                    label2.asFont(targetStringList: ["발라보고!"], font: common.setFont(font: "bold", size: 27))
+                }else{
+                    label1.text = textArr[i][0]
+                    label1.asFont(targetStringList: ["최저가"], font: common.setFont(font: "bold", size: 27))
+                    label2.text = textArr[i][1]
+                    label2.asFont(targetStringList: ["구매"], font: common.setFont(font: "bold", size: 27))
+                }
+                [label1, label2, imgView].forEach{
+                    view.addSubview($0)
+                }
+                views.append(view)
+                stackView.addArrangedSubview(views[i])
 
-            imgView.snp.makeConstraints{
-                $0.top.left.right.equalToSuperview()
-                $0.size.equalTo(CGSize(width: screenBounds.width, height: screenBounds.height/2))
+                imgView.snp.makeConstraints{
+                    $0.top.left.right.equalToSuperview()
+                    $0.size.equalTo(CGSize(width: screenBounds.width, height: screenBounds.height/2))
+                }
+
+                label1.snp.makeConstraints{
+                    $0.bottom.equalTo(imgView.snp.bottom).offset(betweenY/2)
+                    $0.centerX.equalToSuperview()
+                }
+                label2.snp.makeConstraints{
+                    $0.top.equalTo(label1.snp.bottom)
+                    $0.centerX.equalToSuperview()
+                }
             }
 
-            label1.snp.makeConstraints{
-                $0.bottom.equalTo(imgView.snp.bottom).offset(betweenY/2)
-                $0.centerX.equalToSuperview()
-            }
-            label2.snp.makeConstraints{
-                $0.top.equalTo(label1.snp.bottom)
-                $0.centerX.equalToSuperview()
-            }
-        }
-
-        return views
-    }()
+            return views
+        }()
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -183,9 +183,8 @@ class IntroView: UIView {
             startBtn.backgroundColor = common.lightGray()
         }
     }
-
     @objc func touchStartBtn(){
-        vc.touchStartBtn()
+        print("hi")
     }
 
 

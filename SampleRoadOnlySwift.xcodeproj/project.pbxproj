@@ -21,6 +21,13 @@
 		0627307628D9A81D0062AAEA /* IntroView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0627307528D9A81D0062AAEA /* IntroView.swift */; };
 		06378C2228DBEFB70035C212 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06378C2128DBEFB70035C212 /* MainView.swift */; };
 		06378C2428DBEFC50035C212 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06378C2328DBEFC50035C212 /* MainViewController.swift */; };
+		06378C2728DC06780035C212 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06378C2628DC06780035C212 /* LoginViewController.swift */; };
+		06378C2928DC06840035C212 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06378C2828DC06840035C212 /* LoginView.swift */; };
+		06378C2C28DC07B90035C212 /* TopView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06378C2B28DC07B90035C212 /* TopView.swift */; };
+		06378C2E28DC07CA0035C212 /* BottomView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06378C2D28DC07CA0035C212 /* BottomView.swift */; };
+		06378C3028DC282A0035C212 /* TextFieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06378C2F28DC282A0035C212 /* TextFieldView.swift */; };
+		06378C3228DC5ECF0035C212 /* FindEmailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06378C3128DC5ECF0035C212 /* FindEmailViewController.swift */; };
+		06378C3628DC5F5B0035C212 /* FindEmailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06378C3528DC5F5B0035C212 /* FindEmailView.swift */; };
 		066A6FB328DA99B3003F7A34 /* Common.swift in Sources */ = {isa = PBXBuildFile; fileRef = 066A6FB228DA99B3003F7A34 /* Common.swift */; };
 		066A6FBC28DAC1C6003F7A34 /* AppleSDGothicNeo-ExtraBold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 066A6FBB28DAC1C6003F7A34 /* AppleSDGothicNeo-ExtraBold.otf */; };
 		06A13A1228D9B32000ED2A50 /* images in Resources */ = {isa = PBXBuildFile; fileRef = 06A13A1128D9B32000ED2A50 /* images */; };
@@ -63,6 +70,13 @@
 		0627307528D9A81D0062AAEA /* IntroView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntroView.swift; sourceTree = "<group>"; };
 		06378C2128DBEFB70035C212 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
 		06378C2328DBEFC50035C212 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
+		06378C2628DC06780035C212 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
+		06378C2828DC06840035C212 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
+		06378C2B28DC07B90035C212 /* TopView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopView.swift; sourceTree = "<group>"; };
+		06378C2D28DC07CA0035C212 /* BottomView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomView.swift; sourceTree = "<group>"; };
+		06378C2F28DC282A0035C212 /* TextFieldView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldView.swift; sourceTree = "<group>"; };
+		06378C3128DC5ECF0035C212 /* FindEmailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FindEmailViewController.swift; sourceTree = "<group>"; };
+		06378C3528DC5F5B0035C212 /* FindEmailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FindEmailView.swift; sourceTree = "<group>"; };
 		066A6FB228DA99B3003F7A34 /* Common.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Common.swift; sourceTree = "<group>"; };
 		066A6FBB28DAC1C6003F7A34 /* AppleSDGothicNeo-ExtraBold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "AppleSDGothicNeo-ExtraBold.otf"; sourceTree = "<group>"; };
 		06A13A1128D9B32000ED2A50 /* images */ = {isa = PBXFileReference; lastKnownFileType = folder; path = images; sourceTree = "<group>"; };
@@ -130,6 +144,8 @@
 		0627303F28D9A3180062AAEA /* SampleRoadOnlySwift */ = {
 			isa = PBXGroup;
 			children = (
+				06378C2A28DC07A00035C212 /* CommonView */,
+				06378C2528DC066A0035C212 /* Login */,
 				06378C2028DBEF790035C212 /* Main */,
 				066A6FB428DABBF0003F7A34 /* fonts */,
 				066A6FB128DA99A0003F7A34 /* Common */,
@@ -195,6 +211,43 @@
 				06378C2328DBEFC50035C212 /* MainViewController.swift */,
 			);
 			path = Main;
+			sourceTree = "<group>";
+		};
+		06378C2528DC066A0035C212 /* Login */ = {
+			isa = PBXGroup;
+			children = (
+				06378C3428DC5F170035C212 /* ViewController */,
+				06378C3328DC5F0A0035C212 /* Scence */,
+			);
+			path = Login;
+			sourceTree = "<group>";
+		};
+		06378C2A28DC07A00035C212 /* CommonView */ = {
+			isa = PBXGroup;
+			children = (
+				06378C2B28DC07B90035C212 /* TopView.swift */,
+				06378C2D28DC07CA0035C212 /* BottomView.swift */,
+				06378C2F28DC282A0035C212 /* TextFieldView.swift */,
+			);
+			path = CommonView;
+			sourceTree = "<group>";
+		};
+		06378C3328DC5F0A0035C212 /* Scence */ = {
+			isa = PBXGroup;
+			children = (
+				06378C3528DC5F5B0035C212 /* FindEmailView.swift */,
+				06378C2828DC06840035C212 /* LoginView.swift */,
+			);
+			path = Scence;
+			sourceTree = "<group>";
+		};
+		06378C3428DC5F170035C212 /* ViewController */ = {
+			isa = PBXGroup;
+			children = (
+				06378C3128DC5ECF0035C212 /* FindEmailViewController.swift */,
+				06378C2628DC06780035C212 /* LoginViewController.swift */,
+			);
+			path = ViewController;
 			sourceTree = "<group>";
 		};
 		066A6FB128DA99A0003F7A34 /* Common */ = {
@@ -477,13 +530,20 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				06378C2728DC06780035C212 /* LoginViewController.swift in Sources */,
+				06378C3628DC5F5B0035C212 /* FindEmailView.swift in Sources */,
 				0627307628D9A81D0062AAEA /* IntroView.swift in Sources */,
 				06378C2228DBEFB70035C212 /* MainView.swift in Sources */,
+				06378C3028DC282A0035C212 /* TextFieldView.swift in Sources */,
+				06378C2E28DC07CA0035C212 /* BottomView.swift in Sources */,
 				0627304528D9A3180062AAEA /* ViewController.swift in Sources */,
 				0627304128D9A3180062AAEA /* AppDelegate.swift in Sources */,
 				0627304328D9A3180062AAEA /* SceneDelegate.swift in Sources */,
 				066A6FB328DA99B3003F7A34 /* Common.swift in Sources */,
+				06378C2C28DC07B90035C212 /* TopView.swift in Sources */,
+				06378C3228DC5ECF0035C212 /* FindEmailViewController.swift in Sources */,
 				0627307228D9A7700062AAEA /* IntroViewController.swift in Sources */,
+				06378C2928DC06840035C212 /* LoginView.swift in Sources */,
 				06378C2428DBEFC50035C212 /* MainViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
