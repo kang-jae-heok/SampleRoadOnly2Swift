@@ -27,7 +27,7 @@ import NaverThirdPartyLogin
         UserDefaults.standard.set("https://service.iamport.kr/payments/fail?success=", forKey: "PAY_FAILED_URL")
         UserDefaults.standard.set("http://110.165.17.124/sampleroad/", forKey: "SERVER_URL")
         window = UIWindow(windowScene: windowScene)
-        mainViewController = MainContentViewController()
+        mainViewController = SplashViewController()
         navController = UINavigationController(rootViewController: mainViewController)
         navController.setNavigationBarHidden(true, animated: false)
         window?.rootViewController = self.navController // 시작을 위에서 만든 내비게이션 컨트롤러로 해주면 끝!

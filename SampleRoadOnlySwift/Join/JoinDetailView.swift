@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 
 class JoinDetailView: UIView{
     let common = CommonS()
