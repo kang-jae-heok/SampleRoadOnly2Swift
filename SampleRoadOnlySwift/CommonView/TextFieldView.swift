@@ -8,7 +8,8 @@
 import Foundation
 import UIKit
 class TextFieldView: UIView{
-    let common = Common()
+    let common = CommonS()
+    let a = COMController()
     var titleString = String()
     var placeholderStr = String()
 
@@ -44,6 +45,7 @@ class TextFieldView: UIView{
         title.snp.makeConstraints{
             $0.top.equalToSuperview()
             $0.left.equalToSuperview().offset(30)
+
         }
         textField.snp.makeConstraints{
             $0.top.equalTo(title.snp.bottom).offset(20)

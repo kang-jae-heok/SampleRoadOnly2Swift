@@ -20,7 +20,8 @@ class IntroViewController: UIViewController {
     
 
     @objc func touchStartBtn(){
-        print("hi")
+        let vc = MainViewSController()
+        self.navigationController?.pushViewController(vc, animated: true)
     }
 
 

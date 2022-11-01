@@ -7,10 +7,10 @@
 
 import Foundation
 import UIKit
-class MainView: UIView{
+class MainViewS: UIView{
     let margin = 60.0
     let screenBounds = UIScreen.main.bounds
-    let common = Common()
+    let common = CommonS()
     lazy var  bottomY =  screenBounds.height - (screenBounds.width/6 + screenBounds.height/2 + 30 + 20)
     let vc = IntroViewController()
     lazy var startBtn = UIButton().then{
@@ -37,12 +37,22 @@ class MainView: UIView{
         $0.setImage(UIImage(named: "login_kakao_btn"), for: .normal)
         $0.clipsToBounds = true
         $0.layer.cornerRadius = 10
+        if !UserDefaults.standard.bool(forKey: "PRDC_MODE"){
+            $0.isHidden = true
+        }else{
+            $0.isHidden = false
+        }
     }
     lazy var naverBtn = UIButton().then{
         $0.setImage(UIImage(named: "login_naver_btn"), for: .normal)
         $0.backgroundColor = common.setColor(hex: "#06be34")
         $0.clipsToBounds = true
         $0.layer.cornerRadius = 10
+        if !UserDefaults.standard.bool(forKey: "PRDC_MODE"){
+            $0.isHidden = true
+        }else{
+            $0.isHidden = false
+        }
     }
     lazy var copyRight = UILabel().then{
         $0.text = "ⓒTov&Banah"

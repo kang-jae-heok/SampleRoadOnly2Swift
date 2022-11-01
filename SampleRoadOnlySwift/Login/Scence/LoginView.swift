@@ -7,14 +7,19 @@
 
 import Foundation
 import UIKit
+
 class LoginView: UIView{
     let screenBounds = UIScreen.main.bounds
     let margin = 60.0
-    let common = Common()
-    let bottmView = BottomView()
-    let topView = TopView()
-    let emailView = TextFieldView(frame: .zero, title: "이메일", placeholder: "이메일을 입력해주세요.")
-    let passView = TextFieldView(frame: .zero, title: "비밀번호", placeholder: "비밀번호를 입력해주세요.")
+    let common = CommonS()
+    let bottmView = LoginBottomView()
+    let topView = LoginTopView()
+    let emailView = TextFieldView(frame: .zero, title: "이메일", placeholder: "이메일을 입력해주세요.").then{
+        $0.textField.text = UserDefaults.standard.string(forKey: "user_email")
+    }
+    let passView = TextFieldView(frame: .zero, title: "비밀번호", placeholder: "비밀번호를 입력해주세요.").then{
+        $0.textField.isSecureTextEntry = true
+    }
     var checkCheckBtn = Bool()
     //버튼과 시작하기 사이 길이
     lazy var betweenY = screenBounds.height/2 - screenBounds.width/12 - screenBounds.width/4
@@ -30,12 +35,18 @@ class LoginView: UIView{
         $0.setImage(UIImage(named: "login_kakao_btn"), for: .normal)
         $0.clipsToBounds = true
         $0.layer.cornerRadius = 10
+        if !UserDefaults.standard.bool(forKey: "PRDC_MODE"){
+            $0.isHidden = true
+        }
     }
     lazy var naverBtn = UIButton().then{
         $0.setImage(UIImage(named: "login_naver_btn"), for: .normal)
         $0.backgroundColor = common.setColor(hex: "#06be34")
         $0.clipsToBounds = true
         $0.layer.cornerRadius = 10
+        if !UserDefaults.standard.bool(forKey: "PRDC_MODE"){
+            $0.isHidden = true
+        }
     }
     let checkBtn = UIButton().then{
         $0.setImage(UIImage(named: "login_check_off_btn"), for: .normal)
@@ -97,7 +108,6 @@ class LoginView: UIView{
         emailView.snp.makeConstraints{
             $0.top.equalTo(topView.snp.bottom).offset(40)
             $0.left.right.equalToSuperview()
-            $0.bottom.equalToSuperview().offset(screenBounds.width/4 + betweenY/2 - 30)
         }
         passView.snp.makeConstraints{
             $0.top.equalToSuperview().offset(screenBounds.width/4 + betweenY/2)

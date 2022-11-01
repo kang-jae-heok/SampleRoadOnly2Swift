@@ -11,7 +11,7 @@ import UIKit
 class IntroView: UIView {
     let margin = 50
     let screenBounds = UIScreen.main.bounds
-    let common = Common()
+    let common = CommonS()
 //    let vc = IntroViewController()
     lazy var betweenY = (screenBounds.height/2 - screenBounds.width/4 - screenBounds.width/6)/2
     var introIndex = 0{
