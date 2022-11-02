@@ -502,10 +502,10 @@ class MainContentView: UIView {
         myView.isHidden = true
     }
     @objc func touchMyBtn(){
-        if !UserDefaults.standard.bool(forKey: "PRDC_MODE"){
-            let vc = DeliveryHistoryViewController()
-            parentViewController?.navigationController?.pushViewController(vc, animated: true)
-        }else{
+//        if !UserDefaults.standard.bool(forKey: "PRDC_MODE"){
+//            let vc = DeliveryHistoryViewController()
+//            parentViewController?.navigationController?.pushViewController(vc, animated: true)
+//        }else{
             if myMenuImgView.image == UIImage(named: "my_off_btn"){
                 homeMenuImgView.image = UIImage(named: "home_off_btn")
                 rankMenuImgView.image = UIImage(named: "rank_off_btn")
@@ -519,7 +519,7 @@ class MainContentView: UIView {
             rankView.isHidden = true
             reviewView.isHidden = true
             myView.isHidden = false
-        }
+//        }
     }
     @objc func touchNavigateEventBtn(){
         eventView.isHidden = false

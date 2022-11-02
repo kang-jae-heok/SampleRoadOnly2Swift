@@ -1,13 +1,15 @@
 //
-//  DeliveryListTableViewCell.swift
+//  DeliveryListSampleTableViewCell.swift
 //  SampleRoadOnlySwift
 //
-//  Created by NOTEGG on 2022/10/28.
+//  Created by NOTEGG on 2022/11/02.
 //
 
 import Foundation
 
-class DeliveryListTableViewCell: UITableViewCell {
+import Foundation
+
+class DeliveryListSampleTableViewCell: UITableViewCell {
     static let cellId = "DeliveryListCellId"
     let common = CommonS()
     let margin = 17.0
@@ -22,33 +24,56 @@ class DeliveryListTableViewCell: UITableViewCell {
         $0.setTitle("배송준비", for: .normal)
         $0.titleLabel?.font = common.setFont(font: "bold", size: 13)
     }
-    //상품 정보 뷰
-    let productInfoView = UIView().then{
+    //상품 정보 뷰 - 첫번쨰
+    let allInfoView = UIView()
+    let firstSampleInfoView = UIView().then{
         $0.backgroundColor = .clear
     }
-    let imgView = UIImageView().then{
+    let firstImgView = UIImageView().then{
         $0.backgroundColor = .clear
     }
-    lazy var companyNameLbl = UILabel().then{
+    lazy var firstCompanyLbl = UILabel().then{
         $0.font = common.setFont(font: "bold", size: 10)
         $0.textColor = common.setColor(hex: "b1b1b1")
         $0.text = "Test"
     }
-    lazy var productNameLbl = UILabel().then{
+    lazy var firstProductNameLbl = UILabel().then{
         $0.font = common.setFont(font: "semibold", size: 15)
         $0.textColor = common.setColor(hex: "6f6f6f")
         $0.text = "Test"
     }
-    let starImgView = UIImageView().then{
-        $0.image = UIImage(named: "star_btn")
+    //상품 정보 뷰 - 두번쨰
+    let secondSampleInfoView = UIView().then{
+        $0.backgroundColor = .clear
     }
-    lazy var ratingLbl = UILabel().then{
-        $0.font = common.setFont(font: "semibold", size: 12)
+    let secondImgView = UIImageView().then{
+        $0.backgroundColor = .clear
+    }
+    lazy var secondCompanyLbl = UILabel().then{
+        $0.font = common.setFont(font: "bold", size: 10)
+        $0.textColor = common.setColor(hex: "b1b1b1")
         $0.text = "Test"
     }
-    lazy var priceLbl = UILabel().then{
-        $0.font = common.setFont(font: "bold", size: 17)
-        $0.textColor = common.setColor(hex: "#6f6f6f")
+    lazy var secondProductNameLbl = UILabel().then{
+        $0.font = common.setFont(font: "semibold", size: 15)
+        $0.textColor = common.setColor(hex: "6f6f6f")
+        $0.text = "Test"
+    }
+    //상품 정보 뷰 - 세번쨰
+    let thirdSampleInfoView = UIView().then{
+        $0.backgroundColor = .clear
+    }
+    let thirdImgView = UIImageView().then{
+        $0.backgroundColor = .clear
+    }
+    lazy var thirdCompanyLbl = UILabel().then{
+        $0.font = common.setFont(font: "bold", size: 10)
+        $0.textColor = common.setColor(hex: "b1b1b1")
+        $0.text = "Test"
+    }
+    lazy var thirdProductNameLbl = UILabel().then{
+        $0.font = common.setFont(font: "semibold", size: 15)
+        $0.textColor = common.setColor(hex: "6f6f6f")
         $0.text = "Test"
     }
     // 프로그레스 바
@@ -114,6 +139,12 @@ class DeliveryListTableViewCell: UITableViewCell {
         $0.layer.cornerRadius = pointSize.height/2
         $0.clipsToBounds = true
     }
+    //상세보기 버튼
+    lazy var orderDetailBtn = UIButton().then{
+        $0.setTitle("주문 상세 >", for: .normal)
+        $0.setTitleColor(common.pointColor(), for: .normal)
+        $0.titleLabel?.font = common.setFont(font: "semibold", size: 15)
+    }
     // 밑 두 버튼
     lazy var deliveryTrackingBtn = UIButton().then{
         $0.backgroundColor = common.pointColor()
@@ -129,7 +160,7 @@ class DeliveryListTableViewCell: UITableViewCell {
         $0.setTitleColor(.white, for: .normal)
         $0.layer.cornerRadius = 5
     }
-
+    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         addSubviewFunc()
@@ -140,17 +171,26 @@ class DeliveryListTableViewCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     func addSubviewFunc(){
-        [lineView,situationBtn,productInfoView,progressBarView,deliveryTrackingBtn,exchangeBtn].forEach{
+        [lineView,situationBtn,allInfoView,progressBarView,deliveryTrackingBtn,exchangeBtn,orderDetailBtn].forEach{
             self.addSubview($0)
         }
-        [imgView,companyNameLbl,productNameLbl,starImgView,ratingLbl,priceLbl].forEach{
-            productInfoView.addSubview($0)
+        [firstSampleInfoView,secondSampleInfoView,thirdSampleInfoView].forEach{
+            allInfoView.addSubview($0)
+        }
+        [firstImgView,firstCompanyLbl,firstProductNameLbl].forEach{
+            firstSampleInfoView.addSubview($0)
+        }
+        [secondImgView,secondCompanyLbl,secondProductNameLbl].forEach{
+            secondSampleInfoView.addSubview($0)
+        }
+        [thirdImgView,thirdCompanyLbl,thirdProductNameLbl].forEach{
+            thirdSampleInfoView.addSubview($0)
         }
         [readyLbl,readyPoint,startBar,startLbl,shippingBar,startPoint,arrivalBar,shippingLbl,shippingPoint,arrivalLbl,arrivalPoint].forEach{
             progressBarView.addSubview($0)
         }
         
-      
+        
     }
     func setLayout(){
         lineView.snp.makeConstraints{
@@ -165,42 +205,55 @@ class DeliveryListTableViewCell: UITableViewCell {
             $0.bottom.equalTo(lineView.snp.bottom).offset(12 + screenBounds.width/21.0)
             $0.right.equalTo(super.snp.left).offset(margin).offset(margin + screenBounds.width/7.0)
         }
-        productInfoView.snp.makeConstraints{
-            $0.left.right.equalToSuperview()
-            $0.top.equalTo(situationBtn.snp.bottom).offset(12)
-            $0.bottom.equalTo(situationBtn.snp.bottom).offset(12 + screenBounds.width*2.0/9.0)
+        orderDetailBtn.snp.makeConstraints{
+            $0.bottom.equalTo(allInfoView)
+            $0.right.equalToSuperview().offset(-margin)
         }
-        imgView.snp.makeConstraints{
-            $0.top.bottom.equalToSuperview()
+        
+        allInfoView.snp.makeConstraints{
             $0.left.equalToSuperview().offset(margin)
-            $0.right.equalTo(super.snp.left).offset(margin + screenBounds.width/6.0)
+            $0.right.equalTo(super.snp.left).offset(margin + ((screenBounds.width * 2.0) / 3.0))
+            $0.top.equalTo(situationBtn.snp.bottom).offset(12)
+            $0.bottom.equalTo(situationBtn.snp.bottom).offset(12 + screenBounds.height/8)
         }
-        companyNameLbl.snp.makeConstraints{
-            $0.left.equalTo(imgView.snp.right).offset(screenBounds.width/24.0)
-            $0.top.equalToSuperview()
+        firstSampleInfoView.snp.makeConstraints{
+            $0.left.top.bottom.equalToSuperview()
+            $0.right.equalTo(allInfoView.snp.left).offset(screenBounds.width * 2 / 9)
         }
-        let betweenY = (screenBounds.width*2.0/9.0 - (productNameLbl.font.pointSize + companyNameLbl.font.pointSize + 12 + priceLbl.font.pointSize))/4
-        productNameLbl.snp.makeConstraints{
-            $0.left.equalTo(companyNameLbl)
-            $0.top.equalTo(companyNameLbl.snp.bottom).offset(betweenY)
+        secondSampleInfoView.snp.makeConstraints{
+            $0.top.bottom.equalToSuperview()
+            $0.left.equalTo(firstSampleInfoView.snp.right)
+            $0.right.equalTo(firstSampleInfoView.snp.right).offset(screenBounds.width * 2 / 9)
         }
-        starImgView.snp.makeConstraints{
-            $0.left.equalTo(companyNameLbl)
-            $0.top.equalTo(productNameLbl.snp.bottom).offset(betweenY)
-            $0.size.equalTo(CGSize(width: 12, height: 12))
+        
+        thirdSampleInfoView.snp.makeConstraints{
+            $0.top.bottom.right.equalToSuperview()
+            $0.left.equalTo(secondSampleInfoView.snp.right)
         }
-        ratingLbl.snp.makeConstraints{
-            $0.centerY.equalTo(starImgView)
-            $0.left.equalTo(starImgView.snp.right).offset(5)
+        [firstImgView,secondImgView,thirdImgView].forEach{
+            $0.snp.makeConstraints{
+                $0.top.equalToSuperview()
+                $0.left.right.equalToSuperview().inset(margin)
+                $0.bottom.equalTo(firstSampleInfoView.snp.top).offset(screenBounds.height * 1 / 12)
+            }
         }
-        priceLbl.snp.makeConstraints{
-            $0.left.equalTo(companyNameLbl)
-            $0.bottom.equalToSuperview()
+        
+        [firstCompanyLbl,secondCompanyLbl,thirdCompanyLbl].forEach{
+            $0.snp.makeConstraints{
+                $0.top.equalTo(firstImgView.snp.bottom).offset(5)
+                $0.centerX.equalToSuperview()
+            }
+        }
+        [firstProductNameLbl,secondProductNameLbl,thirdProductNameLbl].forEach{
+            $0.snp.makeConstraints{
+                $0.top.equalTo(firstCompanyLbl.snp.bottom).offset(5)
+                $0.centerX.equalToSuperview()
+            }
         }
         progressBarView.snp.makeConstraints{
-            $0.top.equalTo(productInfoView.snp.bottom).offset(36.0)
+            $0.top.equalTo(allInfoView.snp.bottom).offset(36.0)
             $0.left.right.equalToSuperview()
-            $0.bottom.equalTo(productInfoView.snp.bottom).offset(36.0 + 30.0)
+            $0.bottom.equalTo(allInfoView.snp.bottom).offset(36.0 + 30.0)
         }
         let barWidth = (screenBounds.width - margin * 2 + 35)/4
         readyLbl.snp.makeConstraints {

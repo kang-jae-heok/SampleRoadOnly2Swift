@@ -30,8 +30,8 @@ class MainContentViewController: UIViewController {
         mainContentView.firstViewBtn.addTarget(self, action: #selector(touchArrowBtn(sender:)), for: .touchUpInside)
         mainContentView.secondViewBtn.addTarget(self, action: #selector(touchArrowBtn(sender:)), for: .touchUpInside)
         mainContentView.thirdViewBtn.addTarget(self, action: #selector(touchArrowBtn(sender:)), for: .touchUpInside)
-        
-//        deleteAllCart()
+     //카트 전체 삭제
+        deleteAllCart()
     }
     //배너 이미지 가져오기
    

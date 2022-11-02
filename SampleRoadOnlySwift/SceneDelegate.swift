@@ -33,8 +33,7 @@ import NaverThirdPartyLogin
         window?.rootViewController = self.navController // 시작을 위에서 만든 내비게이션 컨트롤러로 해주면 끝!
         window?.makeKeyAndVisible()
          // 내비게이션 컨트롤러에 처음으로 보여질 화면을 rootView로 지정해주고!
-
-    }
+        }
   
 
     func sceneDidDisconnect(_ scene: UIScene) {

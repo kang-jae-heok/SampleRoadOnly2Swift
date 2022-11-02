@@ -391,6 +391,7 @@
 		06C4AB3B28EBBB8700F3A8DD /* KakaoSDK in Frameworks */ = {isa = PBXBuildFile; productRef = 06C4AB3A28EBBB8700F3A8DD /* KakaoSDK */; };
 		06EB5A872910EF0100D17B77 /* IamportViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06EB5A852910EF0000D17B77 /* IamportViewController.swift */; };
 		06EB5A882910EF0100D17B77 /* IAMPortPay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06EB5A842910EF0000D17B77 /* IAMPortPay.swift */; };
+		06FE5D4E2911FF810046F833 /* DeliveryListSampleTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06FE5D4D2911FF810046F833 /* DeliveryListSampleTableViewCell.swift */; };
 		4F28C3D3B2F7888DAE1AB14E /* Pods_SampleRoadOnlySwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E196267AB28F8696D843C05F /* Pods_SampleRoadOnlySwift.framework */; };
 		80978B20116A62E50056AA71 /* Pods_SampleRoadOnlySwiftTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A2FE7C1C52CCC6018C4262FD /* Pods_SampleRoadOnlySwiftTests.framework */; };
 /* End PBXBuildFile section */
@@ -863,6 +864,7 @@
 		06EB5A842910EF0000D17B77 /* IAMPortPay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = IAMPortPay.swift; path = SampleRoadOnlySwift/IamPort/IAMPortPay.swift; sourceTree = "<group>"; };
 		06EB5A852910EF0000D17B77 /* IamportViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = IamportViewController.swift; path = SampleRoadOnlySwift/IamPort/IamportViewController.swift; sourceTree = "<group>"; };
 		06EB5A862910EF0100D17B77 /* IAMPortPay.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = IAMPortPay.html; path = SampleRoadOnlySwift/IamPort/IAMPortPay.html; sourceTree = "<group>"; };
+		06FE5D4D2911FF810046F833 /* DeliveryListSampleTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeliveryListSampleTableViewCell.swift; sourceTree = "<group>"; };
 		22CAEBF73C11B8265659CCD8 /* Pods-SampleRoadOnlySwift-SampleRoadOnlySwiftUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SampleRoadOnlySwift-SampleRoadOnlySwiftUITests.release.xcconfig"; path = "Target Support Files/Pods-SampleRoadOnlySwift-SampleRoadOnlySwiftUITests/Pods-SampleRoadOnlySwift-SampleRoadOnlySwiftUITests.release.xcconfig"; sourceTree = "<group>"; };
 		4485A051BD929E1D37195B3A /* Pods_SampleRoadOnlySwift_SampleRoadOnlySwiftUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SampleRoadOnlySwift_SampleRoadOnlySwiftUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		50B0759BF987AF7680F6759A /* Pods-SampleRoadOnlySwift-SampleRoadOnlySwiftUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SampleRoadOnlySwift-SampleRoadOnlySwiftUITests.debug.xcconfig"; path = "Target Support Files/Pods-SampleRoadOnlySwift-SampleRoadOnlySwiftUITests/Pods-SampleRoadOnlySwift-SampleRoadOnlySwiftUITests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -949,30 +951,30 @@
 		0631DBCD2910FCAC00565F45 /* SampleRoadOnlySwift */ = {
 			isa = PBXGroup;
 			children = (
+				0631DCEA2910FCAC00565F45 /* SwiftyIamport */,
+				0631DCED2910FCAC00565F45 /* Common */,
 				06A556E4291110EE005805B3 /* ObjcFiles */,
 				0631DBCE2910FCAC00565F45 /* GetSample */,
-				0631DBD52910FCAC00565F45 /* ViewController.swift */,
 				0631DBD62910FCAC00565F45 /* CommonView */,
 				0631DBE02910FCAC00565F45 /* IamPort */,
 				0631DBE52910FCAC00565F45 /* Join */,
 				0631DBEE2910FCAC00565F45 /* Intro */,
 				0631DBF32910FCAC00565F45 /* images */,
+				0631DCF02910FCAC00565F45 /* DeliveryList */,
+				0631DDAD2910FCAD00565F45 /* Find */,
+				0631DDB52910FCAD00565F45 /* fonts */,
+				0631DDB72910FCAD00565F45 /* MainContent */,
+				0631DDBC2910FCAD00565F45 /* Login */,
+				0631DBD52910FCAC00565F45 /* ViewController.swift */,
 				0631DCE32910FCAC00565F45 /* KakaoViewController.swift */,
 				0631DCE42910FCAC00565F45 /* Assets.xcassets */,
 				0631DCE52910FCAC00565F45 /* SplashViewController.swift */,
 				0631DCE62910FCAC00565F45 /* LaunchScreen.storyboard */,
 				0631DCE82910FCAC00565F45 /* Main.storyboard */,
-				0631DCEA2910FCAC00565F45 /* SwiftyIamport */,
-				0631DCED2910FCAC00565F45 /* Common */,
 				0631DCEF2910FCAC00565F45 /* SampleRoadOnlySwift-Bridging-Header.h */,
-				0631DCF02910FCAC00565F45 /* DeliveryList */,
-				0631DDAD2910FCAD00565F45 /* Find */,
 				0631DDB42910FCAD00565F45 /* AppDelegate.swift */,
-				0631DDB52910FCAD00565F45 /* fonts */,
-				0631DDB72910FCAD00565F45 /* MainContent */,
-				0631DDBC2910FCAD00565F45 /* Login */,
-				0631DDC32910FCAD00565F45 /* Info.plist */,
 				0631DDC42910FCAD00565F45 /* SceneDelegate.swift */,
+				0631DDC32910FCAD00565F45 /* Info.plist */,
 			);
 			path = SampleRoadOnlySwift;
 			sourceTree = "<group>";
@@ -1354,6 +1356,7 @@
 				0631DCF12910FCAC00565F45 /* DeliveryListTableViewCell.swift */,
 				0631DCF22910FCAC00565F45 /* DeliveryListView.swift */,
 				0631DCF32910FCAC00565F45 /* DeliveryListViewController.swift */,
+				06FE5D4D2911FF810046F833 /* DeliveryListSampleTableViewCell.swift */,
 			);
 			path = DeliveryList;
 			sourceTree = "<group>";
@@ -2248,6 +2251,7 @@
 				06A557C3291110EF005805B3 /* BWHorizontalTableViewCell.m in Sources */,
 				0631DED72910FCAE00565F45 /* DeliveryListViewController.swift in Sources */,
 				0631DDD82910FCAD00565F45 /* JoinDetailView.swift in Sources */,
+				06FE5D4E2911FF810046F833 /* DeliveryListSampleTableViewCell.swift in Sources */,
 				0631DED12910FCAE00565F45 /* SplashViewController.swift in Sources */,
 				0631DDDD2910FCAD00565F45 /* CertificationEmailViewController.swift in Sources */,
 				06A557C0291110EF005805B3 /* MainViewController.m in Sources */,

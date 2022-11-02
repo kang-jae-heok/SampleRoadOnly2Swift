@@ -119,10 +119,10 @@ class CommonS{
         //.validate(statusCode: 200..<300)
         
         .responseJSON { [self] (response) in
-            print(response.result)
+//            print(response.result)
             //여기서 가져온 데이터를 자유롭게 활용하세요.
-            print(params)
-            print(response)
+//            print(params)
+//            print(response)
             switch response.result {
             case .success(let value):
                 completion(value)
