@@ -56,14 +56,16 @@ class JoinEmailView: UIView{
             $0.top.left.right.equalToSuperview()
             $0.bottom.equalTo(self.snp.top).offset(screenBounds.width/4)
         }
-        sclView.snp.makeConstraints{
-            $0.top.equalTo(topView.snp.bottom)
-            $0.bottom.left.right.equalToSuperview()
-        }
         nextBtn.snp.makeConstraints{
             $0.bottom.equalTo(bottomView.titleLbl.snp.top).offset(-20)
             $0.centerX.equalToSuperview()
+            $0.top.equalTo(bottomView.titleLbl.snp.top).offset(-20 - screenBounds.width/6)
             $0.size.equalTo(CGSize(width: screenBounds.width - margin * 2, height: screenBounds.width/6))
+        }
+        sclView.snp.makeConstraints{
+            $0.top.equalTo(topView.snp.bottom)
+            $0.left.right.equalToSuperview()
+            $0.bottom.equalTo(nextBtn.snp.top)
         }
         emailTextField.snp.makeConstraints{
             $0.top.equalToSuperview().offset(50)
@@ -83,17 +85,28 @@ class JoinEmailView: UIView{
         phoneTextField.snp.makeConstraints{
             $0.top.equalTo(checkPassTextField.snp.bottom).offset(30)
             $0.left.right.equalToSuperview()
+            $0.bottom.equalToSuperview().offset(-50)
             $0.size.equalTo(CGSize(width: screenBounds.width, height: 70))
         }
         phoneBtn.snp.makeConstraints{
             $0.edges.equalTo(phoneTextField.textField)
         }
+        sclView.layoutIfNeeded()
+//        phoneTextField.layoutIfNeeded()
+//        sclView.contentSize = CGSize(width: screenBounds.width, height: phoneTextField.frame.origin.y + phoneTextField.frame.size.height)
+        print("스크롤뷰 높이" )
+        print(phoneTextField.frame.origin.y)
+        print(phoneTextField.frame.origin.y + phoneTextField.frame.height)
+        print(sclView.frame.size.height)
+        print(sclView.contentSize.height)
+        
       
     }
     func addSubviewFunc(){
-        [nextBtn,emailTextField,passTextField,subPassTextLbl,checkPassTextField,phoneTextField, phoneBtn].forEach{
+        [emailTextField,passTextField,subPassTextLbl,checkPassTextField,phoneTextField, phoneBtn].forEach{
             sclView.addSubview($0)
         }
+        bottomView.addSubview(nextBtn)
         self.addSubview(topView)
         self.addSubview(bottomView)
         self.addSubview(sclView)

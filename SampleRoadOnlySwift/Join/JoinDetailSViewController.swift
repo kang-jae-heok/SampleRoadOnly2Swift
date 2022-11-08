@@ -117,13 +117,19 @@ class JoinDetailSViewController: UIViewController {
         common.sendRequest(url: "https://api.clayful.io/v1/customers", method: "post", params: params, sender: ""){ [self] reusultJson in
             print(reusultJson)
             let resultDic = reusultJson as! [String:Any]
-            
             guard let customerId = resultDic["_id"] else {return}
-      
+            params.updateValue(gender, forKey: "gender")
+            params.updateValue(birthdate, forKey: "birthdate")
+            common.sendRequest(url: "https://api.clayful.io/v1/customers/\(customerId)", method: "put", params: params, sender: "") { resultJSon2 in
+                print("유저 업데이트")
+                print(customerId)
+                print(params)
+                print(resultJSon2)
+            }
             duplicateCheck(customerId: customerId as! String, name: fullName, birthdate: birthdate)
         }
     }
-
+  
     
     
     

@@ -94,16 +94,28 @@ class SplashViewController: UIViewController {
     }
     func loadNextVC() {
         DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
-            if UserDefaults.standard.bool(forKey: "auto_login") {
-                self.common.checkTypeFormDone2(customerId: UserDefaults.standard.string(forKey: "customer_id") ?? "") { [self] result in
-                    if result {
-                        self.navigationController?.pushViewController(MainContentViewController(), animated: true)
-                    }else{
-                        self.navigationController?.pushViewController(WebViewViewController(), animated: true)
+            if UserDefaults.contains("auto_login") {
+                if UserDefaults.standard.bool(forKey: "auto_login") {
+                    self.common.checkTypeFormDone2(customerId: UserDefaults.standard.string(forKey: "customer_id") ?? "") { [self] result in
+                        if result {
+                            self.navigationController?.pushViewController(MainContentViewController(), animated: true)
+                        }else{
+                            var vc = UIViewController()
+                            if !UserDefaults.standard.bool(forKey: "PRDC_MODE"){
+                                vc = MainContentViewController()
+                              
+                            }else{
+                                vc = WebViewViewController()
+                            }
+                            self.navigationController?.pushViewController(vc, animated: true)
+                        }
                     }
+                }else{
+                    self.navigationController?.pushViewController(MainViewSController(), animated: true)
+    //                self.navigationController?.pushViewController(MainContentViewController(), animated: true)
                 }
             }else{
-                self.navigationController?.pushViewController(IntroViewController(), animated: true)
+                self.navigationController?.pushViewController(MainViewSController(), animated: true)
             }
         }
     }

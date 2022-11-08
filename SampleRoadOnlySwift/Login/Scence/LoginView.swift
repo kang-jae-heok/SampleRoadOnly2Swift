@@ -61,11 +61,21 @@ class LoginView: UIView{
         $0.setTitle("비밀번호 찾기", for: .normal)
         $0.titleLabel?.font = common.setFont(font: "semibold", size: 12)
         $0.setTitleColor(common.pointColor(), for: .normal)
+        if !UserDefaults.standard.bool(forKey: "PRDC_MODE"){
+            $0.isHidden = true
+        }else{
+            $0.isHidden = false
+        }
     }
     lazy var findEmailBtn = UIButton().then{
         $0.setTitle("이메일 찾기 /", for: .normal)
         $0.titleLabel?.font = common.setFont(font: "semibold", size: 12)
         $0.setTitleColor(common.pointColor(), for: .normal)
+        if !UserDefaults.standard.bool(forKey: "PRDC_MODE"){
+            $0.isHidden = true
+        }else{
+            $0.isHidden = false
+        }
     }
 
     override init(frame: CGRect) {
@@ -85,14 +95,15 @@ class LoginView: UIView{
     func setLayout(){
         bottmView.snp.makeConstraints{
             $0.bottom.left.right.equalToSuperview()
-            $0.top.equalTo(loginBtn.snp.bottom)
+            $0.top.equalToSuperview().offset(screenBounds.height/2)
         }
         topView.snp.makeConstraints{
             $0.top.left.right.equalToSuperview()
             $0.bottom.equalTo(self.snp.top).offset(screenBounds.width/4)
         }
         loginBtn.snp.makeConstraints{
-            $0.centerX.centerY.equalToSuperview()
+            $0.centerX.equalToSuperview()
+            $0.top.equalTo(findEmailBtn.snp.bottom).offset(40)
             $0.size.equalTo(CGSize(width: screenBounds.width - margin * 2, height: screenBounds.width/6))
         }
         kakaoBtn.snp.makeConstraints{
@@ -108,15 +119,16 @@ class LoginView: UIView{
         emailView.snp.makeConstraints{
             $0.top.equalTo(topView.snp.bottom).offset(40)
             $0.left.right.equalToSuperview()
+            $0.size.equalTo(CGSize(width: screenBounds.width, height: 80))
         }
         passView.snp.makeConstraints{
-            $0.top.equalToSuperview().offset(screenBounds.width/4 + betweenY/2)
+            $0.top.equalTo(emailView.snp.bottom).offset(40)
             $0.left.right.equalToSuperview()
-            $0.height.equalTo(emailView.snp.height)
+            $0.size.equalTo(CGSize(width: screenBounds.width, height: 80))
         }
         checkBtn.snp.makeConstraints{
             $0.left.equalToSuperview().offset(30)
-            $0.top.equalTo(passView.line.snp.bottom).offset(20)
+            $0.top.equalTo(passView.snp.bottom).offset(20)
         }
         autoLoginLbl.snp.makeConstraints{
             $0.left.equalTo(checkBtn.snp.right).offset(10)

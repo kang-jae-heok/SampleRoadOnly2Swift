@@ -15,6 +15,8 @@ import UIKit
     var bool = Bool()
     let common = CommonS()
     
+    
+    
     let contentView = UIView()
     let titleLbl: UILabel = {
         let titleLbl = UILabel()
@@ -76,11 +78,11 @@ import UIKit
     }
     func addSubView(){
         view.addSubview(contentView)
+        contentView.addSubview(backgroundImgView)
         contentView.addSubview(copyrightLbl)
         contentView.addSubview(bottomLabel)
         contentView.addSubview(certificationBtn)
         contentView.addSubview(failCertificationBtn)
-        contentView.addSubview(backgroundImgView)
         contentView.addSubview(titleLbl)
         contentView.addSubview(homeBtn)
     }
@@ -97,7 +99,7 @@ import UIKit
     
     @objc func touchFailCertificationBtn(){
         let FailCerificationEmailViewController = FailCerificationEmailViewController()
-        self.navigationController?.pushViewController(FailCerificationEmailViewController, animated: true)
+        self.navigationController!.pushViewController(FailCerificationEmailViewController, animated: true)
     }
     @objc func touchCertificationBtn(){
         
@@ -107,16 +109,7 @@ import UIKit
             certificationBtn.setTitle("인증 확인", for: .normal)
         }else{
             selectUserDefault()
-            
-            if bool{
-                present(common.alert(title: "", message: "인증되었습니다"),animated: true)
-                let vc = WebViewViewController()
-                self.navigationController?.pushViewController(vc, animated: true)
-                
-                
-            }else{
-                present(common.alert(title: "", message: "이메일 인증 후 이용하실 수 있습니다"),animated: true)
-            }
+           
            
         }
        
@@ -151,6 +144,25 @@ import UIKit
         let dict:[String:Any] = common.JsonToDictionary(data: result)!
         print(dict["verified"] as! Bool)
         bool = dict["verified"] as! Bool
+        if bool{
+//                present(common.alert(title: "", message: "인증되었습니다"),animated: true)
+            let alert = UIAlertController(title: "", message: "인증되었습니다", preferredStyle: UIAlertController.Style.alert)
+            let okAction = UIAlertAction(title: "OK", style: .default) { (action) in
+                var vc = UIViewController()
+                if !UserDefaults.standard.bool(forKey: "PRDC_MODE"){
+                    vc = MainContentViewController()
+                  
+                }else{
+                    vc = WebViewViewController()
+                }
+                self.navigationController?.pushViewController(vc, animated: true)
+            }
+            alert.addAction(okAction)
+            present(alert, animated: true)
+           
+        }else{
+            present(self.common.alert(title: "", message: "이메일 인증 후 이용하실 수 있습니다"),animated: true)
+        }
     }
     @objc func touchHomeBtn(){
         self.navigationController?.popViewController(animated: false)

@@ -93,15 +93,14 @@ class JoinDetailView: UIView{
 
     func setLayout(){
 //        sclView.contentSize = CGSize(width: screenBounds.width, height: screenBounds.height)
-        sclView.contentSize = CGSize(width: screenBounds.width, height: screenBounds.height - screenBounds.width/4)
         topView.snp.makeConstraints{
             $0.top.left.right.equalToSuperview()
             $0.bottom.equalTo(self.snp.top).offset(screenBounds.width/4)
         }
         sclView.snp.makeConstraints{
             $0.top.equalTo(topView.snp.bottom)
-//            $0.bottom.equalTo(bottomView.snp.top)
-            $0.left.right.bottom.equalToSuperview()
+            $0.left.right.equalToSuperview()
+            $0.bottom.equalTo(nextBtn.snp.top)
         }
         genderLbl.snp.makeConstraints{
             $0.top.equalToSuperview().offset(50)
@@ -147,6 +146,7 @@ class JoinDetailView: UIView{
             $0.top.equalTo(birthDatTextField.snp.bottom).offset(30)
             $0.left.right.equalToSuperview()
             $0.size.equalTo(CGSize(width: screenBounds.width, height: 70))
+            $0.bottom.equalToSuperview().offset(-50)
         }
         bottomView.snp.makeConstraints{
             $0.bottom.left.right.equalToSuperview()
@@ -162,7 +162,8 @@ class JoinDetailView: UIView{
         self.addSubview(bottomView)
         self.addSubview(topView)
         self.addSubview(sclView)
-        [genderLbl,manBtn,womanBtn,manLbl,womanLbl,nonLbl,nonCheckBtn,subNonCheckLbl,birthDatTextField,nickNameTextField, nextBtn].forEach{
+        self.addSubview(nextBtn)
+        [genderLbl,manBtn,womanBtn,manLbl,womanLbl,nonLbl,nonCheckBtn,subNonCheckLbl,birthDatTextField,nickNameTextField].forEach{
             sclView.addSubview($0)
         }
     

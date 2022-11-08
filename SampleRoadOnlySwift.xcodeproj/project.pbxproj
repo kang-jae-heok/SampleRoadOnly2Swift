@@ -301,6 +301,10 @@
 		0631DF462910FCAE00565F45 /* MainViewSController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0631DDC02910FCAD00565F45 /* MainViewSController.swift */; };
 		0631DF472910FCAE00565F45 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0631DDC22910FCAD00565F45 /* LoginViewController.swift */; };
 		0631DF492910FCAE00565F45 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0631DDC42910FCAD00565F45 /* SceneDelegate.swift */; };
+		0633CAE12914B4D400F6AEAD /* ReceivedSampleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0633CAE02914B4D400F6AEAD /* ReceivedSampleView.swift */; };
+		0633CAE42914B50900F6AEAD /* ReceivedSampleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0633CAE32914B50900F6AEAD /* ReceivedSampleViewController.swift */; };
+		0633CAE62914B65200F6AEAD /* SimpleTopView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0633CAE52914B65200F6AEAD /* SimpleTopView.swift */; };
+		0633CAE82914BAE200F6AEAD /* ReceivedSampleTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0633CAE72914BAE200F6AEAD /* ReceivedSampleTableViewCell.swift */; };
 		06A5579D291110EF005805B3 /* OrderViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 06A556E8291110EE005805B3 /* OrderViewController.m */; };
 		06A5579E291110EF005805B3 /* Common.m in Sources */ = {isa = PBXBuildFile; fileRef = 06A556E9291110EE005805B3 /* Common.m */; };
 		06A5579F291110EF005805B3 /* CommonSwift.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06A556EA291110EE005805B3 /* CommonSwift.swift */; };
@@ -713,6 +717,10 @@
 		0631DDC22910FCAD00565F45 /* LoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		0631DDC32910FCAD00565F45 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0631DDC42910FCAD00565F45 /* SceneDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
+		0633CAE02914B4D400F6AEAD /* ReceivedSampleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceivedSampleView.swift; sourceTree = "<group>"; };
+		0633CAE32914B50900F6AEAD /* ReceivedSampleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceivedSampleViewController.swift; sourceTree = "<group>"; };
+		0633CAE52914B65200F6AEAD /* SimpleTopView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimpleTopView.swift; sourceTree = "<group>"; };
+		0633CAE72914BAE200F6AEAD /* ReceivedSampleTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceivedSampleTableViewCell.swift; sourceTree = "<group>"; };
 		06A556E5291110EE005805B3 /* NSString+PDRegex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+PDRegex.h"; sourceTree = "<group>"; };
 		06A556E6291110EE005805B3 /* BWHorizontalTableViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BWHorizontalTableViewDelegate.h; sourceTree = "<group>"; };
 		06A556E7291110EE005805B3 /* ResetPwdViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ResetPwdViewController.h; sourceTree = "<group>"; };
@@ -951,6 +959,7 @@
 		0631DBCD2910FCAC00565F45 /* SampleRoadOnlySwift */ = {
 			isa = PBXGroup;
 			children = (
+				0633CAE22914B4DB00F6AEAD /* ReceivedSample */,
 				0631DCEA2910FCAC00565F45 /* SwiftyIamport */,
 				0631DCED2910FCAC00565F45 /* Common */,
 				06A556E4291110EE005805B3 /* ObjcFiles */,
@@ -1004,6 +1013,7 @@
 				0631DBDD2910FCAC00565F45 /* WebViewViewController.swift */,
 				0631DBDE2910FCAC00565F45 /* LoginTopViewViewController.swift */,
 				0631DBDF2910FCAC00565F45 /* TopView.swift */,
+				0633CAE52914B65200F6AEAD /* SimpleTopView.swift */,
 			);
 			path = CommonView;
 			sourceTree = "<group>";
@@ -1432,6 +1442,16 @@
 				0631DDC22910FCAD00565F45 /* LoginViewController.swift */,
 			);
 			path = ViewController;
+			sourceTree = "<group>";
+		};
+		0633CAE22914B4DB00F6AEAD /* ReceivedSample */ = {
+			isa = PBXGroup;
+			children = (
+				0633CAE02914B4D400F6AEAD /* ReceivedSampleView.swift */,
+				0633CAE32914B50900F6AEAD /* ReceivedSampleViewController.swift */,
+				0633CAE72914BAE200F6AEAD /* ReceivedSampleTableViewCell.swift */,
+			);
+			path = ReceivedSample;
 			sourceTree = "<group>";
 		};
 		06A556E4291110EE005805B3 /* ObjcFiles */ = {
@@ -2240,6 +2260,7 @@
 				06A557A9291110EF005805B3 /* CustomCell.swift in Sources */,
 				06A557E2291110EF005805B3 /* ResetPwdViewController.m in Sources */,
 				0631DDD02910FCAD00565F45 /* BottomView.swift in Sources */,
+				0633CAE82914BAE200F6AEAD /* ReceivedSampleTableViewCell.swift in Sources */,
 				0631DF422910FCAE00565F45 /* MainContentViewController.swift in Sources */,
 				06A557E9291110EF005805B3 /* EventDetailSViewController.swift in Sources */,
 				06A557C2291110EF005805B3 /* COMController.m in Sources */,
@@ -2264,6 +2285,7 @@
 				06A557EE291110EF005805B3 /* MyPageViewController.swift in Sources */,
 				0631DDCE2910FCAD00565F45 /* LoginBottomView.swift in Sources */,
 				0631DDC52910FCAD00565F45 /* SampleCollectionCell.swift in Sources */,
+				0633CAE12914B4D400F6AEAD /* ReceivedSampleView.swift in Sources */,
 				0631DF442910FCAE00565F45 /* LoginView.swift in Sources */,
 				0631DDD92910FCAD00565F45 /* JoinDetailSViewController.swift in Sources */,
 				06A557CE291110EF005805B3 /* PAWKPanGestureRecognizer.m in Sources */,
@@ -2318,6 +2340,7 @@
 				0631DDD72910FCAD00565F45 /* IAMPortPay.swift in Sources */,
 				06A557A3291110EF005805B3 /* RankViewController.swift in Sources */,
 				06A557D5291110EF005805B3 /* TYSnapshot.m in Sources */,
+				0633CAE62914B65200F6AEAD /* SimpleTopView.swift in Sources */,
 				0631DF3D2910FCAE00565F45 /* FindEmailViewController.swift in Sources */,
 				06A557E8291110EF005805B3 /* WriteReviewViewController.m in Sources */,
 				06A557FC291110EF005805B3 /* CartListSViewController.swift in Sources */,
@@ -2333,6 +2356,7 @@
 				06A557F4291110EF005805B3 /* SelectViewController.m in Sources */,
 				0631DDCA2910FCAD00565F45 /* GetSampleView.swift in Sources */,
 				06A557BB291110EF005805B3 /* HorizontalTableViewCell.m in Sources */,
+				0633CAE42914B50900F6AEAD /* ReceivedSampleViewController.swift in Sources */,
 				0631DDDE2910FCAD00565F45 /* JoinEmailViewController.swift in Sources */,
 				06A557FB291110EF005805B3 /* MyViewController.m in Sources */,
 				06A557C8291110EF005805B3 /* WKWebView+POST.m in Sources */,
@@ -2531,7 +2555,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 1.1.0;
 				DEVELOPMENT_TEAM = 478J8N3JFK;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = SampleRoadOnlySwift/Info.plist;
@@ -2544,14 +2568,17 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.notegg.sampleroad;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "SampleRoadOnlySwift/SampleRoadOnlySwift-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -2563,7 +2590,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 1.1.0;
 				DEVELOPMENT_TEAM = 478J8N3JFK;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = SampleRoadOnlySwift/Info.plist;
@@ -2576,13 +2603,16 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.notegg.sampleroad;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "SampleRoadOnlySwift/SampleRoadOnlySwift-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};

@@ -131,6 +131,7 @@ class FailCerificationEmailViewController: UIViewController, UITextFieldDelegate
     }
     func addSubView(){
         view.addSubview(contentView)
+        contentView.addSubview(backgroundImgView)
         contentView.addSubview(copyrightLbl)
         contentView.addSubview(bottomLabel)
         contentView.addSubview(submitBtn)
@@ -143,7 +144,6 @@ class FailCerificationEmailViewController: UIViewController, UITextFieldDelegate
         contentView.addSubview(firstTextField)
         contentView.addSubview(secondTextField)
         contentView.addSubview(thirdTextField)
-        contentView.addSubview(backgroundImgView)
         contentView.addSubview(titleLbl)
         contentView.addSubview(homeBtn)
         

@@ -55,7 +55,6 @@ class TextFieldView: UIView{
         line.snp.makeConstraints{
             $0.top.equalTo(textField.snp.bottom).offset(3)
             $0.left.equalToSuperview().offset(30)
-            $0.bottom.equalToSuperview()
             $0.size.equalTo(CGSize(width: UIScreen.main.bounds.width - 60, height: 2))
         }
 

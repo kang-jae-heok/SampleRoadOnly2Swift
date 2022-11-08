@@ -248,6 +248,7 @@ class DeliveryListSampleTableViewCell: UITableViewCell {
             $0.snp.makeConstraints{
                 $0.top.equalTo(firstCompanyLbl.snp.bottom).offset(5)
                 $0.centerX.equalToSuperview()
+                $0.width.equalTo(firstSampleInfoView)
             }
         }
         progressBarView.snp.makeConstraints{
@@ -317,7 +318,6 @@ class DeliveryListSampleTableViewCell: UITableViewCell {
             $0.bottom.equalToSuperview().offset(-12)
             $0.right.equalTo(exchangeBtn.snp.left).offset(-10)
             $0.size.equalTo(btnSize)
-            
         }
         
     }

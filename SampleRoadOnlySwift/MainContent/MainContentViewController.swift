@@ -31,7 +31,9 @@ class MainContentViewController: UIViewController {
         mainContentView.secondViewBtn.addTarget(self, action: #selector(touchArrowBtn(sender:)), for: .touchUpInside)
         mainContentView.thirdViewBtn.addTarget(self, action: #selector(touchArrowBtn(sender:)), for: .touchUpInside)
      //카트 전체 삭제
-        deleteAllCart()
+        print("커스터머 아이디")
+        print(UserDefaults.standard.string(forKey: "customer_id"))
+//        deleteAllCart()
     }
     //배너 이미지 가져오기
    
@@ -154,7 +156,6 @@ class MainContentViewController: UIViewController {
 //        //                     ,[[NSUserDefaults standardUserDefaults] valueForKey:@"customer_id"]];
 //        //    [COMController sendRequestWithMethod:@"DELETE" :url :nil :self :@selector(emptyCartCallBack:)];
         print("dddddd")
-        print(UserDefaults.standard.string(forKey: "customer_id")!)
         common.sendRequest(url: "https://api.clayful.io/v1/customers/\(UserDefaults.standard.string(forKey: "customer_id")!)/cart/items", method: "DELETE", params: [:], sender: "") { result in
             print("dddddd")
         }

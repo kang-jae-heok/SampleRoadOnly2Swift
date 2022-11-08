@@ -10,6 +10,7 @@ import UIKit
 class JoinEmailViewController: UIViewController {
     let joinEmailView = JoinEmailView()
     let common = CommonS()
+    let screenBounds = UIScreen.main.bounds
     //나중에 이메일 작업할때 필요한 소스
 //    override func viewWillAppear(_ animated: Bool) {
 //        super.viewWillAppear(animated)
@@ -92,7 +93,7 @@ class JoinEmailViewController: UIViewController {
             present(common.alert(title: "", message: "비밀번호를 형식에 맞게 작성해주세요"), animated: false)
         }else if joinEmailView.passTextField.textField.text != joinEmailView.checkPassTextField.textField.text{
             present(common.alert(title: "", message: "비밀번호가 맞지 않습니다"), animated: false)
-        }else if joinEmailView.phoneTextField.textField.text != "" {
+        }else if joinEmailView.phoneTextField.textField.text == "" {
             present(common.alert(title: "", message: "핸드폰 번호를 입력해주세요"), animated: false)
         }else{
             let vc = JoinDetailSViewController(dic: dic)

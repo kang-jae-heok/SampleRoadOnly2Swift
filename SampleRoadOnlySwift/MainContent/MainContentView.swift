@@ -11,7 +11,7 @@ class MainContentView: UIView {
     let screenBounds = UIScreen.main.bounds
     let margin = 17.0
     let common = CommonS()
-    lazy var sclView = UIView().then{
+    lazy var sclView = UIScrollView().then{
         $0.isHidden = false
         //        $0.contentSize = CGSize(width: screenBounds.width, height: screenBounds.height - screenBounds.width/4 - 90.0 - 38.0 - ((screenBounds.width/2.0 - margin)/6.0))
     }
@@ -317,19 +317,19 @@ class MainContentView: UIView {
             $0.top.equalTo(bestTitleLbl.snp.bottom).offset(22)
             $0.left.equalToSuperview().offset(margin)
             $0.right.equalToSuperview().offset(-margin)
-            $0.size.equalTo(CGSize(width: screenBounds.width - margin * 2, height: screenBounds.height/12))
+            $0.size.equalTo(CGSize(width: screenBounds.width - margin * 2, height: screenBounds.height/12 + 20.0))
         }
         secondView.snp.makeConstraints{
             $0.top.equalTo(firstView.snp.bottom).offset(6)
             $0.left.equalToSuperview().offset(margin)
             $0.right.equalToSuperview().offset(-margin)
-            $0.size.equalTo(CGSize(width: screenBounds.width - margin * 2, height: screenBounds.height/12))
+            $0.size.equalTo(CGSize(width: screenBounds.width - margin * 2, height: screenBounds.height/12 + 20.0))
         }
         thirdView.snp.makeConstraints{
             $0.top.equalTo(secondView.snp.bottom).offset(6)
             $0.left.equalToSuperview().offset(margin)
             $0.right.equalToSuperview().offset(-margin)
-            $0.size.equalTo(CGSize(width: screenBounds.width - margin * 2, height: screenBounds.height/12))
+            $0.size.equalTo(CGSize(width: screenBounds.width - margin * 2, height: screenBounds.height/12 + 20.0))
         }
         [firstCrownImgView,secondCrownImgView,thirdCrownImgView].forEach{
             $0.snp.makeConstraints{
@@ -408,7 +408,11 @@ class MainContentView: UIView {
             $0.edges.equalTo(secondView)
         }
         thirdViewBtn.snp.makeConstraints{
-            $0.edges.equalTo(thirdView)
+            $0.top.equalTo(secondView.snp.bottom).offset(6)
+            $0.left.equalToSuperview().offset(margin)
+            $0.right.equalToSuperview().offset(-margin)
+            $0.size.equalTo(CGSize(width: screenBounds.width - margin * 2, height: screenBounds.height/12))
+            $0.bottom.equalToSuperview().offset(-50)
         }
         
     }

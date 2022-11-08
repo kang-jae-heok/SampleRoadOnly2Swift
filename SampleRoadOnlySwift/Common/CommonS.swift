@@ -120,6 +120,8 @@ class CommonS{
         
         .responseJSON { [self] (response) in
 //            print(response.result)
+            print("sendURL -> " + url)
+            print(params)
             //여기서 가져온 데이터를 자유롭게 활용하세요.
 //            print(params)
 //            print(response)
@@ -285,8 +287,14 @@ class CommonS{
                 rootVc = MainContentViewController()
                 vc.navigationController?.pushViewController(rootVc, animated: true)
             }else{
-                rootVc = WebViewViewController()
-                vc.navigationController?.pushViewController(rootVc, animated: true)
+                if !UserDefaults.standard.bool(forKey: "PRDC_MODE"){
+                    rootVc = MainContentViewController()
+                    vc.navigationController?.pushViewController(rootVc, animated: true)
+                }else{
+                    rootVc = WebViewViewController()
+                    vc.navigationController?.pushViewController(rootVc, animated: true)
+                }
+              
             }
             print(rootVc)
         }

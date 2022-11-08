@@ -47,7 +47,6 @@ class DeliveryListView: UIView {
     //메인 컨텐츠
     let mainContentView = UIView()
     lazy var countLbl = UILabel().then{
-        $0.text = "총 3개"
         $0.textColor = common.pointColor()
         $0.font = common.setFont(font: "bold", size: 15)
         $0.asColor(targetStringList: ["총","개"], color: common.setColor(hex: "#b1b1b1"))
@@ -84,7 +83,6 @@ class DeliveryListView: UIView {
         [countLbl,deliveryListTableView].forEach{
             mainContentView.addSubview($0)
         }
-        
     }
     func setLayout(){
         //탑 뷰
@@ -133,14 +131,15 @@ class DeliveryListView: UIView {
     func getDeliveryList(){
         let customerId = UserDefaults.standard.string(forKey: "customer_id") ?? ""
         print(customerId)
-        common.sendRequest(url: "https://api.clayful.io/v1/orders?status=paid,refunded,partially-refunded&customer=3SBDTVJ3ZYWS&fields=_id,items,total.price.sale,fulfillments", method: "get", params: [:], sender: "") { [self] resultJson in
+        common.sendRequest(url: "https://api.clayful.io/v1/orders?status=paid,refunded,partially-refunded&customer=\(customerId)&fields=_id,items,total.price.sale,fulfillments", method: "get", params: [:], sender: "") { [self] resultJson in
             self.infoProductListDicArr = resultJson as? [[String:Any]] ?? []
         }
-        common.sendRequest(url: "https://api.clayful.io/v1/orders?status=paid,refunded,partially-refunded&fields=_id,items,total.price.sale,fulfillments&customer=3SBDTVJ3ZYWS", method: "get", params: [:], sender: "") { [self] resultJson in
+        common.sendRequest(url: "https://api.clayful.io/v1/orders?status=paid,refunded,partially-refunded&fields=_id,items,total.price.sale,fulfillments&customer=\(customerId)", method: "get", params: [:], sender: "") { [self] resultJson in
             self.infoSampleListDicArr = resultJson as? [[String:Any]] ?? []
             deliveryListTableView.delegate = self
             deliveryListTableView.dataSource = self
             deliveryListTableView.reloadData()
+            countLbl.text = "총 \(infoSampleListDicArr.count)개"
         }
     }
     @objc func touchSampleBtn(){
@@ -149,6 +148,7 @@ class DeliveryListView: UIView {
             sampleBtn.setTitleColor(.white, for: .normal)
             productBtn.backgroundColor = .white
             productBtn.setTitleColor(common.pointColor(), for: .normal)
+            countLbl.text = "총 \(infoSampleListDicArr.count)개"
             deliveryListTableView.register(DeliveryListSampleTableViewCell.self, forCellReuseIdentifier: DeliveryListSampleTableViewCell.cellId)
             deliveryListTableView.reloadData()
         }
@@ -159,6 +159,7 @@ class DeliveryListView: UIView {
             productBtn.setTitleColor(.white, for: .normal)
             sampleBtn.backgroundColor = .white
             sampleBtn.setTitleColor(common.pointColor(), for: .normal)
+            countLbl.text = "총 \(infoProductListDicArr.count)개"
             deliveryListTableView.register(DeliveryListTableViewCell.self, forCellReuseIdentifier: DeliveryListTableViewCell.cellId)
             deliveryListTableView.reloadData()
         }
@@ -183,13 +184,12 @@ extension DeliveryListView: UITableViewDelegate, UITableViewDataSource {
        
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return screenBounds.height/3
+        return screenBounds.height/3 + 20
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if sampleBtn.backgroundColor == common.pointColor(){
             let sampleCell = DeliveryListSampleTableViewCell(style: DeliveryListSampleTableViewCell.CellStyle.default, reuseIdentifier: DeliveryListSampleTableViewCell.cellId)
-            
             if infoSampleListDicArr.count != 0 {
                 self.countLbl.text = "총 \(infoSampleListDicArr.count)개"
                 let infoDeliveryListDic = infoSampleListDicArr[indexPath.row]

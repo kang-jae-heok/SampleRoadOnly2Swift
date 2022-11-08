@@ -68,7 +68,7 @@ class LoginViewController: UIViewController {
             if ((resultDic["token"] as? String) != nil) {
                 let customerId = resultDic["customer"] as! String
                 getCustomerInfo(customerId: customerId)
-                common.checkTypeFormDone(customerId: customerId, vc: self)
+         
             }else {
                 if resultDic["errorCode"] as? String == "not-existing-customer" {
                     present(common.alert(title: "", message: "존재하지 않는 아이디입니다"), animated: true)
@@ -80,6 +80,7 @@ class LoginViewController: UIViewController {
         func getCustomerInfo(customerId: String){
             common.sendRequest(url: "https://api.clayful.io/v1/customers/\(customerId)", method: "get", params: [:], sender: "") { resultJson in
                 print("결과")
+                print(resultJson)
                 let userDic = resultJson as! [String:Any]
                 let nameDic = userDic["name"] as! [String:Any]
                 let birthDic = userDic["birthdate"] as! [String:Any]
@@ -97,6 +98,8 @@ class LoginViewController: UIViewController {
                 UserDefaults.standard.set(nameDic["full"] as! String, forKey: "user_name")
                 UserDefaults.standard.set(convertBirth, forKey: "user_birth")
                 UserDefaults.standard.set(String(describing: userDic["gender"]), forKey: "user_gender")
+                print("커스터머 로그인")
+                self.common.checkTypeFormDone(customerId: customerId, vc: self)
             }
         }
     }

@@ -22,6 +22,8 @@ class GetSampleView: UIView{
     let margin = 17.0
     lazy var ratio = screenBounds.width/414.0
     let common = CommonS()
+    let topView = UIView()
+    let scrlView = UIScrollView()
     lazy var tit = UILabel().then{
         $0.text = "샘플받기"
         $0.textColor = common.pointColor()
@@ -166,10 +168,12 @@ class GetSampleView: UIView{
     var typeString = String()
     var selectedDicArr = [[String: Any]]()
     var detailDic = [String:Any]()
+  
     override init(frame: CGRect) {
         super.init(frame: .zero)
         backgroundColor = .white
-        
+        print("se 화면 넓이")
+        print(screenBounds.width)
         sampleCollectionView.showsHorizontalScrollIndicator = false
         sampleCollectionView.register(SampleCollectionCell.self, forCellWithReuseIdentifier: "cell")
         getSample(type: "클렌징")
@@ -182,8 +186,14 @@ class GetSampleView: UIView{
         fatalError("init fail")
     }
     func addSubviewFunc(){
-        [tit,closeBtn,typeTit,subTit,bottomBtnView,sampleCollectionView,selectedStackView,alphaView].forEach{
+        [topView,scrlView,bottomBtnView,alphaView].forEach{
             self.addSubview($0)
+        }
+        [selectedStackView,typeTit,subTit,sampleCollectionView].forEach{
+            scrlView.addSubview($0)
+        }
+        [tit,closeBtn].forEach{
+            topView.addSubview($0)
         }
         alphaView.addSubview(alphaHiddenBtn)
         alphaView.addSubview(selectedSampleView)
@@ -193,6 +203,10 @@ class GetSampleView: UIView{
         }
     }
     func setLayout(){
+        topView.snp.makeConstraints{
+            $0.top.left.right.equalToSuperview()
+            $0.bottom.equalTo(super.snp.top).offset(100)
+        }
         tit.snp.makeConstraints{
             $0.centerX.equalToSuperview()
             $0.centerY.equalTo(closeBtn)
@@ -202,31 +216,38 @@ class GetSampleView: UIView{
             $0.right.equalToSuperview().offset(-margin)
             $0.size.equalTo(CGSize(width: 50, height: 50))
         }
-        selectedStackView.snp.makeConstraints{
-            $0.top.equalTo(tit.snp.bottom).offset(50)
+        scrlView.backgroundColor = .white
+        scrlView.snp.makeConstraints{
+            $0.top.equalTo(topView.snp.bottom)
             $0.left.right.equalToSuperview()
-            $0.bottom.equalTo(tit.snp.bottom).offset(screenBounds.width/2)
+            $0.bottom.equalTo(bottomBtnView.snp.top)
+        }
+        selectedStackView.snp.makeConstraints {
+            $0.top.left.width.equalToSuperview()
+            $0.size.height.equalTo(screenBounds.width/2 - 50)
         }
         
         typeTit.snp.makeConstraints{
             $0.top.equalTo(selectedStackView.snp.bottom)
             $0.left.right.equalToSuperview()
+            $0.size.width.equalTo(screenBounds.width)
             $0.bottom.equalTo(selectedStackView.snp.bottom).offset(70)
         }
         subTit.snp.makeConstraints{
             $0.top.equalTo(typeTit.snp.bottom).offset(10)
             $0.left.equalToSuperview().offset(margin)
-            $0.right.equalToSuperview().offset(-margin)
+            $0.size.width.equalTo(screenBounds.width - margin * 2)
             $0.bottom.equalTo(typeTit.snp.bottom).offset(10 + 70)
         }
         sampleCollectionView.snp.makeConstraints{
             $0.top.equalTo(subTit.snp.bottom).offset(10)
-            $0.bottom.equalTo(bottomBtnView.snp.top).offset(-10)
-            $0.left.right.equalToSuperview()
+            $0.left.equalToSuperview()
+            $0.size.width.equalTo(screenBounds.width)
+            $0.bottom.equalToSuperview().offset(-50)
         }
         bottomBtnView.snp.makeConstraints{
             $0.bottom.left.right.equalToSuperview()
-            $0.top.equalTo(self.snp.bottom).offset(-90)
+            $0.top.equalTo(super.snp.bottom).offset(-90)
         }
         nextBtn.snp.makeConstraints{
             $0.left.equalTo(super.snp.centerX).offset(10)
@@ -341,12 +362,20 @@ class GetSampleView: UIView{
 //        [tit,typeTit,subTit,bottomBtnView,sampleCollectionView,selectedStackView].forEach{
 //            $0.alpha = 0.3
 //        }
-      
-        let dataSelectedSampleView = SelectedSampleView(frame: .zero, arrDic: selectedDicArr, vc: parentViewController ?? GetSampleViewController())
-        selectedSampleView.addSubview(dataSelectedSampleView)
-        dataSelectedSampleView.snp.makeConstraints{
-            $0.edges.equalToSuperview()
+        if !UserDefaults.standard.bool(forKey: "PRDC_MODE"){
+            var param = [String:Any]()
+            param.updateValue(selectedDicArr, forKey: "sample_list")
+            let convertDic = NSMutableDictionary(dictionary: param)
+            let rootVc = OrderViewController(dic: convertDic)
+            parentViewController?.navigationController?.pushViewController(rootVc, animated: true)
+        }else{
+            let dataSelectedSampleView = SelectedSampleView(frame: .zero, arrDic: selectedDicArr, vc: parentViewController ?? GetSampleViewController())
+            selectedSampleView.addSubview(dataSelectedSampleView)
+            dataSelectedSampleView.snp.makeConstraints{
+                $0.edges.equalToSuperview()
+            }
         }
+       
     }
     @objc func touchAlphaHiddenBtn(){
         alphaView.isHidden = true

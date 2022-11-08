@@ -17,6 +17,11 @@ class GetSampleViewController: UIViewController {
         view = getSampleView
         
     }
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        getSampleView.alphaView.isHidden = true
+        getSampleView.alphaHiddenBtn.isHidden = true
+    }
     override func viewDidLoad() {
         super.viewDidLoad()
         getSampleView.nextBtn.addTarget(self, action: #selector(touchNextBtn), for: .touchUpInside)

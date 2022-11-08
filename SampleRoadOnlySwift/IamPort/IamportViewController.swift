@@ -86,7 +86,7 @@ import WebKit
             .setWKWebView(self.wkWebView)           // 현재 Controller에 있는 WebView 지정
             .setRedirectUrl(nil)
         
-        if (UserDefaults.standard.bool(forKey: "BILLING_TEST")) {
+        if !(UserDefaults.standard.bool(forKey: "BILLING_TEST")) {
             IAMPortPay.sharedInstance.setPGType(.html5_inicis)
         }else {
             IAMPortPay.sharedInstance.setPGType(.html5_inicis_prdc)

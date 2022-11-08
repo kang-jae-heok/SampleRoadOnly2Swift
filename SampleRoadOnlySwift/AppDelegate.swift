@@ -61,6 +61,11 @@ import iamport_ios
         // If any sessions were discarded while the application was not running, this will be called shortly after application:didFinishLaunchingWithOptions.
         // Use this method to release any resources that were specific to the discarded scenes, as they will not return.
     }
+    func application(_ application: UIApplication, supportedInterfaceOrientationsFor window: UIWindow?) -> UIInterfaceOrientationMask {
+           
+           // 세로방향 고정
+           return UIInterfaceOrientationMask.portrait
+       }
     
 //    @objc func returnNavi() -> UINavigationController {
 //        return self.navController
@@ -92,6 +97,10 @@ extension UIView {
         }
         return nil
     }
+    var margin2: CGFloat{
+        return 17.0
+    }
+
 }
 extension UIViewController {
     var parentViewController: UIViewController? {
@@ -116,6 +125,11 @@ extension UIDevice {
             // Fallback on earlier versions
             return false
         }
+    }
+}
+extension UserDefaults {
+    static func contains(_ key: String) -> Bool {
+        return UserDefaults.standard.object(forKey: key) != nil
     }
 }
 
