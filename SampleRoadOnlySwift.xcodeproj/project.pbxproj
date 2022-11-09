@@ -305,6 +305,8 @@
 		0633CAE42914B50900F6AEAD /* ReceivedSampleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0633CAE32914B50900F6AEAD /* ReceivedSampleViewController.swift */; };
 		0633CAE62914B65200F6AEAD /* SimpleTopView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0633CAE52914B65200F6AEAD /* SimpleTopView.swift */; };
 		0633CAE82914BAE200F6AEAD /* ReceivedSampleTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0633CAE72914BAE200F6AEAD /* ReceivedSampleTableViewCell.swift */; };
+		069FA392291A206E00320C14 /* OrderCompleteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 069FA391291A206E00320C14 /* OrderCompleteView.swift */; };
+		069FA394291A208500320C14 /* OrderCompleteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 069FA393291A208500320C14 /* OrderCompleteViewController.swift */; };
 		06A5579D291110EF005805B3 /* OrderViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 06A556E8291110EE005805B3 /* OrderViewController.m */; };
 		06A5579E291110EF005805B3 /* Common.m in Sources */ = {isa = PBXBuildFile; fileRef = 06A556E9291110EE005805B3 /* Common.m */; };
 		06A5579F291110EF005805B3 /* CommonSwift.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06A556EA291110EE005805B3 /* CommonSwift.swift */; };
@@ -721,6 +723,8 @@
 		0633CAE32914B50900F6AEAD /* ReceivedSampleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceivedSampleViewController.swift; sourceTree = "<group>"; };
 		0633CAE52914B65200F6AEAD /* SimpleTopView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimpleTopView.swift; sourceTree = "<group>"; };
 		0633CAE72914BAE200F6AEAD /* ReceivedSampleTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceivedSampleTableViewCell.swift; sourceTree = "<group>"; };
+		069FA391291A206E00320C14 /* OrderCompleteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderCompleteView.swift; sourceTree = "<group>"; };
+		069FA393291A208500320C14 /* OrderCompleteViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderCompleteViewController.swift; sourceTree = "<group>"; };
 		06A556E5291110EE005805B3 /* NSString+PDRegex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+PDRegex.h"; sourceTree = "<group>"; };
 		06A556E6291110EE005805B3 /* BWHorizontalTableViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BWHorizontalTableViewDelegate.h; sourceTree = "<group>"; };
 		06A556E7291110EE005805B3 /* ResetPwdViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ResetPwdViewController.h; sourceTree = "<group>"; };
@@ -975,7 +979,6 @@
 				0631DDB72910FCAD00565F45 /* MainContent */,
 				0631DDBC2910FCAD00565F45 /* Login */,
 				0631DBD52910FCAC00565F45 /* ViewController.swift */,
-				0631DCE32910FCAC00565F45 /* KakaoViewController.swift */,
 				0631DCE42910FCAC00565F45 /* Assets.xcassets */,
 				0631DCE52910FCAC00565F45 /* SplashViewController.swift */,
 				0631DCE62910FCAC00565F45 /* LaunchScreen.storyboard */,
@@ -984,6 +987,8 @@
 				0631DDB42910FCAD00565F45 /* AppDelegate.swift */,
 				0631DDC42910FCAD00565F45 /* SceneDelegate.swift */,
 				0631DDC32910FCAD00565F45 /* Info.plist */,
+				069FA391291A206E00320C14 /* OrderCompleteView.swift */,
+				069FA393291A208500320C14 /* OrderCompleteViewController.swift */,
 			);
 			path = SampleRoadOnlySwift;
 			sourceTree = "<group>";
@@ -1420,6 +1425,7 @@
 		0631DDBC2910FCAD00565F45 /* Login */ = {
 			isa = PBXGroup;
 			children = (
+				0631DCE32910FCAC00565F45 /* KakaoViewController.swift */,
 				0631DDBD2910FCAD00565F45 /* Scence */,
 				0631DDBF2910FCAD00565F45 /* MainViewS.swift */,
 				0631DDC02910FCAD00565F45 /* MainViewSController.swift */,
@@ -2343,6 +2349,7 @@
 				0633CAE62914B65200F6AEAD /* SimpleTopView.swift in Sources */,
 				0631DF3D2910FCAE00565F45 /* FindEmailViewController.swift in Sources */,
 				06A557E8291110EF005805B3 /* WriteReviewViewController.m in Sources */,
+				069FA394291A208500320C14 /* OrderCompleteViewController.swift in Sources */,
 				06A557FC291110EF005805B3 /* CartListSViewController.swift in Sources */,
 				06A557CD291110EF005805B3 /* PAWebNavigationController.m in Sources */,
 				0631DDD32910FCAD00565F45 /* LoginTopViewViewController.swift in Sources */,
@@ -2353,6 +2360,7 @@
 				06A557C9291110EF005805B3 /* registerURLSchemes.m in Sources */,
 				06A557C5291110EF005805B3 /* PAWebViewMenu.m in Sources */,
 				06A557FA291110EF005805B3 /* DeliveryHistoryViewController.swift in Sources */,
+				069FA392291A206E00320C14 /* OrderCompleteView.swift in Sources */,
 				06A557F4291110EF005805B3 /* SelectViewController.m in Sources */,
 				0631DDCA2910FCAD00565F45 /* GetSampleView.swift in Sources */,
 				06A557BB291110EF005805B3 /* HorizontalTableViewCell.m in Sources */,
@@ -2555,10 +2563,11 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1.1.0;
+				CURRENT_PROJECT_VERSION = 1.1.1;
 				DEVELOPMENT_TEAM = 478J8N3JFK;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = SampleRoadOnlySwift/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "샘플로드";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -2590,10 +2599,11 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1.1.0;
+				CURRENT_PROJECT_VERSION = 1.1.1;
 				DEVELOPMENT_TEAM = 478J8N3JFK;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = SampleRoadOnlySwift/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "샘플로드";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;

@@ -68,7 +68,7 @@ class JoinDetailView: UIView{
         $0.font = common.setFont(font: "semiBold", size: 12)
 //        $0.isHidden = true
     }
-    let birthDatTextField = TextFieldView(frame: .zero, title: "생년월일(YY,MM,DD)", placeholder: "나이가 어떻게 되시죠? 고객님을 좀 더 알고 싶네요:)").then{
+    let birthDatTextField = TextFieldView(frame: .zero, title: "생년월일(YYYY,MM,DD)", placeholder: "나이가 어떻게 되시죠? 고객님을 좀 더 알고 싶네요:)").then{
         $0.textField.keyboardType = .numberPad
     }
     let nickNameTextField = TextFieldView(frame: .zero, title: "닉네임", placeholder: "나만의 매력적인 닉네임을 정해주세요")
@@ -217,7 +217,7 @@ class JoinDetailView: UIView{
 }
 extension JoinDetailView:UITextFieldDelegate{
     func textFieldDidChangeSelection(_ textField: UITextField) {
-        common.checkMaxLength(textField: birthDatTextField.textField, maxLength: 6)
+        common.checkMaxLength(textField: birthDatTextField.textField, maxLength: 8)
         common.checkMaxLength(textField: nickNameTextField.textField, maxLength: 12)
     }
 }

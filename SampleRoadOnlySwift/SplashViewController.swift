@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Alamofire
 
 class SplashViewController: UIViewController {
     let common = CommonS()
@@ -28,7 +29,7 @@ class SplashViewController: UIViewController {
         $0.clipsToBounds = true
     }
     lazy var sampleLbl = CountScrollLabel()
-
+    
     lazy var copyRightLbl = UILabel().then{
         $0.text = "ⓒTov&Banah"
         $0.font = common.setFont(font: "light", size: 10)
@@ -40,14 +41,14 @@ class SplashViewController: UIViewController {
         super.viewWillAppear(animated)
         getSampleCount()
     }
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
         addSubviewFunc()
         setLayout()
         loadNextVC()
-
+        
     }
     func addSubviewFunc(){
         [midView,titLbl,sampleLbl,copyRightLbl].forEach{
@@ -62,11 +63,11 @@ class SplashViewController: UIViewController {
             $0.bottom.equalToSuperview().offset(-20)
             $0.centerX.equalToSuperview()
         }
-//        sampleLbl.snp.makeConstraints{
-//            $0.bottom.equalTo(copyRightLbl.snp.top).offset(-30)
-//            $0.centerX.equalToSuperview()
-//            $0.size.equalTo(CGSize(width: 200.0, height: 60.0))
-//        }
+        //        sampleLbl.snp.makeConstraints{
+        //            $0.bottom.equalTo(copyRightLbl.snp.top).offset(-30)
+        //            $0.centerX.equalToSuperview()
+        //            $0.size.equalTo(CGSize(width: 200.0, height: 60.0))
+        //        }
         let countLblSize = CGSize(width: 200.0, height: 60.0)
         sampleLbl.frame  = CGRect(x: screenBounds.width/2 - countLblSize.width/2, y: screenBounds.height - (countLblSize.height + 60.0), width: countLblSize.width, height: countLblSize.height)
         titLbl.snp.makeConstraints{
@@ -96,27 +97,70 @@ class SplashViewController: UIViewController {
         DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
             if UserDefaults.contains("auto_login") {
                 if UserDefaults.standard.bool(forKey: "auto_login") {
-                    self.common.checkTypeFormDone2(customerId: UserDefaults.standard.string(forKey: "customer_id") ?? "") { [self] result in
-                        if result {
-                            self.navigationController?.pushViewController(MainContentViewController(), animated: true)
-                        }else{
-                            var vc = UIViewController()
-                            if !UserDefaults.standard.bool(forKey: "PRDC_MODE"){
-                                vc = MainContentViewController()
-                              
+                    if UserDefaults.contains("naver_token") {
+                        if Date().dateCompare(fromDate: UserDefaults.standard.object(forKey: "naver_expireAt") as! Date) != "Future" {
+                           let vc = MainViewSController()
+                            self.getRefreshToken()
+                        }else {
+                            self.loginClayful(platform: "naver")
+                        }
+                    }else if UserDefaults.contains("kakao_token") {
+                        self.loginClayful(platform: "kakao")
+                    }else {
+                        self.common.checkTypeFormDone2(customerId: UserDefaults.standard.string(forKey: "customer_id") ?? "") { [self] result in
+                            if result {
+                                self.navigationController?.pushViewController(MainContentViewController(), animated: true)
                             }else{
-                                vc = WebViewViewController()
+                                var vc = UIViewController()
+                                if !UserDefaults.standard.bool(forKey: "PRDC_MODE"){
+                                    vc = MainContentViewController()
+                                    
+                                }else{
+                                    vc = WebViewViewController()
+                                }
+                                self.navigationController?.pushViewController(vc, animated: true)
                             }
-                            self.navigationController?.pushViewController(vc, animated: true)
                         }
                     }
                 }else{
                     self.navigationController?.pushViewController(MainViewSController(), animated: true)
-    //                self.navigationController?.pushViewController(MainContentViewController(), animated: true)
                 }
             }else{
                 self.navigationController?.pushViewController(MainViewSController(), animated: true)
             }
         }
     }
+    func loginClayful(platform: String){
+        var token = String()
+        if platform == "kakao" {
+            token = UserDefaults.standard.string(forKey: "kakao_token") ?? ""
+        }else if platform == "naver"{
+            token = UserDefaults.standard.string(forKey: "naver_token") ?? ""
+        }
+        let params = ["token": token]
+        common.sendRequest(url: "https://api.clayful.io/v1/customers/auth/\(platform)" , method: "POST", params: params, sender: ""){ resultJson in
+            let resultJson = resultJson as! [String:Any]
+            let customerId = resultJson["customer"] as! String
+            self.common.getCustomerInfo(customerId: customerId,vc: self)
+        }
+    }
+    func getRefreshToken(){
+        let urlStr = "https://nid.naver.com/oauth2.0/token?grant_type=refresh_token&client_id=YhdqBjtCMkKxxip6Egxy&client_secret=nMdSqYG_gq&refresh_token=\(UserDefaults.standard.string(forKey: "naver_refreshToken")!)"
+        print(urlStr)
+        let url = URL(string: urlStr)!
+        let req = AF.request(url, method: .get, parameters: nil, encoding: JSONEncoding.default, headers: [])
+        
+        req.responseJSON { [self] response in
+            guard let result = response.value as? [String: Any] else { return }
+            guard let access_token = result["access_token"] as? String else { return }
+            let expireAt = Calendar.current.date(byAdding: .hour, value: 1, to: Date())
+            UserDefaults.standard.set(access_token,forKey: "naver_token")
+            UserDefaults.standard.set(expireAt,forKey: "naver_expireAt")
+            self.loginClayful(platform: "naver")
+        }
+    }
+    func moveVc(vc: UIViewController) {
+        self.navigationController!.pushViewController(vc, animated: true)
+    }
+  
 }

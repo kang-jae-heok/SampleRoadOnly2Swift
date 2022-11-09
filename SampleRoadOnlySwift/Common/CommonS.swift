@@ -175,7 +175,20 @@ class CommonS{
     func stringToDate2(string: String) -> Date {
         var returnDate = Date()
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MMdd"
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+        dateFormatter.timeZone = TimeZone(identifier: "UTC")
+        if let date = dateFormatter.date(from: string) {
+            let date2 = Calendar.current.date(byAdding: .hour, value: 9, to: Date())
+            print(String(describing: date))
+            print(String(describing: date2))
+            returnDate = date
+        }
+    return returnDate
+    }
+    func stringToDate3(string: String) -> Date {
+        var returnDate = Date()
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyyMMdd"
         dateFormatter.timeZone = TimeZone(identifier: "UTC")
         if let date = dateFormatter.date(from: string) {
             let date2 = Calendar.current.date(byAdding: .hour, value: 9, to: Date())
@@ -285,7 +298,7 @@ class CommonS{
             var rootVc = UIViewController()
             if errCode == "1"{
                 rootVc = MainContentViewController()
-                vc.navigationController?.pushViewController(rootVc, animated: true)
+                vc.navigationController!.pushViewController(rootVc, animated: true)
             }else{
                 if !UserDefaults.standard.bool(forKey: "PRDC_MODE"){
                     rootVc = MainContentViewController()
@@ -294,11 +307,11 @@ class CommonS{
                     rootVc = WebViewViewController()
                     vc.navigationController?.pushViewController(rootVc, animated: true)
                 }
-              
             }
             print(rootVc)
         }
     }
+    
     func checkTypeFormDone2(customerId: String,completion: @escaping(Bool) -> Void){
         let params = ["customer_id":customerId]
         self.sendRequest(url: "http://110.165.17.124/sampleroad/db/sr_survey_check.php", method: "post", params: [:], sender: "") { resultJson in
@@ -311,6 +324,37 @@ class CommonS{
                 completion(false)
             }
             print(rootVc)
+        }
+    }
+    func numberFormatter(number: Int) -> String {
+        let numberFormatter = NumberFormatter()
+        numberFormatter.numberStyle = .decimal
+        
+        return numberFormatter.string(from: NSNumber(value: number))!
+    }
+    func getCustomerInfo(customerId: String, vc: UIViewController){
+        self.sendRequest(url: "https://api.clayful.io/v1/customers/\(customerId)", method: "get", params: [:], sender: "") { resultJson in
+            print("결과")
+            print(resultJson)
+            let userDic = resultJson as! [String:Any]
+            let nameDic = userDic["name"] as! [String:Any]
+            let birthDic = userDic["birthdate"] as! [String:Any]
+            let rawBirth =  birthDic["raw"] as! String
+            let convertBirth = rawBirth.prefix(10)
+            print(userDic["email"]  as! String)
+            print(userDic["mobile"]  as! String)
+            print(nameDic["full"] as! String)
+            print(convertBirth)
+            print(String(describing: userDic["gender"]!))
+            UserDefaults.standard.set(true, forKey: "auto_login")
+            UserDefaults.standard.set(customerId, forKey: "customer_id")
+            UserDefaults.standard.set(userDic["email"] as! String, forKey: "user_email")
+            UserDefaults.standard.set(userDic["mobile"] as! String, forKey: "user_mobile")
+            UserDefaults.standard.set(nameDic["full"] as! String, forKey: "user_name")
+            UserDefaults.standard.set(convertBirth, forKey: "user_birth")
+            UserDefaults.standard.set(String(describing: userDic["gender"]), forKey: "user_gender")
+            print("커스터머 로그인")
+            self.checkTypeFormDone(customerId: customerId, vc: vc)
         }
     }
     

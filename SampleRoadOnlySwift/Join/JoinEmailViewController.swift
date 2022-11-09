@@ -47,6 +47,8 @@ class JoinEmailViewController: UIViewController {
             guard let impId = UserDefaults.standard.value(forKey: "impId") else { return }
             UserDefaults.standard.set(nil, forKey: "impId")
             UserDefaults.standard.synchronize()
+            print("impId 타입")
+            print(impId)
             let viewController = CertificationViewController(impUid: impId as! String)
             navigationController?.pushViewController(viewController, animated: false)
         }

@@ -77,32 +77,40 @@ class LoginViewController: UIViewController {
                 }
             }
         }
-        func getCustomerInfo(customerId: String){
-            common.sendRequest(url: "https://api.clayful.io/v1/customers/\(customerId)", method: "get", params: [:], sender: "") { resultJson in
-                print("결과")
-                print(resultJson)
-                let userDic = resultJson as! [String:Any]
-                let nameDic = userDic["name"] as! [String:Any]
-                let birthDic = userDic["birthdate"] as! [String:Any]
-                let rawBirth =  birthDic["raw"] as! String
-                let convertBirth = rawBirth.prefix(10)
-                print(userDic["email"]  as! String)
-                print(userDic["mobile"]  as! String)
-                print(nameDic["full"] as! String)
-                print(convertBirth)
-                print(String(describing: userDic["gender"]!))
-                UserDefaults.standard.set(self.loginView.checkCheckBtn, forKey: "auto_login")
-                UserDefaults.standard.set(customerId, forKey: "customer_id")
-                UserDefaults.standard.set(userDic["email"] as! String, forKey: "user_email")
-                UserDefaults.standard.set(userDic["mobile"] as! String, forKey: "user_mobile")
-                UserDefaults.standard.set(nameDic["full"] as! String, forKey: "user_name")
-                UserDefaults.standard.set(convertBirth, forKey: "user_birth")
-                UserDefaults.standard.set(String(describing: userDic["gender"]), forKey: "user_gender")
-                print("커스터머 로그인")
+    }
+    func getCustomerInfo(customerId: String){
+        common.sendRequest(url: "https://api.clayful.io/v1/customers/\(customerId)", method: "get", params: [:], sender: "") { resultJson in
+            print("결과")
+            print(resultJson)
+            let userDic = resultJson as! [String:Any]
+            let nameDic = userDic["name"] as! [String:Any]
+            let birthDic = userDic["birthdate"] as! [String:Any]
+            let rawBirth =  birthDic["raw"] as! String
+            let convertBirth = rawBirth.prefix(10)
+          
+            let checkVerified = userDic["verified"] as! Bool
+            print(checkVerified)
+            print(userDic["email"]  as! String)
+            print(userDic["mobile"]  as! String)
+            print(nameDic["full"] as! String)
+            print(String(describing: userDic["gender"]!))
+            UserDefaults.standard.set(self.loginView.checkCheckBtn, forKey: "auto_login")
+            UserDefaults.standard.set(customerId, forKey: "customer_id")
+            UserDefaults.standard.set(userDic["email"] as! String, forKey: "user_email")
+            UserDefaults.standard.set(userDic["mobile"] as! String, forKey: "user_mobile")
+            UserDefaults.standard.set(nameDic["full"] as! String, forKey: "user_name")
+            UserDefaults.standard.set(convertBirth, forKey: "user_birth")
+            UserDefaults.standard.set(String(describing: userDic["gender"]), forKey: "user_gender")
+            print("커스터머 로그인")
+            if checkVerified {
                 self.common.checkTypeFormDone(customerId: customerId, vc: self)
+            }else {
+                self.navigationController?.pushViewController(CertificationViewController(impUid: UserDefaults.standard.string(forKey: "impId") ?? ""), animated: true)
             }
         }
     }
-
+    func checkVerifiedEmail(){
+        
+    }
 
 }

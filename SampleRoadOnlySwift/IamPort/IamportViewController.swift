@@ -170,8 +170,8 @@ extension IamportViewController: WKNavigationDelegate {
             print("결제성공")
             // imp_uid= 뒤로뽑기 -> 2차개발 새로운 뷰 띄우기(내역같은거) -> customerAlert
             UserDefaults.standard.set("success", forKey: "pay_callback")
-            Common.customAlert1("주문완료", "주문이 완료되었습니다.\nMy - 주문/배송 메뉴에서 주문내역을 확인가능합니다.")
-            Common.goMain()
+            
+            self.navigationController?.pushViewController(OrderCompleteViewController(initDic: infoDic), animated: true)
         }
         
         if (webUrl.contains(fUrl)) {

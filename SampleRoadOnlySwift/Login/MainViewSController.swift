@@ -52,16 +52,15 @@ class MainViewSController: UIViewController {
     }
     @objc func touchKakaoBtn(){
         common.kakaoLogin(vc: self)
-        //네이버 로그아웃
-        loginInstance?.requestDeleteToken()
+
     }
 }
 extension MainViewSController: NaverThirdPartyLoginConnectionDelegate {
     func oauth20ConnectionDidFinishRequestACTokenWithAuthCode() {
         print("Success login")
-        guard let token = loginInstance?.accessToken! else { return  }
+        guard let token = loginInstance?.accessToken! else { return }
+   
         print("여기")
-        print(token)
         getInfo(token:token)
     }
     
@@ -80,18 +79,17 @@ extension MainViewSController: NaverThirdPartyLoginConnectionDelegate {
     }
     func getInfo(token:String) {
         guard let isValidAccessToken = loginInstance?.isValidAccessTokenExpireTimeNow() else { return }
-        
         if !isValidAccessToken {
             return
         }
-        
         guard let tokenType = loginInstance?.tokenType else { return }
-        guard let accessToken = loginInstance?.accessToken else { return }
+        guard let refreshToken = loginInstance?.refreshToken! else { return }
+        guard let expireAt = loginInstance?.accessTokenExpireDate! else { return }
         
         let urlStr = "https://openapi.naver.com/v1/nid/me"
         let url = URL(string: urlStr)!
         
-        let authorization = "\(tokenType) \(accessToken)"
+        let authorization = "\(tokenType) \(token)"
         
         let req = AF.request(url, method: .get, parameters: nil, encoding: JSONEncoding.default, headers: ["Authorization": authorization])
         
@@ -113,29 +111,37 @@ extension MainViewSController: NaverThirdPartyLoginConnectionDelegate {
             guard let birthday = object["birthday"] as? String else {return}
             let stringDate = birthyear + "-" + birthday
             print("생일" + stringDate)
+            
             let birthdate = common.stringToDate2(string: stringDate)
+            print("생일" + stringDate)
             print(birthdate)
             let name = ["full":fullName]
             let jsonData = try! JSONSerialization.data(withJSONObject: name, options: [])
             let decodedName = String(data: jsonData, encoding: .utf8)!
             var infoParams = [String: Any]()
-            var params = ["token": token]
+            let params = ["token": token]
             infoParams = ["email": email, "name": decodedName, "mobile": mobile, "birthdate": birthdate, "gender": gender]
             print(object)
             common.sendRequest(url: "https://api.clayful.io/v1/customers/auth/naver" , method: "POST", params: params, sender: ""){ [self] resultJson in
                 let resultJson = resultJson as! [String:Any]
                 let customerId = resultJson["customer"] as! String
                 let action = resultJson["action"] as! String
+                print(resultJson)
                 UserDefaults.standard.set(customerId, forKey: "customer_id")
                 UserDefaults.standard.set(email, forKey: "user_email")
                 UserDefaults.standard.set(mobile, forKey: "user_mobile")
                 UserDefaults.standard.set(decodedName, forKey: "user_name")
                 UserDefaults.standard.set(birthdate, forKey: "user_birth")
                 UserDefaults.standard.set(gender, forKey: "user_gender")
+                UserDefaults.standard.set(token,forKey: "naver_token")
+                UserDefaults.standard.set(true,forKey: "auto_login")
+                UserDefaults.standard.set(refreshToken,forKey: "naver_refreshToken")
+                UserDefaults.standard.set(expireAt,forKey: "naver_expireAt")
+                UserDefaults.standard.set(tokenType,forKey: "naver_tokenType")
                 if action == "login" {
                     print("로그인")
                     common.userUpdate(customerId: customerId, params: infoParams, sender: self) {
-                        let vc = AgreeViewController()
+                        let vc = MainContentViewController()
                         self.navigationController?.pushViewController(vc, animated: true)
                     }
                 }else if action == "register"{
@@ -145,5 +151,7 @@ extension MainViewSController: NaverThirdPartyLoginConnectionDelegate {
             }
         }
     }
+  
+  
 }
 

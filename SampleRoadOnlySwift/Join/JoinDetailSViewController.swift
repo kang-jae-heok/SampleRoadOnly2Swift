@@ -118,8 +118,11 @@ class JoinDetailSViewController: UIViewController {
             print(reusultJson)
             let resultDic = reusultJson as! [String:Any]
             guard let customerId = resultDic["_id"] else {return}
-            params.updateValue(gender, forKey: "gender")
-            params.updateValue(birthdate, forKey: "birthdate")
+            if gender != "none" {
+                params.updateValue(gender, forKey: "gender")
+            }
+            let convertDate = common.stringToDate3(string: birthdate)
+            params.updateValue(convertDate, forKey: "birthdate")
             common.sendRequest(url: "https://api.clayful.io/v1/customers/\(customerId)", method: "put", params: params, sender: "") { resultJSon2 in
                 print("유저 업데이트")
                 print(customerId)

@@ -86,6 +86,8 @@ class KakaoViewController: UIViewController {
                     UserDefaults.standard.set(decodedName, forKey: "user_name")
                     UserDefaults.standard.set(birthdate, forKey: "user_birth")
                     UserDefaults.standard.set(gender, forKey: "user_gender")
+                    UserDefaults.standard.set(true,forKey: "auto_login")
+                    UserDefaults.standard.set(token,forKey: "kakao_token")
                     if action == "login" {
                         print("로그인")
                         common.userUpdate(customerId: customerId, params: infoParams, sender: vc) {

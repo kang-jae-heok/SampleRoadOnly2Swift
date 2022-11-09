@@ -311,7 +311,7 @@ extension DeliveryListView: UITableViewDelegate, UITableViewDataSource {
                     common.setImageUrl(url: infoDic["encodedthumbnailURL"] as! String, imageView: productCell.imgView)
                     productCell.companyNameLbl.text = infoDic["companyName"] as? String
                     productCell.productNameLbl.text = infoDic["productName"] as? String
-                    productCell.priceLbl.text = "\(infoDic["price"]!) | \(infoDic["quantity"]!)개"
+                    productCell.priceLbl.text = "\(common.numberFormatter(number: Int(infoDic["price"] as! String) ?? 0)) | \(infoDic["quantity"]!)개"
                     if infoDic["status"] as! String == "pending" {
                         productCell.startBar.backgroundColor = common.pointColor()
                         productCell.situationBtn.setTitle("배송시작", for: .normal)

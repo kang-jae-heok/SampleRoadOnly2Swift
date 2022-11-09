@@ -38,7 +38,7 @@ class MainViewS: UIView{
         $0.clipsToBounds = true
         $0.layer.cornerRadius = 10
         if !UserDefaults.standard.bool(forKey: "PRDC_MODE"){
-            $0.isHidden = true
+            $0.isHidden = false
         }else{
             $0.isHidden = false
         }
@@ -49,7 +49,7 @@ class MainViewS: UIView{
         $0.clipsToBounds = true
         $0.layer.cornerRadius = 10
         if !UserDefaults.standard.bool(forKey: "PRDC_MODE"){
-            $0.isHidden = true
+            $0.isHidden = false
         }else{
             $0.isHidden = false
         }

@@ -317,19 +317,19 @@ class MainContentView: UIView {
             $0.top.equalTo(bestTitleLbl.snp.bottom).offset(22)
             $0.left.equalToSuperview().offset(margin)
             $0.right.equalToSuperview().offset(-margin)
-            $0.size.equalTo(CGSize(width: screenBounds.width - margin * 2, height: screenBounds.height/12 + 20.0))
+            $0.size.equalTo(CGSize(width: screenBounds.width - margin * 2, height: screenBounds.height/12 + 10.0))
         }
         secondView.snp.makeConstraints{
             $0.top.equalTo(firstView.snp.bottom).offset(6)
             $0.left.equalToSuperview().offset(margin)
             $0.right.equalToSuperview().offset(-margin)
-            $0.size.equalTo(CGSize(width: screenBounds.width - margin * 2, height: screenBounds.height/12 + 20.0))
+            $0.size.equalTo(CGSize(width: screenBounds.width - margin * 2, height: screenBounds.height/12 + 10.0))
         }
         thirdView.snp.makeConstraints{
             $0.top.equalTo(secondView.snp.bottom).offset(6)
             $0.left.equalToSuperview().offset(margin)
             $0.right.equalToSuperview().offset(-margin)
-            $0.size.equalTo(CGSize(width: screenBounds.width - margin * 2, height: screenBounds.height/12 + 20.0))
+            $0.size.equalTo(CGSize(width: screenBounds.width - margin * 2, height: screenBounds.height/12 + 10.0))
         }
         [firstCrownImgView,secondCrownImgView,thirdCrownImgView].forEach{
             $0.snp.makeConstraints{
