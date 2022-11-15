@@ -6,7 +6,7 @@
 //
 
 import UIKit
-
+import Foundation
 class MainContentViewController: UIViewController {
     let mainContentView = MainContentView()
     let common = CommonS()

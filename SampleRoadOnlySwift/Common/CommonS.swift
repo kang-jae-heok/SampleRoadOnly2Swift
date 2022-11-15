@@ -238,10 +238,13 @@ class CommonS{
                 duplicateCheckOrMake(vc: vc, customerId: customerId, bool: true, infoParams: infoParams, social: social)
             }else if code == "2"{
                 print("에러코드 2")
+                deleteUserDefaults()
                 deleteUser(customerId: customerId)
+                vc.present(self.alert(title: "", message: "이미 가입이 되어있는 이메일입니다. \n 이메일로 로그인 해주세요."), animated: false)
                 print("@@@@@@@")
             }else if code == "0"{
                 print("에러코드 0")
+                deleteUserDefaults()
                 vc.present(self.alert(title: "", message: "오류!!"), animated: false)
             }else if code == "1" && bool{
                 //db넣기 -> 성공
@@ -249,6 +252,46 @@ class CommonS{
                 self.checkTypeFormDone(customerId: customerId, vc: vc)
             }
         }
+    }
+    func duplicateCheckOrMake2(vc: UIViewController, customerId: String, bool: Bool, infoParams: [String:Any], social:String){
+        print("중복체크 함수!!")
+        guard let email = infoParams["email"] else {
+            return
+        }
+        guard let mobile = infoParams["mobile"] else { return }
+        var params = [String:Any]()
+        params = ["email":email , "mobile":mobile,"social":social]
+        if bool {
+            params.updateValue(customerId, forKey: "customer_id")
+        }
+        //중복 체크
+        self.sendRequest(url: "http://110.165.17.124/sampleroad/db/sr_user_insert.php", method: "post", params: params, sender: ""){ [self] reusultJson in
+            print(reusultJson)
+            let resultDic = reusultJson as! [String:Any]
+            let code = resultDic["error"] as! String
+            print(code)
+            if code == "1" && !bool{
+                //중복체크 -> 중복없음
+                print("중복체크 -> 중복없음")
+                duplicateCheckOrMake(vc: vc, customerId: customerId, bool: true, infoParams: infoParams, social: social)
+            }else if code == "2"{
+                print("에러코드 2")
+                self.checkTypeFormDone(customerId: customerId, vc: vc)
+            }else if code == "0"{
+                print("에러코드 0")
+                deleteUserDefaults()
+                vc.present(self.alert(title: "", message: "오류!!"), animated: false)
+            }else if code == "1" && bool{
+                //db넣기 -> 성공
+                print("db넣기 -> 성공")
+                self.checkTypeFormDone(customerId: customerId, vc: vc)
+            }
+        }
+    }
+    func deleteUserDefaults(){
+        for key in UserDefaults.standard.dictionaryRepresentation().keys {
+                    UserDefaults.standard.removeObject(forKey: key.description)
+                }
     }
     func addUser(vc: UIViewController, customerId: String, infoParams: [String:Any],social: String){
         print("customerID" + customerId)
@@ -260,6 +303,7 @@ class CommonS{
     func deleteUser(customerId: String){
         self.sendRequest(url: "https://api.clayful.io/v1/customers/\(customerId)", method: "delete", params: [:], sender: "") { resultJson in
             print(resultJson)
+           
         }
     }
     func setImageUrl(url: String, imageView: UIImageView){
@@ -295,6 +339,7 @@ class CommonS{
         self.sendRequest(url: "http://110.165.17.124/sampleroad/db/sr_survey_check.php", method: "post", params: [:], sender: "") { resultJson in
             let resultDic = resultJson as! [String:Any]
             let errCode = resultDic["error"] as! String
+            print(resultDic)
             var rootVc = UIViewController()
             if errCode == "1"{
                 rootVc = MainContentViewController()

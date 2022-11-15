@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 
 class JoinEmailView: UIView{
     let common = CommonS()
@@ -23,7 +24,7 @@ class JoinEmailView: UIView{
         $0.text = "영문+숫자 포함 6~12자 입력하셔야 합니다"
     }
     let checkPassTextField = TextFieldView(frame: .zero, title: "비밀번호 확인", placeholder: "한번 더 입력해주세요").then{
-        $0.textField.isSecureTextEntry = false
+        $0.textField.isSecureTextEntry = true
     }
     let phoneTextField = TextFieldView(frame: .zero, title: "핸드폰 번호", placeholder: "본인 확인을 위해 번호를 입력해주세요 (-없이)").then{
         $0.isUserInteractionEnabled = true

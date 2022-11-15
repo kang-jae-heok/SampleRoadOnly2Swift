@@ -27,7 +27,7 @@ import NaverThirdPartyLogin
         UserDefaults.standard.set("https://service.iamport.kr/payments/fail?success=", forKey: "PAY_FAILED_URL")
         UserDefaults.standard.set("http://110.165.17.124/sampleroad/", forKey: "SERVER_URL")
         window = UIWindow(windowScene: windowScene)
-        mainViewController = SplashViewController()
+        mainViewController = EditProfileViewController()
         navController = UINavigationController(rootViewController: mainViewController)
         navController.setNavigationBarHidden(true, animated: false)
         window?.rootViewController = self.navController // 시작을 위에서 만든 내비게이션 컨트롤러로 해주면 끝!
@@ -68,25 +68,27 @@ import NaverThirdPartyLogin
             if (AuthApi.isKakaoTalkLoginUrl(url)) {
                 _ = AuthController.handleOpenUrl(url: url)
             }
-            
-            let dic = Common.parseQueryString(url.query!)
-            print("application openURL:(NSURL *)url dic  :  \(dic)")
-            if dic["scope"] != nil {
-                if dic["scope"] as! String == "reset-password" {
-                    UserDefaults.standard.set(dic["reset-password"], forKey: "scope")
-                    UserDefaults.standard.set(dic["secret"], forKey: "secret")
+            print("카카오페이 결제")
+            if url.query != nil {
+                let dic = Common.parseQueryString(url.query!)
+                print("application openURL:(NSURL *)url dic  :  \(dic)")
+                if dic["scope"] != nil {
+                    if dic["scope"] as! String == "reset-password" {
+                        UserDefaults.standard.set(dic["reset-password"], forKey: "scope")
+                        UserDefaults.standard.set(dic["secret"], forKey: "secret")
+                        UserDefaults.standard.synchronize()
+                    }
+                }
+
+                if dic["product"] != nil {
+                    UserDefaults.standard.set(dic["product"], forKey: "share-product")
                     UserDefaults.standard.synchronize()
                 }
-            }
 
-            if dic["product"] != nil {
-                UserDefaults.standard.set(dic["product"], forKey: "share-product")
-                UserDefaults.standard.synchronize()
-            }
-
-            if dic["event"] != nil {
-                UserDefaults.standard.set(dic["event"], forKey: "share-event")
-                UserDefaults.standard.synchronize()
+                if dic["event"] != nil {
+                    UserDefaults.standard.set(dic["event"], forKey: "share-event")
+                    UserDefaults.standard.synchronize()
+                }
             }
         }
         NaverThirdPartyLoginConnection
@@ -123,13 +125,15 @@ import NaverThirdPartyLogin
     func getAdmin(){
         common.sendRequest(url: "http://110.165.17.124/sampleroad/db/sr_admin_select.php", method: "post", params: [:], sender: "") { resultJson in
             self.adminDic = resultJson as! [String:Any]
-            if self.adminDic["REVIEW_VERSION"] != nil {
-                UserDefaults.standard.set(false, forKey: "PRDC_MODE")
+            print(type(of: self.adminDic["REVIEW_VERSION"]!))
+//            guard let verCheck = self.adminDic["REVIEW_VERSION"]!
+            if self.adminDic["REVIEW_VERSION"] is NSNull {
+                UserDefaults.standard.set(true, forKey: "PRDC_MODE")
                 print("유저 버전")
                 print(UserDefaults.standard.bool(forKey: "PRDC_MODE"))
             }else{
-                UserDefaults.standard.set(true, forKey: "PRDC_MODE")
-                print("유저 버전")
+                UserDefaults.standard.set(false, forKey: "PRDC_MODE")
+                print("리뷰 버전")
                 print(UserDefaults.standard.bool(forKey: "PRDC_MODE"))
 //                if adminDic["APP_VERSION"] == adminDic["REVIEW_VERSION"] {
 //

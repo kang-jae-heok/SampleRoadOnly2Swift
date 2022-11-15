@@ -119,7 +119,6 @@ import UIKit
     @objc func selectEmail() {
         var params:[String:Any] = [:]
  
-        
         params.updateValue(UserDefaults.standard.value(forKey: "user_email") as! String, forKey: "email")
         params.updateValue("600", forKey: "expiresIn")
         params.updateValue("verification", forKey: "scope")

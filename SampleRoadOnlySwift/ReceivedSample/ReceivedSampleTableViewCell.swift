@@ -6,12 +6,14 @@
 //
 
 import Foundation
+import UIKit
+
 class ReceivedSampleTableViewCell: UITableViewCell {
     static let cellId = "ReceivedSampleTableViewCellId"
     let common = CommonS()
     let screenBounds = UIScreen.main.bounds
     let productImgView = UIImageView().then{
-        $0.backgroundColor = .red
+        $0.backgroundColor = .clear
     }
     lazy var companyNameLbl = UILabel().then{
         $0.font = common.setFont(font: "regular", size: 10)

@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Foundation
 
 class LoginViewController: UIViewController {
     let loginView = LoginView()
@@ -102,10 +103,14 @@ class LoginViewController: UIViewController {
             UserDefaults.standard.set(convertBirth, forKey: "user_birth")
             UserDefaults.standard.set(String(describing: userDic["gender"]), forKey: "user_gender")
             print("커스터머 로그인")
-            if checkVerified {
+            if !UserDefaults.standard.bool(forKey: "PRDC_MODE"){
                 self.common.checkTypeFormDone(customerId: customerId, vc: self)
-            }else {
-                self.navigationController?.pushViewController(CertificationViewController(impUid: UserDefaults.standard.string(forKey: "impId") ?? ""), animated: true)
+            }else{
+                if checkVerified {
+                    self.common.checkTypeFormDone(customerId: customerId, vc: self)
+                }else {
+                    self.navigationController?.pushViewController(CertificationEmailViewController(), animated: true)
+                }
             }
         }
     }

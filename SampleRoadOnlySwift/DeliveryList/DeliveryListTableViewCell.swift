@@ -9,6 +9,7 @@ import Foundation
 
 class DeliveryListTableViewCell: UITableViewCell {
     static let cellId = "DeliveryListCellId"
+    var orderDetailBtnTapped:(() -> Void)?
     let common = CommonS()
     let margin = 17.0
     let screenBounds = UIScreen.main.bounds
@@ -28,6 +29,12 @@ class DeliveryListTableViewCell: UITableViewCell {
     }
     let imgView = UIImageView().then{
         $0.backgroundColor = .clear
+    }
+    lazy var orderDetailBtn = UIButton().then{
+        $0.setTitle("주문 상세 >", for: .normal)
+        $0.setTitleColor(common.pointColor(), for: .normal)
+        $0.titleLabel?.font = common.setFont(font: "semibold", size: 15)
+        $0.accessibilityLabel = "hi"
     }
     lazy var companyNameLbl = UILabel().then{
         $0.font = common.setFont(font: "bold", size: 10)
@@ -132,6 +139,8 @@ class DeliveryListTableViewCell: UITableViewCell {
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
+        self.orderDetailBtn.addTarget(self, action: #selector(touchOrderDetailBtn), for: .touchUpInside)
+        contentView.isUserInteractionEnabled = true
         addSubviewFunc()
         setLayout()
         
@@ -140,7 +149,7 @@ class DeliveryListTableViewCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     func addSubviewFunc(){
-        [lineView,situationBtn,productInfoView,progressBarView,deliveryTrackingBtn,exchangeBtn].forEach{
+        [lineView,situationBtn,productInfoView,progressBarView,deliveryTrackingBtn,exchangeBtn,orderDetailBtn].forEach{
             self.addSubview($0)
         }
         [imgView,companyNameLbl,productNameLbl,starImgView,ratingLbl,priceLbl].forEach{
@@ -196,6 +205,10 @@ class DeliveryListTableViewCell: UITableViewCell {
         priceLbl.snp.makeConstraints{
             $0.left.equalTo(companyNameLbl)
             $0.bottom.equalToSuperview()
+        }
+        orderDetailBtn.snp.makeConstraints{
+            $0.right.equalToSuperview().offset(-margin2)
+            $0.centerY.equalTo(priceLbl)
         }
         progressBarView.snp.makeConstraints{
             $0.top.equalTo(productInfoView.snp.bottom).offset(36.0)
@@ -266,6 +279,9 @@ class DeliveryListTableViewCell: UITableViewCell {
             $0.size.equalTo(btnSize)
             
         }
-        
+    }
+    @objc func touchOrderDetailBtn(){
+        print("탭")
+        orderDetailBtnTapped?()
     }
 }

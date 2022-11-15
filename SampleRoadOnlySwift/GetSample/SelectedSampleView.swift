@@ -11,7 +11,7 @@ class SelectedSampleView: UIView {
     let screenBounds = UIScreen.main.bounds
     let common = CommonS()
     lazy var titLbl = UILabel().then{
-        $0.text = "강재혁님이 선택하신 샘플"
+        $0.text = "\(UserDefaults.standard.string(forKey: "user_name") ?? "고객")이 선택하신 샘플"
         $0.font = common.setFont(font: "bold", size: 15)
         $0.textAlignment = .center
     }
@@ -44,7 +44,7 @@ class SelectedSampleView: UIView {
     func setLayout(){
         titLbl.snp.makeConstraints{
             $0.top.left.right.equalToSuperview()
-            $0.bottom.equalTo(self.snp.top).offset(100)
+            $0.height.equalTo(100)
         }
         getSampleBtn.snp.makeConstraints{
             $0.bottom.left.right.equalToSuperview()
@@ -69,6 +69,8 @@ class SelectedSampleView: UIView {
         var param = [String:Any]()
         param.updateValue(sampleArrDic, forKey: "sample_list")
         let convertDic = NSMutableDictionary(dictionary: param)
+        print("convert 딕셔너리")
+        print(convertDic)
         let rootVc = OrderViewController(dic: convertDic)
         vc.navigationController?.pushViewController(rootVc, animated: true)
     }
@@ -80,8 +82,24 @@ extension SelectedSampleView: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as! SelectedTableCell
-        print("hi")
+        
         let sampleDic = sampleArrDic[indexPath.row]
+        let hashTagString = sampleDic["description"] as! String
+//        let pTag =  "<p>"
+//        let pTag2 =  CharacterSet(charactersIn: "</p>").inverted
+        var convertStr = hashTagString.components(separatedBy: "</p>").joined()
+        convertStr = convertStr.components(separatedBy: "<p>").joined()
+        let convertStrArr = convertStr.components(separatedBy: ",")
+        print("여기 해쉬테그")
+        print(convertStrArr)
+        print("딕셔너리")
+        print(sampleDic)
+        var hasTag = String()
+        hasTag = "#\(convertStrArr[0])"
+        for i in 1...convertStrArr.count - 1 {
+            hasTag += "\n#\(convertStrArr[i])"
+        }
+        print(hasTag)
         let brandDic = sampleDic["brand"] as! [String:Any]
 //        let brandDic = dataDic["brand"] as! [String:Any]
 //        let ThumDic = dataDic["thumbnail"] as! [String:Any]
@@ -93,15 +111,20 @@ extension SelectedSampleView: UITableViewDelegate, UITableViewDataSource {
 //        common.setImageUrl(url: encoded!, imageView: cell.sampleImgView)
         cell.companyLbl.text = brandDic["name"] as? String
         cell.sampleName.text = sampleDic["name"] as? String
+        cell.hashtagLbl.text = hasTag
+        let viewS = GetSampleView()
+        cell.typeTit.text = "\(indexPath.row + 1)| \(viewS.typeTitArr[indexPath.row])"
         let ThumDic = sampleDic["thumbnail"] as! [String:Any]
         let ThumbURL = ThumDic["url"] as! String
         let encoded = ThumbURL.description.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
         common.setImageUrl(url: encoded!, imageView: cell.sampleImgView)
         cell.backgroundColor = .white
+        cell.selectionStyle = .none
         return cell
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 300
+        return UITableView.automaticDimension
     }
+    
 }

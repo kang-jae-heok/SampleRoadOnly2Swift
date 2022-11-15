@@ -307,6 +307,11 @@
 		0633CAE82914BAE200F6AEAD /* ReceivedSampleTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0633CAE72914BAE200F6AEAD /* ReceivedSampleTableViewCell.swift */; };
 		069FA392291A206E00320C14 /* OrderCompleteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 069FA391291A206E00320C14 /* OrderCompleteView.swift */; };
 		069FA394291A208500320C14 /* OrderCompleteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 069FA393291A208500320C14 /* OrderCompleteViewController.swift */; };
+		069FA396291CA1B200320C14 /* OrderDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 069FA395291CA1B100320C14 /* OrderDetailViewController.swift */; };
+		069FA39A291CDB5200320C14 /* CouponListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 069FA399291CDB5200320C14 /* CouponListView.swift */; };
+		069FA39C291CDC5A00320C14 /* CouponListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 069FA39B291CDC5A00320C14 /* CouponListViewController.swift */; };
+		069FA39E291CE01A00320C14 /* ExtensionUIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 069FA39D291CE01A00320C14 /* ExtensionUIView.swift */; };
+		069FA3A1291CFA6600320C14 /* CouponCollectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 069FA3A0291CFA6600320C14 /* CouponCollectionCell.swift */; };
 		06A5579D291110EF005805B3 /* OrderViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 06A556E8291110EE005805B3 /* OrderViewController.m */; };
 		06A5579E291110EF005805B3 /* Common.m in Sources */ = {isa = PBXBuildFile; fileRef = 06A556E9291110EE005805B3 /* Common.m */; };
 		06A5579F291110EF005805B3 /* CommonSwift.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06A556EA291110EE005805B3 /* CommonSwift.swift */; };
@@ -399,6 +404,9 @@
 		06EB5A882910EF0100D17B77 /* IAMPortPay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06EB5A842910EF0000D17B77 /* IAMPortPay.swift */; };
 		06FE5D4E2911FF810046F833 /* DeliveryListSampleTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06FE5D4D2911FF810046F833 /* DeliveryListSampleTableViewCell.swift */; };
 		4F28C3D3B2F7888DAE1AB14E /* Pods_SampleRoadOnlySwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E196267AB28F8696D843C05F /* Pods_SampleRoadOnlySwift.framework */; };
+		7EA2EA862923599B00D4C312 /* EditProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EA2EA852923599B00D4C312 /* EditProfileView.swift */; };
+		7EA2EA88292359B400D4C312 /* EditProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EA2EA87292359B400D4C312 /* EditProfileViewController.swift */; };
+		7ECD2912291E3D3E00E488F3 /* ExtensionUIViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ECD2911291E3D3E00E488F3 /* ExtensionUIViewController.swift */; };
 		80978B20116A62E50056AA71 /* Pods_SampleRoadOnlySwiftTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A2FE7C1C52CCC6018C4262FD /* Pods_SampleRoadOnlySwiftTests.framework */; };
 /* End PBXBuildFile section */
 
@@ -725,6 +733,11 @@
 		0633CAE72914BAE200F6AEAD /* ReceivedSampleTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceivedSampleTableViewCell.swift; sourceTree = "<group>"; };
 		069FA391291A206E00320C14 /* OrderCompleteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderCompleteView.swift; sourceTree = "<group>"; };
 		069FA393291A208500320C14 /* OrderCompleteViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderCompleteViewController.swift; sourceTree = "<group>"; };
+		069FA395291CA1B100320C14 /* OrderDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderDetailViewController.swift; sourceTree = "<group>"; };
+		069FA399291CDB5200320C14 /* CouponListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CouponListView.swift; sourceTree = "<group>"; };
+		069FA39B291CDC5A00320C14 /* CouponListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CouponListViewController.swift; sourceTree = "<group>"; };
+		069FA39D291CE01A00320C14 /* ExtensionUIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionUIView.swift; sourceTree = "<group>"; };
+		069FA3A0291CFA6600320C14 /* CouponCollectionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CouponCollectionCell.swift; sourceTree = "<group>"; };
 		06A556E5291110EE005805B3 /* NSString+PDRegex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+PDRegex.h"; sourceTree = "<group>"; };
 		06A556E6291110EE005805B3 /* BWHorizontalTableViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BWHorizontalTableViewDelegate.h; sourceTree = "<group>"; };
 		06A556E7291110EE005805B3 /* ResetPwdViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ResetPwdViewController.h; sourceTree = "<group>"; };
@@ -880,6 +893,9 @@
 		22CAEBF73C11B8265659CCD8 /* Pods-SampleRoadOnlySwift-SampleRoadOnlySwiftUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SampleRoadOnlySwift-SampleRoadOnlySwiftUITests.release.xcconfig"; path = "Target Support Files/Pods-SampleRoadOnlySwift-SampleRoadOnlySwiftUITests/Pods-SampleRoadOnlySwift-SampleRoadOnlySwiftUITests.release.xcconfig"; sourceTree = "<group>"; };
 		4485A051BD929E1D37195B3A /* Pods_SampleRoadOnlySwift_SampleRoadOnlySwiftUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SampleRoadOnlySwift_SampleRoadOnlySwiftUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		50B0759BF987AF7680F6759A /* Pods-SampleRoadOnlySwift-SampleRoadOnlySwiftUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SampleRoadOnlySwift-SampleRoadOnlySwiftUITests.debug.xcconfig"; path = "Target Support Files/Pods-SampleRoadOnlySwift-SampleRoadOnlySwiftUITests/Pods-SampleRoadOnlySwift-SampleRoadOnlySwiftUITests.debug.xcconfig"; sourceTree = "<group>"; };
+		7EA2EA852923599B00D4C312 /* EditProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditProfileView.swift; sourceTree = "<group>"; };
+		7EA2EA87292359B400D4C312 /* EditProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditProfileViewController.swift; sourceTree = "<group>"; };
+		7ECD2911291E3D3E00E488F3 /* ExtensionUIViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionUIViewController.swift; sourceTree = "<group>"; };
 		A2FE7C1C52CCC6018C4262FD /* Pods_SampleRoadOnlySwiftTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SampleRoadOnlySwiftTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B042F976847CE79EF17FB1F7 /* Pods-SampleRoadOnlySwiftTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SampleRoadOnlySwiftTests.release.xcconfig"; path = "Target Support Files/Pods-SampleRoadOnlySwiftTests/Pods-SampleRoadOnlySwiftTests.release.xcconfig"; sourceTree = "<group>"; };
 		BD552B1CA9F7CEEC550E6456 /* Pods-SampleRoadOnlySwiftTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SampleRoadOnlySwiftTests.debug.xcconfig"; path = "Target Support Files/Pods-SampleRoadOnlySwiftTests/Pods-SampleRoadOnlySwiftTests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -963,6 +979,10 @@
 		0631DBCD2910FCAC00565F45 /* SampleRoadOnlySwift */ = {
 			isa = PBXGroup;
 			children = (
+				7EA2EA842923597200D4C312 /* EditProfile */,
+				069FA39F291CE03600320C14 /* Extension */,
+				069FA398291CD9B500320C14 /* Coupon */,
+				069FA397291CD98C00320C14 /* OrderDetail */,
 				0633CAE22914B4DB00F6AEAD /* ReceivedSample */,
 				0631DCEA2910FCAC00565F45 /* SwiftyIamport */,
 				0631DCED2910FCAC00565F45 /* Common */,
@@ -987,8 +1007,6 @@
 				0631DDB42910FCAD00565F45 /* AppDelegate.swift */,
 				0631DDC42910FCAD00565F45 /* SceneDelegate.swift */,
 				0631DDC32910FCAD00565F45 /* Info.plist */,
-				069FA391291A206E00320C14 /* OrderCompleteView.swift */,
-				069FA393291A208500320C14 /* OrderCompleteViewController.swift */,
 			);
 			path = SampleRoadOnlySwift;
 			sourceTree = "<group>";
@@ -1460,6 +1478,35 @@
 			path = ReceivedSample;
 			sourceTree = "<group>";
 		};
+		069FA397291CD98C00320C14 /* OrderDetail */ = {
+			isa = PBXGroup;
+			children = (
+				069FA391291A206E00320C14 /* OrderCompleteView.swift */,
+				069FA393291A208500320C14 /* OrderCompleteViewController.swift */,
+				069FA395291CA1B100320C14 /* OrderDetailViewController.swift */,
+			);
+			path = OrderDetail;
+			sourceTree = "<group>";
+		};
+		069FA398291CD9B500320C14 /* Coupon */ = {
+			isa = PBXGroup;
+			children = (
+				069FA399291CDB5200320C14 /* CouponListView.swift */,
+				069FA39B291CDC5A00320C14 /* CouponListViewController.swift */,
+				069FA3A0291CFA6600320C14 /* CouponCollectionCell.swift */,
+			);
+			path = Coupon;
+			sourceTree = "<group>";
+		};
+		069FA39F291CE03600320C14 /* Extension */ = {
+			isa = PBXGroup;
+			children = (
+				069FA39D291CE01A00320C14 /* ExtensionUIView.swift */,
+				7ECD2911291E3D3E00E488F3 /* ExtensionUIViewController.swift */,
+			);
+			path = Extension;
+			sourceTree = "<group>";
+		};
 		06A556E4291110EE005805B3 /* ObjcFiles */ = {
 			isa = PBXGroup;
 			children = (
@@ -1755,6 +1802,15 @@
 				B042F976847CE79EF17FB1F7 /* Pods-SampleRoadOnlySwiftTests.release.xcconfig */,
 			);
 			path = Pods;
+			sourceTree = "<group>";
+		};
+		7EA2EA842923597200D4C312 /* EditProfile */ = {
+			isa = PBXGroup;
+			children = (
+				7EA2EA852923599B00D4C312 /* EditProfileView.swift */,
+				7EA2EA87292359B400D4C312 /* EditProfileViewController.swift */,
+			);
+			path = EditProfile;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -2251,6 +2307,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7EA2EA88292359B400D4C312 /* EditProfileViewController.swift in Sources */,
+				7ECD2912291E3D3E00E488F3 /* ExtensionUIViewController.swift in Sources */,
 				06A5580029111635005805B3 /* ComWebViewController.m in Sources */,
 				06A557FF291115BC005805B3 /* TermsViewController.m in Sources */,
 				06A557B4291110EF005805B3 /* EventSViewController.swift in Sources */,
@@ -2297,14 +2355,17 @@
 				06A557CE291110EF005805B3 /* PAWKPanGestureRecognizer.m in Sources */,
 				06A557CC291110EF005805B3 /* WKBaseWebView.m in Sources */,
 				06A557AA291110EF005805B3 /* FTWCache.m in Sources */,
+				069FA39E291CE01A00320C14 /* ExtensionUIView.swift in Sources */,
 				0631DDE12910FCAD00565F45 /* IntroViewController.swift in Sources */,
 				0631DDCD2910FCAD00565F45 /* LoginTopView.swift in Sources */,
 				0631DF412910FCAE00565F45 /* BannerCollectionView.swift in Sources */,
 				0631DED42910FCAE00565F45 /* CommonS.swift in Sources */,
+				069FA39C291CDC5A00320C14 /* CouponListViewController.swift in Sources */,
 				06A557D4291110EF005805B3 /* PreviewVc.m in Sources */,
 				0631DDC72910FCAD00565F45 /* SelectedSampleView.swift in Sources */,
 				06A557B8291110EF005805B3 /* RankDetailCell.swift in Sources */,
 				06A557B3291110EF005805B3 /* NoticeCell.swift in Sources */,
+				069FA3A1291CFA6600320C14 /* CouponCollectionCell.swift in Sources */,
 				0631DDCC2910FCAD00565F45 /* TextFieldView.swift in Sources */,
 				06A557E7291110EF005805B3 /* CountScrollLabel.swift in Sources */,
 				06A5579F291110EF005805B3 /* CommonSwift.swift in Sources */,
@@ -2329,6 +2390,7 @@
 				06A557F3291110EF005805B3 /* ImageViewerViewController.m in Sources */,
 				06A557D6291110EF005805B3 /* WKWebView+TYSnapshot.m in Sources */,
 				0631DDDC2910FCAD00565F45 /* AgreeViewController.swift in Sources */,
+				069FA39A291CDB5200320C14 /* CouponListView.swift in Sources */,
 				06A557AF291110EF005805B3 /* RankDetailViewController.m in Sources */,
 				0631DDCF2910FCAD00565F45 /* WebView.swift in Sources */,
 				0631DF3A2910FCAE00565F45 /* FindPassView.swift in Sources */,
@@ -2376,9 +2438,11 @@
 				06A557EB291110EF005805B3 /* HCSStarRatingView.m in Sources */,
 				06A557D9291110EF005805B3 /* UIImage+TYSnapshot.m in Sources */,
 				0631DF472910FCAE00565F45 /* LoginViewController.swift in Sources */,
+				7EA2EA862923599B00D4C312 /* EditProfileView.swift in Sources */,
 				06A557D7291110EF005805B3 /* UIScrollView+TYSnapshot.m in Sources */,
 				0631DF462910FCAE00565F45 /* MainViewSController.swift in Sources */,
 				06A557FD291110EF005805B3 /* UIImage+animatedGIF.m in Sources */,
+				069FA396291CA1B200320C14 /* OrderDetailViewController.swift in Sources */,
 				06A557D3291110EF005805B3 /* WKJSFunction.m in Sources */,
 				06A557DE291110EF005805B3 /* PAWebView.m in Sources */,
 				06A557E0291110EF005805B3 /* NSURLProtocol+WKWebView.m in Sources */,
@@ -2563,7 +2627,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1.1.1;
+				CURRENT_PROJECT_VERSION = 1.0.0;
 				DEVELOPMENT_TEAM = 478J8N3JFK;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = SampleRoadOnlySwift/Info.plist;
@@ -2573,13 +2637,14 @@
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.0;
+				MARKETING_VERSION = 1.0.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.notegg.sampleroad;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = SampleRoadOnlySwift;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
@@ -2599,7 +2664,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1.1.1;
+				CURRENT_PROJECT_VERSION = 1.0.0;
 				DEVELOPMENT_TEAM = 478J8N3JFK;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = SampleRoadOnlySwift/Info.plist;
@@ -2609,13 +2674,14 @@
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.0;
+				MARKETING_VERSION = 1.0.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.notegg.sampleroad;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = SampleRoadOnlySwift;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;

@@ -190,6 +190,7 @@ extension DeliveryListView: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if sampleBtn.backgroundColor == common.pointColor(){
             let sampleCell = DeliveryListSampleTableViewCell(style: DeliveryListSampleTableViewCell.CellStyle.default, reuseIdentifier: DeliveryListSampleTableViewCell.cellId)
+            sampleCell.selectionStyle = .none
             if infoSampleListDicArr.count != 0 {
                 self.countLbl.text = "총 \(infoSampleListDicArr.count)개"
                 let infoDeliveryListDic = infoSampleListDicArr[indexPath.row]
@@ -211,6 +212,12 @@ extension DeliveryListView: UITableViewDelegate, UITableViewDataSource {
                     }
                 }
                 let itemsInfoDicArr = infoDeliveryListDic["items"] as! [[String:Any]]
+                let orderId = infoDeliveryListDic["_id"] as! String
+                sampleCell.orderDetailBtn.name = orderId
+                sampleCell.orderDetailBtnTapped = {
+                    let vc = OrderDetailViewController(orderId: orderId)
+                    self.parentViewController?.navigationController!.pushViewController(vc, animated: true)
+                }
                 for x in 0...2 {
                     let itemsInfoDic = itemsInfoDicArr[x]
                     let productInfo = itemsInfoDic["product"] as! [String:Any]
@@ -268,8 +275,8 @@ extension DeliveryListView: UITableViewDelegate, UITableViewDataSource {
                             }
                         }
                     }
-        
                     let itemsInfoDicArr = infoDeliveryListDic["items"] as! [[String:Any]]
+                    let orderId = infoDeliveryListDic["_id"] as! String
                     for x in 0...itemsInfoDicArr.count - 1 {
                         let itemsInfoDic = itemsInfoDicArr[x]
                         let productInfo = itemsInfoDic["product"] as! [String:Any]
@@ -302,6 +309,7 @@ extension DeliveryListView: UITableViewDelegate, UITableViewDataSource {
                         cellInfoDic.updateValue(productName, forKey: "productName")
                         cellInfoDic.updateValue(price, forKey: "price")
                         cellInfoDic.updateValue(quantity, forKey: "quantity")
+                        cellInfoDic.updateValue(orderId, forKey: "orderId")
                         cellInfoDicArr.append(cellInfoDic)
                     }
                 }
@@ -309,6 +317,12 @@ extension DeliveryListView: UITableViewDelegate, UITableViewDataSource {
                     self.countLbl.text = "총 \(cellInfoDicArr.count)개"
                     let infoDic = cellInfoDicArr[indexPath.row]
                     common.setImageUrl(url: infoDic["encodedthumbnailURL"] as! String, imageView: productCell.imgView)
+                    productCell.orderDetailBtnTapped = {
+                        guard let orderId: String = infoDic["orderId"] as? String else {return}
+                        print(orderId)
+                        let vc = OrderDetailViewController(orderId: orderId)
+                        self.parentViewController?.navigationController!.pushViewController(vc, animated: true)
+                    }
                     productCell.companyNameLbl.text = infoDic["companyName"] as? String
                     productCell.productNameLbl.text = infoDic["productName"] as? String
                     productCell.priceLbl.text = "\(common.numberFormatter(number: Int(infoDic["price"] as! String) ?? 0)) | \(infoDic["quantity"]!)개"

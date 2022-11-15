@@ -54,6 +54,10 @@ class MainViewSController: UIViewController {
         common.kakaoLogin(vc: self)
 
     }
+    func alertDuplicate(){
+        present(common.alert(title: "", message: "이메일을 확인해주세요."),animated: true)
+    }
+
 }
 extension MainViewSController: NaverThirdPartyLoginConnectionDelegate {
     func oauth20ConnectionDidFinishRequestACTokenWithAuthCode() {
@@ -141,8 +145,9 @@ extension MainViewSController: NaverThirdPartyLoginConnectionDelegate {
                 if action == "login" {
                     print("로그인")
                     common.userUpdate(customerId: customerId, params: infoParams, sender: self) {
-                        let vc = MainContentViewController()
-                        self.navigationController?.pushViewController(vc, animated: true)
+//                        let vc = MainContentViewController()
+//                        self.navigationController?.pushViewController(vc, animated: true)
+                        self.common.duplicateCheckOrMake2(vc: self, customerId: customerId, bool: false, infoParams: infoParams, social: "naver")
                     }
                 }else if action == "register"{
                     print("가입")

@@ -317,19 +317,16 @@ class MainContentView: UIView {
             $0.top.equalTo(bestTitleLbl.snp.bottom).offset(22)
             $0.left.equalToSuperview().offset(margin)
             $0.right.equalToSuperview().offset(-margin)
-            $0.size.equalTo(CGSize(width: screenBounds.width - margin * 2, height: screenBounds.height/12 + 10.0))
         }
         secondView.snp.makeConstraints{
             $0.top.equalTo(firstView.snp.bottom).offset(6)
             $0.left.equalToSuperview().offset(margin)
             $0.right.equalToSuperview().offset(-margin)
-            $0.size.equalTo(CGSize(width: screenBounds.width - margin * 2, height: screenBounds.height/12 + 10.0))
         }
         thirdView.snp.makeConstraints{
             $0.top.equalTo(secondView.snp.bottom).offset(6)
             $0.left.equalToSuperview().offset(margin)
             $0.right.equalToSuperview().offset(-margin)
-            $0.size.equalTo(CGSize(width: screenBounds.width - margin * 2, height: screenBounds.height/12 + 10.0))
         }
         [firstCrownImgView,secondCrownImgView,thirdCrownImgView].forEach{
             $0.snp.makeConstraints{
@@ -342,7 +339,9 @@ class MainContentView: UIView {
             $0.snp.makeConstraints{
                 $0.centerY.equalToSuperview()
                 $0.left.equalTo(firstCrownImgView.snp.right).offset(6)
-                $0.size.equalTo(CGSize(width: 25, height: screenBounds.height/12 - 30))
+                $0.size.equalTo(CGSize(width: 25, height: firstCompanytLbl.font.pointSize + firstProductLbl.font.pointSize + firstRatingLbl.font.pointSize + 15))
+                $0.top.equalToSuperview().offset(15)
+                $0.bottom.equalToSuperview().offset(-15)
             }
         }
         [firstCompanytLbl,secondCompanytLbl,thirdCompanytLbl].forEach{
@@ -365,6 +364,7 @@ class MainContentView: UIView {
                 $0.size.equalTo(CGSize(width: 15, height: 15))
             }
         }
+        
         [firstRateImgView,secondRateImgView,thirdRateImgView].forEach{
             let superView = $0.superview!
             $0.snp.makeConstraints{

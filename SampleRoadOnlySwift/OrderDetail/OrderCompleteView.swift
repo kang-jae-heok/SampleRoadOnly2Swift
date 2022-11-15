@@ -11,12 +11,10 @@ class OrderCompleteView: UIView {
     let common = CommonS()
     let screenBounds = UIScreen.main.bounds
     lazy var titLbl = UILabel().then{
-        $0.text = "주문완료"
         $0.font = common.setFont(font: "bold", size: 20)
         $0.textAlignment = .center
     }
     lazy var subTit = UILabel().then{
-        $0.text = "결제가 완료되었습니다"
         $0.font = common.setFont(font: "semibold", size: 15)
         $0.textAlignment = .center
     }
@@ -56,11 +54,9 @@ class OrderCompleteView: UIView {
         $0.font = common.setFont(font: "bold", size: 15)
     }
     lazy var addressNum = UILabel().then{
-        $0.text = "1049"
         $0.font = common.setFont(font: "bold", size: 15)
     }
     lazy var address = UILabel().then{
-        $0.text = "서울시 관악구 관악센터 123(관악창업센터) 502호"
         $0.font = common.setFont(font: "bold", size: 15)
         $0.numberOfLines = 0
     }
@@ -70,7 +66,6 @@ class OrderCompleteView: UIView {
         $0.font = common.setFont(font: "bold", size: 15)
     }
     lazy var deliveryRequest = UILabel().then{
-        $0.text = "문앞에 놔주세요"
         $0.font = common.setFont(font: "bold", size: 15)
     }
     // 결제정보
@@ -87,7 +82,6 @@ class OrderCompleteView: UIView {
         $0.font = common.setFont(font: "bold", size: 15)
     }
     lazy var paymentMethod = UILabel().then{
-        $0.text = "네이버페이"
         $0.font = common.setFont(font: "bold", size: 15)
     }
     // 결제정보 - 총 주문 금액
@@ -96,7 +90,6 @@ class OrderCompleteView: UIView {
         $0.font = common.setFont(font: "bold", size: 15)
     }
     lazy var orderTotalPrice = UILabel().then{
-        $0.text = "1,6000원"
         $0.font = common.setFont(font: "bold", size: 15)
         $0.textColor = common.pointColor()
     }
@@ -110,7 +103,6 @@ class OrderCompleteView: UIView {
         $0.font = common.setFont(font: "bold", size: 13)
     }
     lazy var productPrice = UILabel().then{
-        $0.text = "14,900원"
         $0.font = common.setFont(font: "bold", size: 13)
     }
     // 결제정보 - 금액 - 배송비
@@ -119,7 +111,6 @@ class OrderCompleteView: UIView {
         $0.font = common.setFont(font: "bold", size: 13)
     }
     lazy var deliveryPrice = UILabel().then{
-        $0.text = "2,500원"
         $0.font = common.setFont(font: "bold", size: 13)
     }
     // 결제정보 - 금액 - 쿠폰할인
@@ -128,7 +119,6 @@ class OrderCompleteView: UIView {
         $0.font = common.setFont(font: "bold", size: 13)
     }
     lazy var couponDiscount = UILabel().then{
-        $0.text = "-10,000원"
         $0.font = common.setFont(font: "bold", size: 13)
     }
     // 결제정보 - 금액 - 포인트 사용
@@ -137,7 +127,6 @@ class OrderCompleteView: UIView {
         $0.font = common.setFont(font: "bold", size: 13)
     }
     lazy var point = UILabel().then{
-        $0.text = "-1,000원"
         $0.font = common.setFont(font: "bold", size: 13)
     }
     // 적립 포인트
@@ -149,7 +138,6 @@ class OrderCompleteView: UIView {
         $0.font = common.setFont(font: "bold", size: 15)
     }
     lazy var savedPoint = UILabel().then{
-        $0.text = "최대 1,000p"
         $0.font = common.setFont(font: "semibold", size: 15)
         $0.asFont(targetStringList: ["최대"], font: common.setFont(font: "bold", size: 15))
     }
@@ -158,7 +146,6 @@ class OrderCompleteView: UIView {
         $0.font = common.setFont(font: "bold", size: 13)
     }
     lazy var earnTextReview = UILabel().then{
-        $0.text = "500p"
         $0.font = common.setFont(font: "semibold", size: 13)
     }
     lazy var earnPhotoReviewLbl = UILabel().then{
@@ -166,12 +153,10 @@ class OrderCompleteView: UIView {
         $0.font = common.setFont(font: "bold", size: 13)
     }
     lazy var earnPhotoReview = UILabel().then{
-        $0.text = "텍스트 리뷰 적립"
         $0.font = common.setFont(font: "semibold", size: 13)
     }
     lazy var homeBtn = UIButton().then{
         $0.backgroundColor = common.pointColor()
-        $0.setTitle("홈가기", for: .normal)
         $0.setTitleColor(.white, for: .normal)
         $0.titleLabel?.font = common.setFont(font: "bold", size: 20)
     }
@@ -262,11 +247,11 @@ class OrderCompleteView: UIView {
         deliveryRequestLbl.snp.makeConstraints {
             $0.top.equalTo(address.snp.bottom).offset(20 * screenRatio)
             $0.left.equalToSuperview().offset(margin2)
+            $0.bottom.equalToSuperview().offset(-20)
         }
         deliveryRequest.snp.makeConstraints {
             $0.top.equalTo(deliveryRequestLbl)
             $0.left.equalTo(recipient)
-            $0.bottom.equalToSuperview().offset(-20)
         }
         // 결제 정보
         paymentInformationView.snp.makeConstraints {
@@ -324,11 +309,11 @@ class OrderCompleteView: UIView {
         pointLbl.snp.makeConstraints {
             $0.top.equalTo(couponDiscountLbl.snp.bottom).offset(10 * screenRatio)
             $0.left.equalToSuperview().offset(margin2)
+            $0.bottom.equalToSuperview().offset(-10)
         }
         point.snp.makeConstraints {
             $0.top.equalTo(pointLbl)
             $0.right.equalToSuperview().offset(-margin2)
-            $0.bottom.equalToSuperview().offset(-10)
         }
         
         savedPointLbl.snp.makeConstraints {
@@ -356,11 +341,11 @@ class OrderCompleteView: UIView {
         earnPhotoReviewLbl.snp.makeConstraints {
             $0.top.equalTo(savedPointView.snp.centerY).offset(5)
             $0.left.equalToSuperview().offset(margin2)
+            $0.bottom.equalToSuperview().offset(-10)
         }
         earnPhotoReview.snp.makeConstraints {
             $0.top.equalTo(earnPhotoReviewLbl)
             $0.right.equalToSuperview().offset(-margin2)
-            $0.bottom.equalToSuperview().offset(-10)
         }
         homeBtn.snp.makeConstraints {
             $0.left.right.bottom.equalToSuperview()

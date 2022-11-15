@@ -86,27 +86,7 @@ extension UITextField {
         self.leftViewMode = ViewMode.always
     }
 }
-extension UIView {
-    var parentViewController: UIViewController? {
-        // Starts from next (As we know self is not a UIViewController).
-        var parentResponder: UIResponder? = self.next
-        while parentResponder != nil {
-            if let viewController = parentResponder as? UIViewController {
-                return viewController
-            }
-            parentResponder = parentResponder?.next
-        }
-        return nil
-    }
-    var margin2: CGFloat{
-        return 17.0
-    }
-    var screenRatio: CGFloat {
-        let screenBounds = UIScreen.main.bounds
-        return screenBounds.width/414.0
-    }
-    
-}
+
 extension UIViewController {
     var parentViewController: UIViewController? {
         // Starts from next (As we know self is not a UIViewController).
@@ -138,7 +118,6 @@ extension UserDefaults {
     }
 }
 extension Date {
-
     /**
      # dateCompare
      - Parameters:
@@ -164,6 +143,23 @@ extension Date {
         }
         return strDateMessage
     }
+}
+extension UIButton {
+    private struct theAnswer {
+           static var name: String = ""
+       }
+
+       var name: String {
+           get {
+               guard let theName = objc_getAssociatedObject(self, &theAnswer.name) as? String else {
+                   return ""
+               }
+               return theName
+           }
+           set {
+               objc_setAssociatedObject(self, &theAnswer.name, newValue, .OBJC_ASSOCIATION_RETAIN)
+           }
+       }
 }
 
 

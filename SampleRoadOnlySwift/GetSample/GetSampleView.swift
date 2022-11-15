@@ -63,7 +63,10 @@ class GetSampleView: UIView{
     }
     lazy var data = [sampleItems(sampleImgURL: "a", companyName: "test", sampleName: "test"),sampleItems(sampleImgURL: "a", companyName: "test2", sampleName: "test2"),sampleItems(sampleImgURL: "a", companyName: "test", sampleName: "test")]
     var sampleArr = [[String:Any]]()
-    lazy var selectedSampleView = UIView()
+    lazy var selectedSampleView = UIView().then{
+        $0.layer.cornerRadius = 9
+        $0.clipsToBounds = true
+    }
     lazy var nextBtn = UIButton().then{
         $0.setTitle("다음", for: .normal)
         $0.backgroundColor = common.pointColor()
@@ -157,7 +160,7 @@ class GetSampleView: UIView{
     }()
     let alphaView = UIView().then{
         $0.isHidden = true
-        $0.backgroundColor = .black.withAlphaComponent(0.3)
+        $0.backgroundColor = .black.withAlphaComponent(0.7)
     }
     let alphaHiddenBtn = UIButton().then{
         $0.isHidden = true
@@ -303,7 +306,7 @@ class GetSampleView: UIView{
         //
         //        NSString *cacheKey = [dic valueForKey:@"name"];
         
-        common.sendRequest(url: "https://api.clayful.io/v1/products?search:keywords=\(String(describing: encodedType!))", method: "get", params: [:], sender: "") { [self] resultJson in
+        common.sendRequest(url: "https://api.clayful.io/v1/products?search:keywords=\(String(describing: encodedType!))&variantQuantityMin=1", method: "get", params: [:], sender: "") { [self] resultJson in
             sampleArr = resultJson as! [[String:Any]]
             sampleCollectionView.delegate = self
             sampleCollectionView.dataSource = self
@@ -320,12 +323,20 @@ class GetSampleView: UIView{
         changeApplicateBtn()
     }
     func addAnimation(tag: Int){
-        for i in 0...selectedArr.count - 1 {
-            selectedViews[i].subviews[0].subviews.compactMap{$0 as? UIImageView}[0].alpha = 0.0
+        if selectedArr.count == 0 {
+            selectedViews[0].subviews[0].subviews.compactMap{$0 as? UIImageView}[0].alpha = 0.0
             UIView.animate(withDuration: 0.5, animations: { [self] in
-                selectedViews[i].subviews[0].subviews.compactMap{$0 as? UIImageView}[0].alpha = 1.0
+                selectedViews[0].subviews[0].subviews.compactMap{$0 as? UIImageView}[0].alpha = 1.0
             })
+        }else {
+            for i in 0...selectedArr.count - 1 {
+                selectedViews[i].subviews[0].subviews.compactMap{$0 as? UIImageView}[0].alpha = 0.0
+                UIView.animate(withDuration: 0.5, animations: { [self] in
+                    selectedViews[i].subviews[0].subviews.compactMap{$0 as? UIImageView}[0].alpha = 1.0
+                })
+            }
         }
+       
     }
     func drawSelectedViews() {
         for i in 0...2{
@@ -369,10 +380,17 @@ class GetSampleView: UIView{
             let rootVc = OrderViewController(dic: convertDic)
             parentViewController?.navigationController?.pushViewController(rootVc, animated: true)
         }else{
+//            var param = [String:Any]()
+//            param.updateValue(selectedDicArr, forKey: "sample_list")
+//            let convertDic = NSMutableDictionary(dictionary: param)
+//            let rootVc = OrderViewController(dic: convertDic)
+//            parentViewController?.navigationController?.pushViewController(rootVc, animated: true)
+            //나중에 추가할것
             let dataSelectedSampleView = SelectedSampleView(frame: .zero, arrDic: selectedDicArr, vc: parentViewController ?? GetSampleViewController())
             selectedSampleView.addSubview(dataSelectedSampleView)
             dataSelectedSampleView.snp.makeConstraints{
                 $0.edges.equalToSuperview()
+                
             }
         }
        

@@ -11,6 +11,7 @@ import Foundation
 
 class DeliveryListSampleTableViewCell: UITableViewCell {
     static let cellId = "DeliveryListCellId"
+    var orderDetailBtnTapped:(() -> Void)?
     let common = CommonS()
     let margin = 17.0
     let screenBounds = UIScreen.main.bounds
@@ -144,6 +145,7 @@ class DeliveryListSampleTableViewCell: UITableViewCell {
         $0.setTitle("주문 상세 >", for: .normal)
         $0.setTitleColor(common.pointColor(), for: .normal)
         $0.titleLabel?.font = common.setFont(font: "semibold", size: 15)
+        $0.accessibilityLabel = "hi"
     }
     // 밑 두 버튼
     lazy var deliveryTrackingBtn = UIButton().then{
@@ -163,6 +165,8 @@ class DeliveryListSampleTableViewCell: UITableViewCell {
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
+        contentView.isUserInteractionEnabled = true
+        self.orderDetailBtn.addTarget(self, action: #selector(touchOrderDetailBtn), for: .touchUpInside)
         addSubviewFunc()
         setLayout()
         
@@ -320,5 +324,9 @@ class DeliveryListSampleTableViewCell: UITableViewCell {
             $0.size.equalTo(btnSize)
         }
         
+    }
+    @objc func touchOrderDetailBtn(){
+        print("탭")
+        orderDetailBtnTapped?()
     }
 }
