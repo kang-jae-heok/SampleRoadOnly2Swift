@@ -39,12 +39,19 @@ class SplashViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        
+        if UserDefaults.standard.value(forKey: "PRDC_MODE") == nil {
+            UserDefaults.standard.set(true, forKey: "PRDC_MODE")
+        }
         getSampleCount()
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
+        for (key, value) in UserDefaults.standard.dictionaryRepresentation() {
+            print("\(key) = \(value) \n")
+        }
         addSubviewFunc()
         setLayout()
         loadNextVC()
@@ -99,7 +106,6 @@ class SplashViewController: UIViewController {
                 if UserDefaults.standard.bool(forKey: "auto_login") {
                     if UserDefaults.contains("naver_token") {
                         if Date().dateCompare(fromDate: UserDefaults.standard.object(forKey: "naver_expireAt") as! Date) != "Future" {
-                           let vc = MainViewSController()
                             self.getRefreshToken()
                         }else {
                             self.loginClayful(platform: "naver")
@@ -140,6 +146,7 @@ class SplashViewController: UIViewController {
         let params = ["token": token]
         common.sendRequest(url: "https://api.clayful.io/v1/customers/auth/\(platform)" , method: "POST", params: params, sender: ""){ resultJson in
             let resultJson = resultJson as! [String:Any]
+            print(resultJson)
             let customerId = resultJson["customer"] as! String
             self.common.getCustomerInfo(customerId: customerId,vc: self)
         }

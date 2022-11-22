@@ -23,6 +23,9 @@ class MainContentViewController: UIViewController {
     }
     override func viewDidLoad() {
         super.viewDidLoad()
+        print("유저 생일")
+        print(type(of: UserDefaults.standard.value(forKey: "user_birth")!) )
+        print(UserDefaults.standard.value(forKey: "user_birth")!)
         getTopSampleId()
         mainContentView.sampleBtn.addTarget(self, action: #selector(touchSampleBtn), for: .touchUpInside)
         mainContentView.topView.cartBtn.addTarget(self, action: #selector(touchCartBtn), for: .touchUpInside)

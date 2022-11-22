@@ -209,7 +209,10 @@ class MainContentView: UIView {
         $0.isHidden = true
     }
     //마이 뷰
-    lazy var myVc = MyPageViewController(screenRect:  CGRect(x: 0, y: 0, width: screenBounds.width, height: screenBounds.height - screenBounds.width/4 - 90.0))
+    
+    lazy var myVc = MyPageSViewController(screenRect:  CGRect(x: 0, y: 0, width: screenBounds.width, height: screenBounds.height - screenBounds.width/4 - 90.0))
+//    lazy var myVc = MyPageViewController(screenRect:  CGRect(x: 0, y: 0, width: screenBounds.width, height: screenBounds.height - screenBounds.width/4 - 90.0))
+    
     let myView = UIView().then{
         $0.isHidden = true
     }

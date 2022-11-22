@@ -21,7 +21,7 @@ class TextFieldView: UIView{
     lazy var textField = UITextField().then{
         let attributes = [
             NSAttributedString.Key.foregroundColor: common.pointColor().withAlphaComponent(50),
-            NSAttributedString.Key.font : common.setFont(font: "medium", size: 18)
+            NSAttributedString.Key.font : common.setFont(font: "medium", size: 18 * screenRatio)
         ]
 
         $0.placeholder = placeholderStr

@@ -34,5 +34,10 @@ extension UIView {
         let common = CommonS()
         return common
     }
+    @objc func touchGrayView(view: UIView){
+        print("여기")
+        let viewWithTag = view.viewWithTag(100)
+        viewWithTag?.removeFromSuperview()
+    }
     
 }

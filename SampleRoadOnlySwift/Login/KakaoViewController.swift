@@ -39,7 +39,7 @@ class KakaoViewController: UIViewController {
         var gender = String()
         var infoParams = [String:Any]()
         UserApi.shared.me{ [self] User, Error in
-            if let name = User?.kakaoAccount?.profile?.nickname{
+            if let name = User?.kakaoAccount?.name{
                 fullName = name
                 print("name:"+name)
             }
@@ -56,7 +56,7 @@ class KakaoViewController: UIViewController {
                 if let birthyear = User?.kakaoAccount?.birthyear{
                     let stringDate = birthyear + "-" + birthday
                     print("생일" + stringDate)
-                    birthdate = common.stringToDate2(string: stringDate)
+                    birthdate = common.stringToDate4(string: stringDate)
                     print(birthdate)
                 }
             }
@@ -68,13 +68,13 @@ class KakaoViewController: UIViewController {
             let name = ["full":fullName]
             let jsonData = try! JSONSerialization.data(withJSONObject: name, options: [])
             let decodedName = String(data: jsonData, encoding: .utf8)!
-            print(email, decodedName)
             infoParams.updateValue(email, forKey: "email")
             infoParams.updateValue(decodedName, forKey: "name")
             infoParams.updateValue(mobile, forKey: "mobile")
             infoParams.updateValue(birthdate, forKey: "birthdate")
             infoParams.updateValue(gender, forKey: "gender")
             if token != ""{
+                print(infoParams)
                 common.sendRequest(url: "https://api.clayful.io/v1/customers/auth/kakao" , method: "POST", params: params, sender: ""){ [self] resultJson in
                     let resultJson = resultJson as! [String:Any]
                     if resultJson["action"] == nil {
@@ -84,21 +84,29 @@ class KakaoViewController: UIViewController {
                         guard let customerId: String = resultJson["customer"] as? String else {return}
                       
                         guard let action: String = resultJson["action"] as? String else {return}
-                        
-                        
                         print(action)
+                        let strDate = "\(birthdate)"
+                        let convertDate = strDate.prefix(10)
                         UserDefaults.standard.set(customerId, forKey: "customer_id")
                         UserDefaults.standard.set(email, forKey: "user_email")
                         UserDefaults.standard.set(mobile, forKey: "user_mobile")
-                        UserDefaults.standard.set(name, forKey: "user_name")
-                        UserDefaults.standard.set(birthdate, forKey: "user_birth")
+                        UserDefaults.standard.set(fullName, forKey: "user_name")
+                        UserDefaults.standard.set(convertDate, forKey: "user_birth")
                         UserDefaults.standard.set(gender, forKey: "user_gender")
                         UserDefaults.standard.set(true,forKey: "auto_login")
                         UserDefaults.standard.set(token,forKey: "kakao_token")
                         if action == "login" {
                             print("로그인")
-                            common.userUpdate(customerId: customerId, params: infoParams, sender: vc) {
-                                self.common.duplicateCheckOrMake2(vc: vc, customerId: customerId, bool: false, infoParams: infoParams, social: "kakao")
+                            common.userUpdate(customerId: customerId, params: infoParams, sender: vc) { resultJson2 in
+                                guard let infoDic = resultJson2 as? [String:Any] else {return}
+                                guard let nick = infoDic["alias"] as? String else {return}
+                                if nick == customerId {
+                                    vc.navigationController?.pushViewController(CheckNickViewController(), animated: true)
+                                }else {
+                                    UserDefaults.standard.set(nick, forKey: "user_alias")
+                                    self.common.duplicateCheckOrMake2(vc: vc, customerId: customerId, bool: false, infoParams: infoParams, social: "kakao")
+                                }
+                               
 //                                self.common.checkTypeFormDone(customerId: customerId, vc: vc)
                             }
                         }else if action == "register"{

@@ -11,6 +11,7 @@ class JoinDetailSViewController: UIViewController {
     let joinDetailView = JoinDetailView()
     let joinEmailView = JoinEmailView()
     let common = CommonS()
+    var checkBool = false
     var infoDic = [String:Any]()
     var gender = String()
     
@@ -28,11 +29,13 @@ class JoinDetailSViewController: UIViewController {
     }
     override func viewDidLoad() {
         super.viewDidLoad()
+        joinDetailView.nickNameTextField.textField.delegate = self
         joinDetailView.topView.homeBtn.addTarget(self, action: #selector(touchHomeBtn), for: .touchUpInside)
         joinDetailView.nextBtn.addTarget(self, action: #selector(touchNextBtn), for: .touchUpInside)
         joinDetailView.manBtn.addTarget(self, action: #selector(touchGenderBtn(sender:)), for: .touchUpInside)
         joinDetailView.womanBtn.addTarget(self, action: #selector(touchGenderBtn(sender:)), for: .touchUpInside)
         joinDetailView.nonCheckBtn.addTarget(self, action: #selector(touchGenderBtn(sender:)), for: .touchUpInside)
+        joinDetailView.checkDuplicateBtn.addTarget(self, action: #selector(touchCheckDuplicateBtn), for: .touchUpInside)
         
     }
     @objc func touchHomeBtn(){
@@ -48,19 +51,34 @@ class JoinDetailSViewController: UIViewController {
         }
     }
     @objc func touchNextBtn(){
+        guard let nickText = joinDetailView.nickNameTextField.textField.text else { return }
         if joinDetailView.nonCheckBtn.tag == 0 && joinDetailView.manBtn.backgroundColor != common.pointColor() && joinDetailView.womanBtn.backgroundColor != common.pointColor(){
             present(common.alert(title: "", message: "성별을 입력해주세요!"), animated: false)
         }else{
+            if !(common2.isValidDate(testStr: joinDetailView.birthDateTextField.textField.text ?? "")) {
+                present(common2.alert(title: "", message: "생년월일을 형식에 맞춰서 입력해주세요."), animated: true)
+                return
+            }
             if joinDetailView.nickNameTextField.textField.text == "" {
                 present(common.alert(title: "", message: "닉네임을 입력해주세요!"), animated: false)
             }else{
                 duplicateCheck(customerId: "", name: "", birthdate: "")
             }
         }
-      
-        
-        
-        
+    }
+    @objc func touchCheckDuplicateBtn(){
+        guard let nickText = joinDetailView.nickNameTextField.textField.text else { return }
+        if nickText.count < 2 {
+            present(common2.alert(title: "", message: "2글자 이상 입력해주세요"), animated: true)
+        }else {
+            common2.checkDuplicateNick(vc: self, nick: nickText) {[self] result in
+                if result {
+                    checkBool = true
+                }else {
+                    checkBool = false
+                }
+            }
+        }
     }
     func duplicateCheck(customerId: String,name: String, birthdate: String){
         guard let email = infoDic["email"] else { return }
@@ -74,6 +92,7 @@ class JoinDetailSViewController: UIViewController {
         params = ["email":email , "mobile":stringMobile, "social":"null"]
         if customerId != "" {
             params.updateValue(customerId, forKey: "customer_id")
+            params.updateValue(name, forKey: "nick")
         }
         //중복 체크
         common.sendRequest(url: "http://110.165.17.124/sampleroad/db/sr_user_insert.php", method: "post", params: params, sender: ""){ [self] reusultJson in
@@ -81,20 +100,36 @@ class JoinDetailSViewController: UIViewController {
             let resultDic = reusultJson as! [String:Any]
             let code = resultDic["error"] as! String
             if code == "1" && customerId == ""{
-                addUser()
+                guard let nickText = joinDetailView.nickNameTextField.textField.text else { return }
+                if checkBool {
+                    common2.checkDuplicateAndMakeNick3(vc: self, nick: nickText){
+                        self.addUser()
+                    }
+                } else {
+                    present(common2.alert(title: "", message: "중복체크 해주세요"), animated: true)
+                }
             }else if code == "2"{
                 present(common.alert(title: "", message: "중복된 아이디입니다!"), animated: false)
             }else if code == "0" {
                 present(common.alert(title: "", message: "오류!!"), animated: false)
             }else if code == "1" && customerId != "" {
-                UserDefaults.standard.set(customerId, forKey: "customer_id")
-                UserDefaults.standard.set(email, forKey: "user_email")
-                UserDefaults.standard.set(mobile, forKey: "user_mobile")
-                UserDefaults.standard.set(name, forKey: "user_name")
-                UserDefaults.standard.set(birthdate, forKey: "user_birth")
-                UserDefaults.standard.set(gender, forKey: "user_gender")
-                let vc = CertificationEmailViewController()
-                self.navigationController?.pushViewController(vc, animated: true)
+                if checkBool {
+                        let convertDate = self.common.stringToDate3(string: birthdate)
+                        let strDate = "\(convertDate)"
+                        let convertDate2 = strDate.prefix(10)
+                        UserDefaults.standard.set(customerId, forKey: "customer_id")
+                        UserDefaults.standard.set(email, forKey: "user_email")
+                        UserDefaults.standard.set(mobile, forKey: "user_mobile")
+                        UserDefaults.standard.set(name, forKey: "user_name")
+                        UserDefaults.standard.set(name, forKey: "user_alias")
+                        UserDefaults.standard.set(convertDate2, forKey: "user_birth")
+                        UserDefaults.standard.set(self.gender, forKey: "user_gender")
+                        let vc = CertificationEmailViewController()
+                        self.navigationController?.pushViewController(vc, animated: true)
+                } else {
+                    present(common2.alert(title: "", message: "중복체크 해주세요"), animated: true)
+                }
+             
             }
         }
     }
@@ -105,15 +140,18 @@ class JoinDetailSViewController: UIViewController {
         guard let pass = infoDic["pass"] else { return }
         guard let mobile = infoDic["mobile"] else { return }
         guard let fullName = joinDetailView.nickNameTextField.textField.text else { return }
-        guard let birthdate = joinDetailView.birthDatTextField.textField.text else { return }
+        guard let birthdate = joinDetailView.birthDateTextField.textField.text else { return }
         let name = ["full":fullName]
         let jsonData = try! JSONSerialization.data(withJSONObject: name, options: [])
         let decodedName = String(data: jsonData, encoding: .utf8)!
+        params.updateValue(name, forKey: "alias")
         params.updateValue(email, forKey: "email")
         params.updateValue(pass, forKey: "password")
         params.updateValue(mobile, forKey: "mobile")
         params.updateValue(decodedName, forKey: "name")
         params.updateValue(fullName, forKey: "alias")
+        print("여기다")
+        print(params)
         common.sendRequest(url: "https://api.clayful.io/v1/customers", method: "post", params: params, sender: ""){ [self] reusultJson in
             print(reusultJson)
             let resultDic = reusultJson as! [String:Any]
@@ -121,7 +159,7 @@ class JoinDetailSViewController: UIViewController {
             if gender != "none" {
                 params.updateValue(gender, forKey: "gender")
             }
-            let convertDate = common.stringToDate3(string: birthdate)
+            let convertDate = common.stringToDate2(string: birthdate)
             params.updateValue(convertDate, forKey: "birthdate")
             common.sendRequest(url: "https://api.clayful.io/v1/customers/\(customerId)", method: "put", params: params, sender: "") { resultJSon2 in
                 print("유저 업데이트")
@@ -136,4 +174,10 @@ class JoinDetailSViewController: UIViewController {
     
     
     
+}
+extension JoinDetailSViewController:UITextFieldDelegate{
+    func textFieldDidChangeSelection(_ textField: UITextField) {
+        common2.checkMaxLength(textField: joinDetailView.birthDateTextField.textField, maxLength: 12)
+        checkBool = false
+    }
 }

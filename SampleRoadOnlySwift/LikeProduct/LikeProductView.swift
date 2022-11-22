@@ -7,27 +7,33 @@
 
 import Foundation
 
-class ReceivedSampleView: UIView {
+class LikeProductView: UIView {
    
     let common = CommonS()
     let screenBounds = UIScreen.main.bounds
     
     let topView = SimpleTopView().then {
-        $0.tit.text = "받아온 샘플"
+        $0.tit.text = "찜"
     }
     lazy var countLbl = UILabel().then{
+        $0.text = "총 3개"
         $0.textColor = common.pointColor()
         $0.font = common.setFont(font: "bold", size: 15)
         $0.asColor(targetStringList: ["총","개"], color: common.setColor(hex: "#b1b1b1"))
     }
+    lazy var allDeleteBtn = UIButton().then{
+        $0.setTitle("전체 삭제", for: .normal)
+        $0.setTitleColor(common.setColor(hex: "$b1b1b1"), for: .normal)
+        $0.titleLabel?.font = common.setFont(font: "bold", size: 10)
+        $0.layer.borderWidth = 1
+    }
     lazy var topLineView = UIView().then{
         $0.backgroundColor = common.gray()
     }
-    let receivedSampleTableView = UITableView()
+    let likeProductTableView = UITableView()
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.backgroundColor = .white
-       
         addSubviewFunc()
         setLayout()
        
@@ -37,7 +43,7 @@ class ReceivedSampleView: UIView {
         fatalError("initFail")
     }
     func addSubviewFunc(){
-        [topView,countLbl,topLineView,receivedSampleTableView].forEach{
+        [topView,countLbl,allDeleteBtn,topLineView,likeProductTableView].forEach{
             self.addSubview($0)
         }
     }
@@ -50,16 +56,22 @@ class ReceivedSampleView: UIView {
             $0.top.equalTo(topView.snp.bottom).offset(margin2)
             $0.left.equalToSuperview().offset(margin2)
         }
+        allDeleteBtn.snp.makeConstraints{
+            $0.top.equalTo(topView.snp.bottom).offset(margin2)
+            $0.right.equalToSuperview().offset(-margin2)
+            $0.size.equalTo(CGSize(width: margin2 * 3, height: margin2))
+        }
         topLineView.snp.makeConstraints{
-            $0.top.equalTo(countLbl.snp.bottom).offset(margin2)
+            $0.top.equalTo(allDeleteBtn.snp.bottom).offset(margin2)
             $0.left.right.equalToSuperview()
             $0.size.height.equalTo(2)
         }
-        receivedSampleTableView.snp.makeConstraints{
+        likeProductTableView.snp.makeConstraints{
             $0.left.right.bottom.equalToSuperview()
             $0.top.equalTo(topLineView.snp.bottom)
         }
         
     }
 }
+
 

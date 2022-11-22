@@ -130,12 +130,14 @@ extension MainViewSController: NaverThirdPartyLoginConnectionDelegate {
                 let resultJson = resultJson as! [String:Any]
                 let customerId = resultJson["customer"] as! String
                 let action = resultJson["action"] as! String
+                let strDate = "\(birthdate)"
+                let convertDate = strDate.prefix(10)
                 print(resultJson)
                 UserDefaults.standard.set(customerId, forKey: "customer_id")
                 UserDefaults.standard.set(email, forKey: "user_email")
                 UserDefaults.standard.set(mobile, forKey: "user_mobile")
-                UserDefaults.standard.set(decodedName, forKey: "user_name")
-                UserDefaults.standard.set(birthdate, forKey: "user_birth")
+                UserDefaults.standard.set(fullName, forKey: "user_name")
+                UserDefaults.standard.set(convertDate, forKey: "user_birth")
                 UserDefaults.standard.set(gender, forKey: "user_gender")
                 UserDefaults.standard.set(token,forKey: "naver_token")
                 UserDefaults.standard.set(true,forKey: "auto_login")
@@ -144,10 +146,18 @@ extension MainViewSController: NaverThirdPartyLoginConnectionDelegate {
                 UserDefaults.standard.set(tokenType,forKey: "naver_tokenType")
                 if action == "login" {
                     print("로그인")
-                    common.userUpdate(customerId: customerId, params: infoParams, sender: self) {
+                    common.userUpdate(customerId: customerId, params: infoParams, sender: self) {resultJson2 in
 //                        let vc = MainContentViewController()
 //                        self.navigationController?.pushViewController(vc, animated: true)
-                        self.common.duplicateCheckOrMake2(vc: self, customerId: customerId, bool: false, infoParams: infoParams, social: "naver")
+                        guard let infoDic = resultJson2 as? [String:Any] else {return}
+                        guard let nick = infoDic["alias"] as? String else {return}
+                        if nick == customerId {
+                            self.navigationController?.pushViewController(CheckNickViewController(), animated: true)
+                        }else {
+                            UserDefaults.standard.set(nick, forKey: "user_alias")
+                            self.common.duplicateCheckOrMake2(vc: self, customerId: customerId, bool: false, infoParams: infoParams, social: "kakao")
+                        }
+//                        self.common.duplicateCheckOrMake2(vc: self, customerId: customerId, bool: false, infoParams: infoParams, social: "naver")
                     }
                 }else if action == "register"{
                     print("가입")

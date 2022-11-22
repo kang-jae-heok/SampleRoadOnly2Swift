@@ -30,14 +30,14 @@ class CommonS{
     func setColor(hex: String) -> UIColor {
         let scanner = Scanner(string: hex)
         _ = scanner.scanString("#")
-
+        
         var rgb: UInt64 = 0
         scanner.scanHexInt64(&rgb)
-
+        
         let r = Double((rgb >> 16) & 0xFF) / 255.0
         let g = Double((rgb >>  8) & 0xFF) / 255.0
         let b = Double((rgb >>  0) & 0xFF) / 255.0
-
+        
         return(UIColor(red: r, green: g, blue: b, alpha: 1.0))
     }
     func pointColor() -> UIColor{
@@ -50,10 +50,10 @@ class CommonS{
         return self.setColor(hex: "#b1b1b1")
     }
     func alert(title:String , message: String) -> UIAlertController{
-
+        
         let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertController.Style.alert)
         let okAction = UIAlertAction(title: "OK", style: .default) { (action) in
-
+            
         }
         alert.addAction(okAction)
         return alert
@@ -76,11 +76,41 @@ class CommonS{
             return false
         }
     }
+    func isValidDate(testStr: String) -> Bool{
+        //문자와 숫자 무조건 포함
+        let RegEx = "^([12]\\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01]))$"
+        let Test = NSPredicate(format:"SELF MATCHES %@", RegEx)
+        return Test.evaluate(with: testStr)
+    }
+    func isValidDate2(testStr: String) -> Bool{
+        //문자와 숫자 무조건 포함
+        let RegEx = "^([12]\\d{3}(0[1-9]|1[0-2])(0[1-9]|[12]\\d|3[01]))$"
+        let Test = NSPredicate(format:"SELF MATCHES %@", RegEx)
+        return Test.evaluate(with: testStr)
+    }
     func checkMaxLength(textField: UITextField!, maxLength: Int) {
         if (textField.text?.count ??  "".count > maxLength) {
             textField.deleteBackward()
         }
     }
+    
+    func addGrayAlertView(view: UIView, alertView: UIView){
+        let grayBackgroundView = UIButton().then{
+            $0.backgroundColor =  .black.withAlphaComponent(0.8)
+        }
+        grayBackgroundView.tag = 100
+        view.addSubview(grayBackgroundView)
+        grayBackgroundView.addSubview(alertView)
+        grayBackgroundView.snp.makeConstraints {
+            $0.edges.equalToSuperview()
+        }
+        alertView.snp.makeConstraints {
+            $0.centerY.centerX.equalToSuperview()
+        }
+        print(self)
+        grayBackgroundView.addTarget(self, action: #selector(view.touchGrayView), for: .touchUpInside)
+    }
+    
     func kakaoLogin(vc: UIViewController){
         let kakaoVc = KakaoViewController()
         if(UserApi.isKakaoTalkLoginAvailable()){
@@ -96,17 +126,17 @@ class CommonS{
             }
         }
     }
-//    func kakaoLogin(vc:UIViewController){
-//        if(UserApi.isKakaoTalkLoginAvailable()){
-//            UserApi.shared.loginWithKakaoTalk { [vc] oauthToken, error in
-//                onKakaoLoginCompleted(oauthToken?.accessToken, vc: vc)
-//            }
-//        }else{
-//            UserApi.shared.loginWithKakaoAccount(prompts:[.Login]) { [vc] oauthToken, error  in
-//                onKakaoLoginCompleted(oauthToken?.accessToken, vc: vc)
-//            }
-//        }
-//    }
+    //    func kakaoLogin(vc:UIViewController){
+    //        if(UserApi.isKakaoTalkLoginAvailable()){
+    //            UserApi.shared.loginWithKakaoTalk { [vc] oauthToken, error in
+    //                onKakaoLoginCompleted(oauthToken?.accessToken, vc: vc)
+    //            }
+    //        }else{
+    //            UserApi.shared.loginWithKakaoAccount(prompts:[.Login]) { [vc] oauthToken, error  in
+    //                onKakaoLoginCompleted(oauthToken?.accessToken, vc: vc)
+    //            }
+    //        }
+    //    }
     func sendRequest(url: String, method: String, params: Dictionary<String, Any>, sender: String,  completion:@escaping (Any) -> Void) {
         AF.request(url,
                    method: HTTPMethod(rawValue: method),
@@ -119,12 +149,12 @@ class CommonS{
         //.validate(statusCode: 200..<300)
         
         .responseJSON { [self] (response) in
-//            print(response.result)
+            //            print(response.result)
             print("sendURL -> " + url)
             print(params)
             //여기서 가져온 데이터를 자유롭게 활용하세요.
-//            print(params)
-//            print(response)
+            //            print(params)
+            //            print(response)
             switch response.result {
             case .success(let value):
                 completion(value)
@@ -170,7 +200,7 @@ class CommonS{
             print(String(describing: date2))
             returnDate = date2!
         }
-    return returnDate
+        return returnDate
     }
     func stringToDate2(string: String) -> Date {
         var returnDate = Date()
@@ -183,7 +213,7 @@ class CommonS{
             print(String(describing: date2))
             returnDate = date
         }
-    return returnDate
+        return returnDate
     }
     func stringToDate3(string: String) -> Date {
         var returnDate = Date()
@@ -196,23 +226,55 @@ class CommonS{
             print(String(describing: date2))
             returnDate = date
         }
-    return returnDate
+        return returnDate
     }
-
-    func userUpdate(customerId: String, params: [String:Any], sender: UIViewController, completion: @escaping () -> Void){
+    func stringToDate4(string: String) -> Date {
+        var returnDate = Date()
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MMdd"
+        dateFormatter.timeZone = TimeZone(identifier: "UTC")
+        if let date = dateFormatter.date(from: string) {
+            let date2 = Calendar.current.date(byAdding: .hour, value: 9, to: Date())
+            print(String(describing: date))
+            print(String(describing: date2))
+            returnDate = date
+        }
+        return returnDate
+    }
+    func DateToDate(date: Date) -> Date {
+        var returnDate = Date()
+        let dateFormatter = DateFormatter()
+        let strDate = String(describing: date)
+        print("strDate -> " + strDate)
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+//        dateFormatter.timeZone = TimeZone(identifier: "UTC")
+        let date2 = dateFormatter.date(from: strDate)
+        
+        returnDate = date2!
+        return returnDate
+    }
+    func nowDate() -> String{
+        let nowDate = Date()
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+        let str = dateFormatter.string(from: nowDate)
+        return str
+    }
+    
+    func userUpdate(customerId: String, params: [String:Any], sender: UIViewController, completion: @escaping ([String:Any]) -> Void){
         print(#function)
-//        UserDefaults.standard.set(customerId, forKey: "customerId")
-//        UserDefaults.standard.set(email, forKey: "user_email")
-//        UserDefaults.standard.set(mobile, forKey: "user_mobile")
-//        UserDefaults.standard.set(name, forKey: "user_name")
-//        UserDefaults.standard.set(birthdate, forKey: "user_birth")
-//        UserDefaults.standard.set(gender, forKey: "user_gender")
+        //        UserDefaults.standard.set(customerId, forKey: "customerId")
+        //        UserDefaults.standard.set(email, forKey: "user_email")
+        //        UserDefaults.standard.set(mobile, forKey: "user_mobile")
+        //        UserDefaults.standard.set(name, forKey: "user_name")
+        //        UserDefaults.standard.set(birthdate, forKey: "user_birth")
+        //        UserDefaults.standard.set(gender, forKey: "user_gender")
         self.sendRequest(url: "https://api.clayful.io/v1/customers/\(customerId)", method: "put", params: params, sender: ""){ resultJson in
             print("성공")
             print(resultJson)
+            guard let infoDic = resultJson as? [String:Any] else {return}
             
-    
-            completion()
+            completion(infoDic)
         }
     }
     func duplicateCheckOrMake(vc: UIViewController, customerId: String, bool: Bool, infoParams: [String:Any], social:String){
@@ -237,19 +299,20 @@ class CommonS{
                 print("중복체크 -> 중복없음")
                 duplicateCheckOrMake(vc: vc, customerId: customerId, bool: true, infoParams: infoParams, social: social)
             }else if code == "2"{
-                print("에러코드 2")
+                print("중복체크 -> 중복")
                 deleteUserDefaults()
                 deleteUser(customerId: customerId)
                 vc.present(self.alert(title: "", message: "이미 가입이 되어있는 이메일입니다. \n 이메일로 로그인 해주세요."), animated: false)
                 print("@@@@@@@")
             }else if code == "0"{
-                print("에러코드 0")
+                print("알수없는 오류")
                 deleteUserDefaults()
                 vc.present(self.alert(title: "", message: "오류!!"), animated: false)
             }else if code == "1" && bool{
                 //db넣기 -> 성공
                 print("db넣기 -> 성공")
-                self.checkTypeFormDone(customerId: customerId, vc: vc)
+                vc.navigationController?.pushViewController(CheckNickViewController(), animated: true)
+//                self.checkTypeFormDone(customerId: customerId, vc: vc)
             }
         }
     }
@@ -273,7 +336,7 @@ class CommonS{
             if code == "1" && !bool{
                 //중복체크 -> 중복없음
                 print("중복체크 -> 중복없음")
-                duplicateCheckOrMake(vc: vc, customerId: customerId, bool: true, infoParams: infoParams, social: social)
+                duplicateCheckOrMake2(vc: vc, customerId: customerId, bool: true, infoParams: infoParams, social: social)
             }else if code == "2"{
                 print("에러코드 2")
                 self.checkTypeFormDone(customerId: customerId, vc: vc)
@@ -288,22 +351,119 @@ class CommonS{
             }
         }
     }
+    func checkDuplicateNick(vc: UIViewController, nick: String, completion: @escaping(Bool) -> Void) {
+        var params = [String:Any]()
+        params.updateValue(nick, forKey: "nick")
+        params.updateValue("1", forKey: "check")
+        self.sendRequest(url: "http://110.165.17.124/sampleroad/db/sr_user_insert.php", method: "post", params: params, sender: "") { resultJson in
+            print(resultJson)
+            guard let errorDic = resultJson as? [String:Any] else { return }
+            guard let errorCode = errorDic["error"] as? String else { return }
+            if errorCode == "1" {
+                vc.present(self.alert(title: "", message: "사용 가능한 닉네임입니다"), animated: true)
+                completion(true)
+            } else if errorCode == "2" {
+                vc.present(self.alert(title: "", message: "중복된 닉네임입니다"), animated: true)
+                completion(false)
+            }
+        }
+    }
+//    func checkDuplicateAndMakeNick(vc: UIViewController, nick: String){
+//        var params = [String:Any]()
+//        params.updateValue(nick, forKey: "nick")
+//        params.updateValue("1", forKey: "check")
+//        self.sendRequest(url: "http://110.165.17.124/sampleroad/db/sr_user_insert.php", method: "post", params: params, sender: "") { resultJson in
+//            print(resultJson)
+//            guard let errorDic = resultJson as? [String:Any] else { return }
+//            guard let errorCode = errorDic["error"] as? String else { return }
+//            if errorCode == "1" {
+//                self.updateNick(vc: vc, nick: nick)
+//            } else if errorCode == "2" {
+//                vc.present(self.alert(title: "", message: "중복된 닉네임입니다"), animated: true)
+//            }
+//        }
+//    }
+    func checkDuplicateAndMakeNick(vc: UIViewController,nick: String ) {
+        let customerId = UserDefaults.standard.string(forKey: "customer_id") ?? ""
+        var params2 = [String:Any]()
+        params2.updateValue(nick, forKey: "nick")
+        params2.updateValue(customerId, forKey: "customer_id")
+        self.sendRequest(url: "http://110.165.17.124/sampleroad/db/sr_user_insert.php", method: "post", params: params2, sender: "") { resultJson2 in
+            guard let errorDic = resultJson2 as? [String:Any] else { return }
+            guard let errorCode = errorDic["error"] as? String else { return }
+            if errorCode == "1" {
+                self.userUpdate(customerId: customerId, params: ["alias":nick], sender: vc) {_ in
+                    UserDefaults.standard.set(nick, forKey: "user_alias")
+                    self.checkTypeFormDone(customerId: customerId, vc: vc)
+                }
+            } else if errorCode == "2" {
+                vc.present(self.alert(title: "", message: "중복된 닉네임입니다"), animated: true)
+            }
+        }
+    }
+    func checkDuplicateAndMakeNick2(vc: UIViewController,nick: String, completion: @escaping() -> Void) {
+        let customerId = UserDefaults.standard.string(forKey: "customer_id") ?? ""
+        var params2 = [String:Any]()
+        params2.updateValue(nick, forKey: "nick")
+        params2.updateValue(customerId, forKey: "customer_id")
+        self.sendRequest(url: "http://110.165.17.124/sampleroad/db/sr_user_insert.php", method: "post", params: params2, sender: "") { resultJson2 in
+            guard let errorDic = resultJson2 as? [String:Any] else { return }
+            guard let errorCode = errorDic["error"] as? String else { return }
+            if errorCode == "1" {
+                self.userUpdate(customerId: customerId, params: ["alias":nick], sender: vc) {_ in
+                    UserDefaults.standard.set(nick, forKey: "user_alias")
+                    completion()
+                }
+            } else if errorCode == "2" {
+                vc.present(self.alert(title: "", message: "중복된 닉네임입니다"), animated: true)
+            }
+        }
+    }
+    func checkDuplicateAndMakeNick3(vc: UIViewController,nick: String, completion: @escaping() -> Void) {
+        var params = [String:Any]()
+        params.updateValue(nick, forKey: "nick")
+        params.updateValue("1", forKey: "check")
+        self.sendRequest(url: "http://110.165.17.124/sampleroad/db/sr_user_insert.php", method: "post", params: params, sender: "") { resultJson in
+            print(resultJson)
+            guard let errorDic = resultJson as? [String:Any] else { return }
+            guard let errorCode = errorDic["error"] as? String else { return }
+            if errorCode == "1" {
+                completion()
+            } else if errorCode == "2" {
+                vc.present(self.alert(title: "", message: "중복된 닉네임입니다"), animated: true)
+            }
+        }
+    }
+ 
+
+  
     func deleteUserDefaults(){
         for key in UserDefaults.standard.dictionaryRepresentation().keys {
-                    UserDefaults.standard.removeObject(forKey: key.description)
-                }
+            UserDefaults.standard.removeObject(forKey: key.description)
+        }
     }
     func addUser(vc: UIViewController, customerId: String, infoParams: [String:Any],social: String){
         print("customerID" + customerId)
-        self.userUpdate(customerId: customerId, params: infoParams, sender: vc) { [weak self] in
-            self?.duplicateCheckOrMake(vc: vc, customerId: customerId, bool: false, infoParams: infoParams, social: social)
+        var params = infoParams
+        params.updateValue(customerId, forKey: "alias")
+        self.userUpdate(customerId: customerId, params: params, sender: vc) { _ in
+            self.duplicateCheckOrMake(vc: vc, customerId: customerId, bool: false, infoParams: infoParams, social: social)
+        }
+        
+    }
+    func addUser2(vc: UIViewController, customerId: String, infoParams: [String:Any],social: String){
+        print("customerID" + customerId)
+        var params = infoParams
+        params.updateValue(customerId, forKey: "alias")
+        self.userUpdate(customerId: customerId, params: infoParams, sender: vc) { _ in
+            self.duplicateCheckOrMake(vc: vc, customerId: customerId, bool: false, infoParams: infoParams, social: social)
         }
         
     }
     func deleteUser(customerId: String){
         self.sendRequest(url: "https://api.clayful.io/v1/customers/\(customerId)", method: "delete", params: [:], sender: "") { resultJson in
             print(resultJson)
-           
+            
         }
     }
     func setImageUrl(url: String, imageView: UIImageView){
@@ -336,7 +496,9 @@ class CommonS{
     }
     func checkTypeFormDone(customerId: String, vc: UIViewController){
         let params = ["customer_id":customerId]
-        self.sendRequest(url: "http://110.165.17.124/sampleroad/db/sr_survey_check.php", method: "post", params: [:], sender: "") { resultJson in
+        print("유저 커스터머 아이디")
+        print(customerId)
+        self.sendRequest(url: "http://110.165.17.124/sampleroad/db/sr_survey_check.php", method: "post", params: params, sender: "") { resultJson in
             let resultDic = resultJson as! [String:Any]
             let errCode = resultDic["error"] as! String
             print(resultDic)
@@ -399,17 +561,22 @@ class CommonS{
             UserDefaults.standard.set(convertBirth, forKey: "user_birth")
             UserDefaults.standard.set(String(describing: userDic["gender"]), forKey: "user_gender")
             print("커스터머 로그인")
-            self.checkTypeFormDone(customerId: customerId, vc: vc)
+            if UserDefaults.contains("user_alias") {
+                self.checkTypeFormDone(customerId: customerId, vc: vc)
+            }else {
+                vc.navigationController?.pushViewController(CheckNickViewController(), animated: true)
+            }
+           
         }
     }
     
-
+    
 }
 extension UILabel {
     func asFontColor(targetStringList: [String], font: UIFont?, color: UIColor?) {
         let fullText = text ?? ""
         let attributedString = NSMutableAttributedString(string: fullText)
-
+        
         targetStringList.forEach {
             let range = (fullText as NSString).range(of: $0)
             attributedString.addAttributes([.font: font as Any, .foregroundColor: color as Any], range: range)
@@ -419,7 +586,7 @@ extension UILabel {
     func asFont(targetStringList: [String], font: UIFont?) {
         let fullText = text ?? ""
         let attributedString = NSMutableAttributedString(string: fullText)
-
+        
         targetStringList.forEach {
             let range = (fullText as NSString).range(of: $0)
             attributedString.addAttributes([.font: font as Any], range: range)
@@ -429,12 +596,12 @@ extension UILabel {
     func asColor(targetStringList: [String],color: UIColor?) {
         let fullText = text ?? ""
         let attributedString = NSMutableAttributedString(string: fullText)
-
+        
         targetStringList.forEach {
             let range = (fullText as NSString).range(of: $0)
             attributedString.addAttributes([.foregroundColor: color as Any], range: range)
         }
         attributedText = attributedString
     }
-
+    
 }

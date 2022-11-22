@@ -94,7 +94,7 @@ extension WebView: WKUIDelegate, WKNavigationDelegate{
                 dataDic.updateValue(c, forKey: a[0])
             }
             print(dataDic)
-            dataDic.updateValue("QUFZC3UF2VFM", forKey: "customer_id")
+            dataDic.updateValue(UserDefaults.standard.string(forKey: "customer_id") ?? "", forKey: "customer_id")
             common.sendRequest(url: "http://110.165.17.124/sampleroad/db/survey.php", method: "post", params: dataDic, sender: ""){resultJson in
                 print(resultJson)
                 let errorCode = resultJson as! [String: Any]
@@ -107,3 +107,4 @@ extension WebView: WKUIDelegate, WKNavigationDelegate{
         decisionHandler(.allow)
     }
 }
+    

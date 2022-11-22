@@ -68,10 +68,19 @@ class JoinDetailView: UIView{
         $0.font = common.setFont(font: "semiBold", size: 12)
 //        $0.isHidden = true
     }
-    let birthDatTextField = TextFieldView(frame: .zero, title: "생년월일(YYYY,MM,DD)", placeholder: "나이가 어떻게 되시죠? 고객님을 좀 더 알고 싶네요:)").then{
+    let birthDateTextField = TextFieldView(frame: .zero, title: "생년월일(YYYY-MM-DD)", placeholder: "나이가 어떻게 되시죠? 고객님을 좀 더 알고 싶네요:)").then{
         $0.textField.keyboardType = .numberPad
+        $0.textField.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
+//        $0.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
     }
     let nickNameTextField = TextFieldView(frame: .zero, title: "닉네임", placeholder: "나만의 매력적인 닉네임을 정해주세요")
+    lazy var checkDuplicateBtn = UIButton().then {
+        $0.backgroundColor = common2.pointColor()
+        $0.setTitle("중복검사", for: .normal)
+        $0.setTitleColor(.white, for: .normal)
+        $0.titleLabel?.font = common2.setFont(font:"bold", size: 13)
+        $0.layer.cornerRadius = 9
+    }
     lazy var nextBtn = UIButton().then{
         $0.setTitle("다음", for: .normal)
         $0.backgroundColor = common.pointColor()
@@ -82,7 +91,7 @@ class JoinDetailView: UIView{
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.backgroundColor = .white
-        birthDatTextField.textField.delegate = self
+        birthDateTextField.textField.delegate = self
         nickNameTextField.textField.delegate = self
         addSubviewFunc()
         setLayout()
@@ -137,16 +146,21 @@ class JoinDetailView: UIView{
             $0.centerY.equalTo(nonLbl.snp.centerY).offset(-1)
             $0.right.equalTo(nonLbl.snp.left).offset(-5)
         }
-        birthDatTextField.snp.makeConstraints{
+        birthDateTextField.snp.makeConstraints{
             $0.top.equalTo(nonLbl.snp.bottom).offset(50)
             $0.left.right.equalToSuperview()
             $0.size.equalTo(CGSize(width: screenBounds.width, height: 70))
         }
         nickNameTextField.snp.makeConstraints{
-            $0.top.equalTo(birthDatTextField.snp.bottom).offset(30)
+            $0.top.equalTo(birthDateTextField.snp.bottom).offset(30)
             $0.left.right.equalToSuperview()
             $0.size.equalTo(CGSize(width: screenBounds.width, height: 70))
             $0.bottom.equalToSuperview().offset(-50)
+        }
+        checkDuplicateBtn.snp.makeConstraints {
+            $0.right.equalToSuperview().offset(-margin2)
+            $0.centerY.equalTo(nickNameTextField.textField.snp.centerY)
+            $0.size.equalTo(CGSize(width: 60, height: 25))
         }
         bottomView.snp.makeConstraints{
             $0.bottom.left.right.equalToSuperview()
@@ -163,10 +177,10 @@ class JoinDetailView: UIView{
         self.addSubview(topView)
         self.addSubview(sclView)
         self.addSubview(nextBtn)
-        [genderLbl,manBtn,womanBtn,manLbl,womanLbl,nonLbl,nonCheckBtn,subNonCheckLbl,birthDatTextField,nickNameTextField].forEach{
+        [genderLbl,manBtn,womanBtn,manLbl,womanLbl,nonLbl,nonCheckBtn,subNonCheckLbl,birthDateTextField,nickNameTextField].forEach{
             sclView.addSubview($0)
         }
-    
+        nickNameTextField.addSubview(checkDuplicateBtn)
        
         
 //        bottomView.addSubview(nextBtn)
@@ -214,10 +228,27 @@ class JoinDetailView: UIView{
             nonCheckBtn.tag = 0
         }
     }
+    @objc func textFieldDidChange(_ textField: UITextField) {
+        if birthDateTextField.textField.text?.count == 10 {
+            if !(common2.isValidDate(testStr: textField.text ?? "")) {
+                parentViewController?.present(common2.alert(title: "", message: "생년월일을 형식에 맞춰서 입력해주세요."), animated: true)
+            }
+        }
+    }
 }
 extension JoinDetailView:UITextFieldDelegate{
     func textFieldDidChangeSelection(_ textField: UITextField) {
-        common.checkMaxLength(textField: birthDatTextField.textField, maxLength: 8)
+//        common.checkMaxLength(textField: birthDatTextField.textField, maxLength: 8)
         common.checkMaxLength(textField: nickNameTextField.textField, maxLength: 12)
+    }
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        if (textField.text?.count == 4) || (textField.text?.count == 7) {
+            if !(string == "") {
+                textField.text = (textField.text)! + "-"
+            }
+        }
+    
+        return !(textField.text!.count > 9 && (string.count ) > range.length)
+      
     }
 }

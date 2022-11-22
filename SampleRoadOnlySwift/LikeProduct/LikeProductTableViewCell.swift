@@ -8,8 +8,8 @@
 import Foundation
 import UIKit
 
-class ReceivedSampleTableViewCell: UITableViewCell {
-    static let cellId = "ReceivedSampleTableViewCellId"
+class LikeProductTableViewCell: UITableViewCell {
+    static let cellId = "LikeProductTableViewCellId"
     let common = CommonS()
     let screenBounds = UIScreen.main.bounds
     let productImgView = UIImageView().then{
@@ -27,9 +27,13 @@ class ReceivedSampleTableViewCell: UITableViewCell {
     lazy var ratingLbl = UILabel().then{
         $0.font = common.setFont(font: "bold", size: 10)
     }
+    let deleteBtn = UIButton().then{
+        $0.setImage(UIImage(named: "x_btn"), for: .normal)
+    }
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
+        contentView.isUserInteractionEnabled = true
         addSubviewFunc()
         setLayout()
     }
@@ -38,7 +42,7 @@ class ReceivedSampleTableViewCell: UITableViewCell {
         fatalError("initFail")
     }
     func addSubviewFunc(){
-        [productImgView,productNameLbl,companyNameLbl,rateImgView,ratingLbl].forEach{
+        [productImgView,productNameLbl,companyNameLbl,rateImgView,ratingLbl,deleteBtn].forEach{
             self.addSubview($0)
         }
     }
@@ -65,5 +69,10 @@ class ReceivedSampleTableViewCell: UITableViewCell {
             $0.left.equalTo(rateImgView.snp.right).offset(5)
             $0.top.equalTo(productNameLbl.snp.bottom).offset(6)
         }
+        deleteBtn.snp.makeConstraints{
+            $0.top.equalTo(productImgView)
+            $0.right.equalToSuperview().offset(-margin2)
+        }
     }
 }
+

@@ -16,6 +16,21 @@ class EditProfileViewController: UIViewController {
     }
     override func viewDidLoad() {
         super.viewDidLoad()
+        setTarget()
+    }
+    func setTarget(){
+        editProfileView.topView.backBtn.addTarget(self, action: #selector(touchBackBtn), for: .touchUpInside)
+        editProfileView.nameDuplicateCheckBtn.addTarget(self, action: #selector(touchNameDuplicateCheckBtn), for: .touchUpInside)
+        editProfileView.yesBtn.addTarget(self, action: #selector(touchYesBtn), for: .touchUpInside)
+    }
+    @objc func touchBackBtn(){
+        self.navigationController?.popViewController(animated: true)
+    }
+    @objc func touchNameDuplicateCheckBtn(){
+        present(common2.alert(title: "", message: "준비중입니다"), animated: true)
+    }
+    @objc func touchYesBtn(){
+        present(common2.alert(title: "", message: "준비중입니다"), animated: true)
     }
     
 

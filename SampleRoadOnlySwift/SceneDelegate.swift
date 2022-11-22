@@ -27,7 +27,7 @@ import NaverThirdPartyLogin
         UserDefaults.standard.set("https://service.iamport.kr/payments/fail?success=", forKey: "PAY_FAILED_URL")
         UserDefaults.standard.set("http://110.165.17.124/sampleroad/", forKey: "SERVER_URL")
         window = UIWindow(windowScene: windowScene)
-        mainViewController = EditProfileViewController()
+        mainViewController = SplashViewController()
         navController = UINavigationController(rootViewController: mainViewController)
         navController.setNavigationBarHidden(true, animated: false)
         window?.rootViewController = self.navController // 시작을 위에서 만든 내비게이션 컨트롤러로 해주면 끝!
@@ -126,14 +126,22 @@ import NaverThirdPartyLogin
         common.sendRequest(url: "http://110.165.17.124/sampleroad/db/sr_admin_select.php", method: "post", params: [:], sender: "") { resultJson in
             self.adminDic = resultJson as! [String:Any]
             print(type(of: self.adminDic["REVIEW_VERSION"]!))
+            guard let localVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String else {
+                return
+            }
 //            guard let verCheck = self.adminDic["REVIEW_VERSION"]!
             if self.adminDic["REVIEW_VERSION"] is NSNull {
                 UserDefaults.standard.set(true, forKey: "PRDC_MODE")
                 print("유저 버전")
                 print(UserDefaults.standard.bool(forKey: "PRDC_MODE"))
             }else{
-                UserDefaults.standard.set(false, forKey: "PRDC_MODE")
-                print("리뷰 버전")
+                if self.adminDic["REVIEW_VERSION"] as! String == localVersion {
+                    print("리뷰 버전")
+                    UserDefaults.standard.set(false, forKey: "PRDC_MODE")
+                }else {
+                    print("유저 버전")
+                    UserDefaults.standard.set(true, forKey: "PRDC_MODE")
+                }
                 print(UserDefaults.standard.bool(forKey: "PRDC_MODE"))
 //                if adminDic["APP_VERSION"] == adminDic["REVIEW_VERSION"] {
 //
@@ -148,6 +156,8 @@ import NaverThirdPartyLogin
             }
         }
     }
+  
+       
 
 }
 
