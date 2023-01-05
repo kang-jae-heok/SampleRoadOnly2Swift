@@ -26,14 +26,15 @@ class SelectedTableCell: UITableViewCell{
     let sampleImgView = UIImageView()
     lazy var companyLbl = UILabel().then{
         $0.textAlignment = .center
-        $0.font = common.setFont(font: "regular", size: 10)
+        $0.font = common.setFont(font: "regular", size: 9)
+        $0.textColor = common.setColor(hex: "#6f6f6f")
     }
     lazy var sampleName = UILabel().then{
         $0.lineBreakMode = .byWordWrapping
         $0.numberOfLines = 2
         $0.textAlignment = .center
-        
-        $0.font = common.setFont(font: "regular", size: 13)
+        $0.textColor = common.setColor(hex: "#6f6f6f")
+        $0.font = common.setFont(font: "bold", size: 13)
     }
     lazy var hashtagLbl = UILabel().then{
         $0.textColor = common.pointColor()
@@ -82,8 +83,8 @@ class SelectedTableCell: UITableViewCell{
             $0.top.equalToSuperview().offset(5)
             $0.left.equalToSuperview().offset(margin)
 //            $0.bottom.equalTo(self.snp.centerY)
-            $0.width.equalTo(50 + margin)
-            $0.height.equalTo(80)
+            $0.width.equalTo(60)
+            $0.height.equalTo(70)
         }
         sampleInfoView.snp.makeConstraints{
             $0.top.equalTo(sampleImgView.snp.bottom)
@@ -98,7 +99,7 @@ class SelectedTableCell: UITableViewCell{
         sampleName.snp.makeConstraints{
             $0.centerX.equalTo(sampleImgView)
             $0.top.equalTo(companyLbl.snp.bottom).offset(4)
-            $0.bottom.equalToSuperview().offset(-5)
+            $0.bottom.equalToSuperview().offset(-15)
             $0.width.equalTo(sampleInfoView)
         }
         hashtagLbl.snp.makeConstraints{

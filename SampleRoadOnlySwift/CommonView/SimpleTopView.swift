@@ -13,7 +13,7 @@ class SimpleTopView: UIView {
     }
     lazy var tit = UILabel().then{
         $0.textColor = common.pointColor()
-        $0.font = common.setFont(font: "bold", size: 23)
+        $0.font = common.setFont(font: "bold", size: 20)
         $0.textAlignment = .center
     }
     override init(frame: CGRect) {

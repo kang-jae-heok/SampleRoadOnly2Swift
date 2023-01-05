@@ -12,7 +12,7 @@ import WebKit
 public typealias IAMPortParameters = [String: Any]
 
 public enum IAMPortPGType: String {
-    case html5_inicis   = "html5_inicis"  // (이니시스웹표준)
+    case html5_inicis   = "html5_inicis"  // (이니시스웹테스트)
     case html5_inicis_prdc   = "html5_inicis.MOImobil83"  // (이니시스웹표준)
     case inicis         = "inicis"        // (이니시스ActiveX결제창)
     case uplus          = "uplus"         // (LGU+)
@@ -53,6 +53,7 @@ public enum IAMPortPayType {
     case bankpay
     case isp
 }
+//https://service.iamport.kr/payments/fail?success=false&imp_uid=imp_569793819917&error_msg=F0004%3APG사+결제요청에+실패하여+중단합니다%28imp_569793819917%29+PG하위몰+사업자번호+오류
 
 public enum IAMPortPayError: Error {
     case custom(reason: String)

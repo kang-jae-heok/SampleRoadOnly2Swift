@@ -33,6 +33,7 @@ class GetSampleViewController: UIViewController {
     @objc func touchNextBtn(){
         if typeNum < 2 {
             typeNum += 1
+            getSampleView.nextBtn.isHidden = false
         }
         if typeNum == 0 {
             getSampleView.backBtn.isHidden = true
@@ -43,6 +44,7 @@ class GetSampleViewController: UIViewController {
             getSampleView.typeTit.text = getSampleView.typeTitArr[1]
             getSampleView.getSample(type: "모이스처")
         }else if typeNum == 2 {
+            getSampleView.nextBtn.isHidden = true
             getSampleView.backBtn.isHidden = false
             getSampleView.typeTit.text = getSampleView.typeTitArr[2]
             getSampleView.getSample(type: "선케어")
@@ -53,6 +55,7 @@ class GetSampleViewController: UIViewController {
     @objc func touchBackBtn(){
         if typeNum > 0 {
             typeNum -= 1
+            getSampleView.nextBtn.isHidden = false
         }
         if typeNum == 0 {
             getSampleView.backBtn.isHidden = true

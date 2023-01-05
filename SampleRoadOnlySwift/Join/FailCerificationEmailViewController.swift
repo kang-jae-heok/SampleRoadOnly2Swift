@@ -179,29 +179,58 @@ class FailCerificationEmailViewController: UIViewController, UITextFieldDelegate
             present(common.alert(title: "", message: "이메일 형식이 아닙니다"),animated: true)
         }else if !checkEmail(str: secondTextField.text!){
             present(common.alert(title: "", message: "이메일 형식이 아닙니다"),animated: true)
-        }else if firstTextField.text != UserDefaults.standard.value(forKey: "user_email") as! String{
+        }else if firstTextField.text != UserDefaults.standard.string(forKey: "user_email") ?? "" {
             present(common.alert(title: "", message: "기존 이메일이 다릅니다"),animated: true)
-        }else if thirdTextField.text != UserDefaults.standard.value(forKey: "user_pwd") as! String{
-            present(common.alert(title: "", message: "비밀번호가 다릅니다"),animated: true)
         }else{
-            UserDefaults.standard.set(secondTextField.text, forKey: "user_email")
-            let text: String = "이메일이 변경되었습니다"
-            let attributeString = NSMutableAttributedString(string: text) // 텍스트 일부분 색상, 폰트 변경 - https://icksw.tistory.com/152
-            let font = Common.kFont(withSize: "regular", 13)
-            attributeString.addAttribute(.font, value: font, range: (text as NSString).range(of: "\(text)")) // 폰트 적용.
-            let alert = UIAlertController(title: nil, message: nil, preferredStyle: UIAlertController.Style.alert)
-            
-            let okAction = UIAlertAction(title: "OK", style: .default) { (action) in
-                self.navigationController?.popViewController(animated: false)
-                    }
-            alert.setValue(attributeString, forKey: "attributedTitle")
-            alert.addAction(okAction)
-            present(alert, animated: false, completion: nil)
-            
-            
-           
-    
-            
+          checkPass()
+        }
+    }
+    func checkPass(){
+        var params = [String:Any]()
+        let email = firstTextField.text
+        let pass = thirdTextField.text
+        params.updateValue(email!, forKey: "email")
+        params.updateValue(pass!, forKey: "password")
+        common.sendRequest(url: "https://api.clayful.io/v1/customers/auth", method: "post", params: params, sender: ""){[self] resultJson in
+            var resultDic = [String:Any]()
+            resultDic = resultJson as! [String:Any]
+            print(resultDic)
+            if ((resultDic["token"] as? String) != nil) {
+                changeEmail()
+            }else {
+                if resultDic["errorCode"] as? String == "not-existing-customer" {
+                    present(common.alert(title: "", message: "존재하지 않는 아이디입니다"), animated: true)
+                }else if (resultDic["message"] as! String).contains("password") {
+                    present(common.alert(title: "", message: "비밀번호가 일치하지 않습니다"), animated: true)
+                }
+            }
+        }
+    }
+    func changeEmail(){
+        UserDefaults.standard.set(secondTextField.text, forKey: "user_email")
+        let text: String = "이메일이 변경되었습니다"
+        let attributeString = NSMutableAttributedString(string: text)
+        let font = Common.kFont(withSize: "regular", 13)
+        attributeString.addAttribute(.font, value: font, range: (text as NSString).range(of: "\(text)")) // 폰트 적용.
+        let alert = UIAlertController(title: nil, message: nil, preferredStyle: UIAlertController.Style.alert)
+        
+        let okAction = UIAlertAction(title: "OK", style: .default) { (action) in
+            self.changeClayfulEmail()
+                }
+        alert.setValue(attributeString, forKey: "attributedTitle")
+        alert.addAction(okAction)
+        present(alert, animated: false, completion: nil)
+    }
+    func changeClayfulEmail(){
+        common.sendRequest(url: "https://api.clayful.io/v1/customers/\(customerId2)", method: "put", params: ["email":secondTextField.text!], sender: "") { resultJson in
+            print(resultJson)
+            self.changeNCloudEamil()
+        }
+    }
+    func changeNCloudEamil(){
+        common.sendRequest(url: "https://api.clayful.io/v1/customers/\(customerId2)", method: "put", params: ["email":secondTextField.text!], sender: "") { resultJson in
+            print(resultJson)
+            self.navigationController?.popViewController(animated: false)
         }
     }
     @objc func touchHomeBtn(){

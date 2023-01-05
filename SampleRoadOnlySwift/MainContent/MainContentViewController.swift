@@ -8,24 +8,35 @@
 import UIKit
 import Foundation
 class MainContentViewController: UIViewController {
-    let mainContentView = MainContentView()
+    var mainContentView = MainContentView()
+    lazy var reviewVc = MyReviewViewController(screenRect:  CGRect(x: 0, y: 0, width: screenBounds2.width, height: screenBounds2.height - screenBounds2.width/4 - 90.0))
+    lazy var myVc = MyPageSViewController(screenRect:  CGRect(x: 0, y: 0, width: screenBounds2.width, height: screenBounds2.height - screenBounds2.width/4 - 90.0))
+    lazy var eventVc = EventSViewController(screenRect: CGRect(x: 0, y: 0, width: screenBounds2.width, height: screenBounds2.height - screenBounds2.width/4 - 90.0 - 38.0 - ((screenBounds2.width/2.0 - margin2)/6.0)))
     let common = CommonS()
+    var moveBool = Bool()
     let screenbounds = UIScreen.main.bounds
     var dataDicArr = [[String:Any]]()
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+       
+        if UserDefaults.standard.string(forKey: "user_image") ?? "" == ""  ||  !UserDefaults.contains("user_image") ||  UserDefaults.standard.string(forKey: "user_image") == "null"{
+            myVc.myPageView.profileBtn.setImage(UIImage(named: "profile_btn"), for: .normal)
+        }else {
+            common2.setButtonImageUrl(url: UserDefaults.standard.string(forKey: "user_image") ?? "", button:  myVc.myPageView.profileBtn)
+        }
+        myVc.myPageView.nameLbl.text = UserDefaults.standard.string(forKey: "user_alias") ?? ""
+        eventVc.tableView.reloadData()
+        reviewVc.viewDidLoad()
+    }
     override func loadView() {
         super.loadView()
         view = mainContentView
-        
-        
         mainContentView.rankVc.navi = self.navigationController
-        mainContentView.eventVc.navi = self.navigationController
-        mainContentView.myVc.navi = self.navigationController
+        myVc.navi = self.navigationController
+        eventVc.navi = self.navigationController
     }
     override func viewDidLoad() {
         super.viewDidLoad()
-        print("유저 생일")
-        print(type(of: UserDefaults.standard.value(forKey: "user_birth")!) )
-        print(UserDefaults.standard.value(forKey: "user_birth")!)
         getTopSampleId()
         mainContentView.sampleBtn.addTarget(self, action: #selector(touchSampleBtn), for: .touchUpInside)
         mainContentView.topView.cartBtn.addTarget(self, action: #selector(touchCartBtn), for: .touchUpInside)
@@ -33,13 +44,37 @@ class MainContentViewController: UIViewController {
         mainContentView.firstViewBtn.addTarget(self, action: #selector(touchArrowBtn(sender:)), for: .touchUpInside)
         mainContentView.secondViewBtn.addTarget(self, action: #selector(touchArrowBtn(sender:)), for: .touchUpInside)
         mainContentView.thirdViewBtn.addTarget(self, action: #selector(touchArrowBtn(sender:)), for: .touchUpInside)
+        printAllUserDefaults()
      //카트 전체 삭제
         print("커스터머 아이디")
         print(UserDefaults.standard.string(forKey: "customer_id"))
-//        deleteAllCart()
+        addChild(reviewVc)
+        addChild(myVc)
+        addChild(eventVc)
+        print(mainContentView.myView.frame)
+        mainContentView.reviewView.addSubview(reviewVc.view)
+        mainContentView.eventView.addSubview(eventVc.view)
+        mainContentView.myView.addSubview(myVc.view)
+        eventVc.view.frame = CGRect(x: 0, y: 0, width: screenBounds2.width, height:   screenBounds2.height - screenBounds2.width/4 - 90.0 - 38.0 - ((screenBounds2.width/2.0 - margin2)/6.0))
+              myVc.view.frame = CGRect(x: 0, y: 0, width: screenBounds2.width, height: screenBounds2.height - screenBounds2.width/4)
+        mainContentView.layoutIfNeeded()
+        printAllUserDefaults()
     }
-    //배너 이미지 가져오기
+    func printAllUserDefaults(){
+        print("USERDEFUALTS")
+        for (key, value) in UserDefaults.standard.dictionaryRepresentation() {
+            print("\(key) = \(value) \n")
+        }
+    }
+    func redrawView(){
+        mainContentView = MainContentView()
+        self.loadView()
+        self.viewDidLoad()
+    }
+  
    
+    //배너 이미지 가져오기
+  
     //베스트 3
     func getTopSampleId(){
         let cal = Calendar.current
@@ -47,36 +82,50 @@ class MainContentViewController: UIViewController {
         let componentMonth = cal.component(.month, from: Date())
         print(cal.component(.hour, from: Date()))
         var params = [String:String]()
-        params = ["date":"\(componetYear)-\(componentMonth)"]
-        common.sendRequest(url: "http://110.165.17.124/sampleroad/db/sr_top_sample_select.php", method: "post", params: params, sender: "") { resultJson in
-            let topSampleArr = resultJson as? [[String:Any]]
-            let firstProductId = topSampleArr?[0]["product_id"] as! String
-            let secondProductId = topSampleArr?[1]["product_id"] as! String
-            let thirdProductId = topSampleArr?[2]["product_id"] as! String
-            self.getTopSampleInfo(firstId: firstProductId, secondId: secondProductId, thirdId: thirdProductId)
+        params = ["date":"\(componetYear)-\(componentMonth)-01"]
+        common.sendRequest(url: "http://110.165.17.124/sampleroad/v1/sample.php", method: "post", params: params, sender: "") { resultJson in
+            print("여기")
+            print(resultJson)
+//            guard let topSampleArr = resultJson as? [[String:Any]] else {return}
+//            if topSampleArr.count == 3 {
+//                guard let firstProductId = topSampleArr[0]["product_id"] as? String else {return}
+//                guard let secondProductId = topSampleArr[1]["product_id"] as? String else {return}
+//                guard let thirdProductId = topSampleArr[2]["product_id"] as? String else {return}
+//
+//            }else {
+//                return
+//            }
+            guard let topSample = resultJson as? [String:Any] else {return}
+            guard let ids = topSample["ids"] as? String else {return}
+            self.getTopSampleInfo(ids: ids)
+           
         }
     }
-    func getTopSampleInfo(firstId: String, secondId: String, thirdId: String){
-        common.sendRequest(url: "https://api.clayful.io/v1/products?ids=\(firstId),\(secondId),\(thirdId)", method: "get", params: [:], sender: "") { resultJson in
-            let topSampleInfoArr = resultJson as! [[String:Any]]
+    func getTopSampleInfo(ids:String){
+        common.sendRequest(url: "https://api.clayful.io/v1/products?ids=\(ids)&sort=ids", method: "get", params: [:], sender: "") { resultJson in
+            guard let topSampleInfoArr = resultJson as? [[String:Any]] else {
+                self.mainContentView.noneView.isHidden = false
+                return
+            }
             var sortSampleInfoArr = [[String:Any]]()
             sortSampleInfoArr = [[:],[:],[:]]
             //순서대로 정렬
-            for i in 0...topSampleInfoArr.count - 1 {
-                if topSampleInfoArr[i]["_id"] as! String == firstId{
-                    sortSampleInfoArr[0] = topSampleInfoArr[i]
-                }
-                if topSampleInfoArr[i]["_id"] as! String == secondId{
-                    sortSampleInfoArr[1] = topSampleInfoArr[i]
-                }
-                if topSampleInfoArr[i]["_id"] as! String == thirdId{
-                    sortSampleInfoArr[2] = topSampleInfoArr[i]
-                }
-            }
-            self.dataDicArr = sortSampleInfoArr
-            self.setTopSampleInfo(infoArr: sortSampleInfoArr)
+//            for i in 0...topSampleInfoArr.count - 1 {
+//                if topSampleInfoArr[i]["_id"] as! String == firstId{
+//                    sortSampleInfoArr[0] = topSampleInfoArr[i]
+//                }
+//                if topSampleInfoArr[i]["_id"] as! String == secondId{
+//                    sortSampleInfoArr[1] = topSampleInfoArr[i]
+//                }
+//                if topSampleInfoArr[i]["_id"] as! String == thirdId{
+//                    sortSampleInfoArr[2] = topSampleInfoArr[i]
+//                }
+//            }
+            self.dataDicArr = topSampleInfoArr
+            self.setTopSampleInfo(infoArr: topSampleInfoArr)
         }
     }
+    
     func setTopSampleInfo(infoArr: [[String:Any]]){
         let firstBrand = infoArr[0]["brand"] as! [String:Any]
         let secondBrand = infoArr[1]["brand"] as! [String:Any]
@@ -92,14 +141,14 @@ class MainContentViewController: UIViewController {
             let average = rating["average"] as! [String:Any]
             let totalReview = infoArr[i]["totalReview"] as! [String:Any]
             if i == 0 {
-                print(totalReview["raw"])
-                firstRawRating = String(format: "%.1f", average["raw"] as! Float)
+               
+                firstRawRating = String(format: "%.1f", average["raw"] as! Double)
                 firstRawReview = String(totalReview["raw"] as! Int)
             }else if i == 1 {
-                secondRawRating = String(format: "%.1f", average["raw"] as! Float)
+                secondRawRating = String(format: "%.1f", average["raw"] as! Double)
                 secondRawReview = String(totalReview["raw"] as! Int)
             }else{
-                thirdRawRating = String(format: "%.1f", average["raw"] as! Float)
+                thirdRawRating = String(format: "%.1f", average["raw"] as! Double)
                 thirdRawReview = String(totalReview["raw"] as! Int)
             }
         }
@@ -119,14 +168,23 @@ class MainContentViewController: UIViewController {
         mainContentView.secondProductLbl.text = infoArr[1]["name"] as? String
         mainContentView.thirdProductLbl.text = infoArr[2]["name"] as? String
         mainContentView.firstRatingLbl.text =  firstRawRating + "(\(firstRawReview))"
-        mainContentView.firstRatingLbl.asColor(targetStringList: [firstRawRating], color: .yellow)
+        mainContentView.firstRatingLbl.asColor(targetStringList: [firstRawRating], color: common.setColor(hex: "#ffbc00"))
         mainContentView.secondRatingLbl.text =  secondRawRating + "(\(secondRawReview))"
-        mainContentView.secondRatingLbl.asColor(targetStringList: [secondRawRating], color: .yellow)
+        mainContentView.secondRatingLbl.asColor(targetStringList: [secondRawRating], color: common.setColor(hex: "#ffbc00"))
         mainContentView.thirdRatingLbl.text =  thirdRawRating + "(\(thirdRawReview))"
-        mainContentView.thirdRatingLbl.asColor(targetStringList: [thirdRawRating], color: .yellow)
+        mainContentView.thirdRatingLbl.asColor(targetStringList: [thirdRawRating], color: common.setColor(hex: "#ffbc00"))
         common.setImageUrl(url: imgUrlArr[0], imageView: mainContentView.firstProductImgView)
         common.setImageUrl(url: imgUrlArr[1], imageView: mainContentView.secondProductImgView)
         common.setImageUrl(url: imgUrlArr[2], imageView: mainContentView.thirdProductImgView)
+        if firstRawRating == "0.0" {
+            mainContentView.firstRateImgView.image = UIImage(named: "rate_empty_btn")
+        }
+        if secondRawRating == "0.0" {
+            mainContentView.secondRateImgView.image = UIImage(named: "rate_empty_btn")
+        }
+        if thirdRawRating == "0.0" {
+            mainContentView.thirdRateImgView.image = UIImage(named: "rate_empty_btn")
+        }
     }
     @objc func touchSampleBtn(){
         let vc = GetSampleViewController()
@@ -142,15 +200,19 @@ class MainContentViewController: UIViewController {
     }
     @objc func touchArrowBtn(sender: UIButton){
         var vc = UIViewController()
+      
         if sender.tag == 0 {
             let convertDic = NSMutableDictionary(dictionary: dataDicArr[0])
-            vc = ProductDetailViewController(data: convertDic)
+            guard let productId = convertDic["_id"] as? String else {return}
+            vc = DetailProductViewController(productDic: dataDicArr[0])
         }else if sender.tag == 1 {
             let convertDic = NSMutableDictionary(dictionary: dataDicArr[1])
-            vc = ProductDetailViewController(data: convertDic)
+            guard let productId = convertDic["_id"] as? String else {return}
+            vc = DetailProductViewController(productDic:  dataDicArr[1])
         }else if sender.tag == 2 {
             let convertDic = NSMutableDictionary(dictionary: dataDicArr[2])
-            vc = ProductDetailViewController(data: convertDic)
+            guard let productId = convertDic["_id"] as? String else {return}
+            vc = DetailProductViewController(productDic: dataDicArr[2])
         }
         self.navigationController?.pushViewController(vc, animated: true)
     }
@@ -159,9 +221,10 @@ class MainContentViewController: UIViewController {
 //        //                     ,[[NSUserDefaults standardUserDefaults] valueForKey:@"customer_id"]];
 //        //    [COMController sendRequestWithMethod:@"DELETE" :url :nil :self :@selector(emptyCartCallBack:)];
         print("dddddd")
-        common.sendRequest(url: "https://api.clayful.io/v1/customers/\(UserDefaults.standard.string(forKey: "customer_id")!)/cart/items", method: "DELETE", params: [:], sender: "") { result in
+        common.sendRequest(url: "https://api.clayful.io/v1/customers/\(UserDefaults.standard.string(forKey: "customer_id") ?? "")/cart/items", method: "DELETE", params: [:], sender: "") { result in
             print("dddddd")
         }
     }
+
     
 }

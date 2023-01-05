@@ -18,7 +18,7 @@ class TopView: UIView {
     lazy var searchTextField = UITextField().then{
         let attributes = [
             NSAttributedString.Key.foregroundColor: common.lightGray().withAlphaComponent(50),
-            NSAttributedString.Key.font : common.setFont(font: "medium", size: 18)
+            NSAttributedString.Key.font : common.setFont(font: "medium", size: 14)
         ]
         $0.placeholder = " 진저민트 원포올 에센스 120ml"
         $0.attributedPlaceholder = NSAttributedString(string: "진저민트 원포올 에센스 120ml", attributes:attributes)
@@ -36,7 +36,7 @@ class TopView: UIView {
         $0.setImage(UIImage(named: "search_btn"), for: .normal)
     }
     let alarmBtn = UIButton().then{
-        $0.setImage(UIImage(named: "bell_btn"), for: .normal)
+        $0.setImage(UIImage(named: "bell2_btn"), for: .normal)
         $0.isHidden = true
     }
     let cartBtn = UIButton().then{

@@ -14,13 +14,9 @@ class ReturnProductView: UIView {
     }
     let scrlView = UIScrollView()
     lazy var titBackground = UIView().then {
-        $0.backgroundColor = common2.pointColor()
+        $0.backgroundColor = common2.lightGray()
     }
-    lazy var titLbl = UILabel().then {
-        $0.text = "취소하실 상품을 선택해주세요"
-        $0.textColor = .black
-        $0.font = common2.setFont(font: "bold", size: 13)
-    }
+   
     lazy var dateLbl = UILabel().then {
         $0.text = common2.nowDate()
         $0.textColor = .black
@@ -38,7 +34,7 @@ class ReturnProductView: UIView {
         $0.setImage(UIImage(named: "check_on_btn"), for: .normal)
     }
     let productImgView = UIImageView().then{
-        $0.backgroundColor = .red
+        $0.backgroundColor = .clear
     }
     lazy var companyNameLbl = UILabel().then{
         $0.font = common2.setFont(font: "regular", size: 10)
@@ -54,20 +50,21 @@ class ReturnProductView: UIView {
     }
     lazy var deliveryPrice = UILabel().then {
         $0.font = common2.setFont(font: "regular", size: 10)
-        $0.text = "테스트"
+        $0.text = ""
     }
     lazy var retunrReasonLbl = UITextField().then {
         $0.font = common2.setFont(font: "regular", size: 15)
         $0.textColor = common2.gray()
         $0.tintColor = .clear
         $0.text = "단순변심"
+        $0.layer.borderColor = common2.gray().cgColor
         $0.layer.borderWidth = 1
         $0.addLeftPadding()
     }
     let pickerView = UIPickerView()
     lazy var reasonDetailTit = UILabel().then {
         $0.text = "상세 사유 입력"
-        $0.font = common2.setFont(font: "regular", size: 10)
+        $0.font = common2.setFont(font: "regular", size: 13)
         $0.textColor = common2.gray()
     }
     lazy var reasonDetailContent = UITextView().then {
@@ -75,6 +72,7 @@ class ReturnProductView: UIView {
 //        $0.delegate = self
         $0.contentInset = UIEdgeInsets(top: 0, left: 5, bottom: 20, right: 5)
         $0.layer.borderWidth = 1
+        $0.layer.borderColor = common2.gray().cgColor
     }
     lazy var returnInfoBackground = UIView().then {
         $0.backgroundColor = common2.lightGray()
@@ -121,12 +119,12 @@ class ReturnProductView: UIView {
         $0.titleLabel?.font = common2.setFont(font: "bold", size: 18)
     }
     lazy var yesBtn = UIButton().then {
-        $0.setTitle("네", for: .normal)
+        $0.setTitle("확인", for: .normal)
         $0.setTitleColor(.black, for: .normal)
         $0.titleLabel?.font = common2.setFont(font: "regular", size: 18)
     }
     lazy var noBtn = UIButton().then {
-        $0.setTitle("아니오", for: .normal)
+        $0.setTitle("취소", for: .normal)
         $0.setTitleColor(.black, for: .normal)
         $0.titleLabel?.font = common2.setFont(font: "regular", size: 18)
         $0.addTarget(self, action: #selector(touchNoBtn), for: .touchUpInside)
@@ -135,7 +133,7 @@ class ReturnProductView: UIView {
         $0.backgroundColor = .white
         $0.layer.cornerRadius = 9
         let tit = UILabel().then {
-            $0.text = "확인시 바로 반품요청이 진행됩니다 \n 진행하시겠습니까?"
+            $0.text = "확인시 바로 반품요청이 진행됩니다 \n진행하시겠습니까?"
             $0.font = common2.setFont(font: "regular", size: 18)
             $0.numberOfLines = 0
 //            $0.asFont(targetStringList: ["변경된 정보","저장"], font: common2.setFont(font: "bold", size: 18))
@@ -183,7 +181,6 @@ class ReturnProductView: UIView {
         [returnInfoTit,returnMethodLbl,returnMethod,returnPriceLbl,returnPrice,couponDiscountLbl,couponDiscount].forEach {
             returnInfoBackground.addSubview($0)
         }
-        titBackground.addSubview(titLbl)
     }
     func setLayout(){
         topView.snp.makeConstraints {
@@ -198,13 +195,10 @@ class ReturnProductView: UIView {
         titBackground.snp.makeConstraints {
             $0.left.right.equalToSuperview()
             $0.top.equalToSuperview().offset(margin2)
-            $0.height.equalTo(30)
+            $0.height.equalTo(2)
             $0.width.equalTo(screenBounds2.width)
         }
-        titLbl.snp.makeConstraints {
-            $0.left.equalToSuperview().offset(5)
-            $0.centerY.equalToSuperview()
-        }
+       
         dateLbl.snp.makeConstraints {
             $0.left.equalToSuperview().offset(margin2)
             $0.top.equalTo(titBackground.snp.bottom).offset(margin2)
@@ -248,7 +242,7 @@ class ReturnProductView: UIView {
             $0.top.equalTo(productInfoBackground.snp.bottom).offset(margin2)
             $0.left.equalToSuperview().offset(margin2)
             $0.right.equalToSuperview().offset(-margin2)
-            $0.height.equalTo(30)
+            $0.height.equalTo(50)
         }
         reasonDetailTit.snp.makeConstraints {
             $0.left.equalToSuperview().offset(margin2)
@@ -259,7 +253,7 @@ class ReturnProductView: UIView {
             $0.left.equalToSuperview().offset(margin2)
             $0.right.equalToSuperview().offset(-margin2)
             $0.width.equalTo(screenBounds2.width - margin2 * 2)
-            $0.height.equalTo(300)
+            $0.height.equalTo(250)
         }
         returnInfoBackground.snp.makeConstraints {
             $0.top.equalTo(reasonDetailContent.snp.bottom).offset(margin2)

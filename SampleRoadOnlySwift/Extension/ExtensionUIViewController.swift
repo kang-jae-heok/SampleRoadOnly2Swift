@@ -23,4 +23,19 @@ extension UIViewController {
         let common = CommonS()
         return common
     }
+    var customerId2: String {
+        let customerId = UserDefaults.standard.string(forKey: "customer_id") ?? ""
+        return customerId
+    }
+    var clientId: String {
+        let clientId = "d7e698eb-c67d-4525-9253-ae881ee06f9f"
+        return clientId
+    }
+    var clientSecret: String {
+        let clientSecret = "xchdmPXIhzQN28jFBeg1FOfwazl0A_eudwsl6zEEtMw"
+        return clientSecret
+    }
+    
+    
+
 }

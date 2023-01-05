@@ -119,7 +119,7 @@ import UIKit
     @objc func selectEmail() {
         var params:[String:Any] = [:]
  
-        params.updateValue(UserDefaults.standard.value(forKey: "user_email") as! String, forKey: "email")
+        params.updateValue(UserDefaults.standard.string(forKey: "user_email") ?? "", forKey: "email")
         params.updateValue("600", forKey: "expiresIn")
         params.updateValue("verification", forKey: "scope")
         print("파라미터")
@@ -132,7 +132,7 @@ import UIKit
      
     }
     @objc func selectUserDefault() {
-        let customerId = UserDefaults.standard.value(forKey: "customer_id") as! String
+        let customerId = UserDefaults.standard.string(forKey: "customer_id") ?? ""
         COMController.sendRequestGet("https://api.clayful.io/v1/customers/\(customerId)", nil, self, #selector(selectUserDefaultCallback(result: )) )
         
     }

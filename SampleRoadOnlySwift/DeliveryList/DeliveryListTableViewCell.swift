@@ -8,12 +8,14 @@
 import Foundation
 
 class DeliveryListTableViewCell: UITableViewCell {
-    static let cellId = "DeliveryListCellId"
+    static let cellId = "DeliveryListCellId2"
     var orderDetailBtnTapped:(() -> Void)?
+    var deliveryTrackingTapped: (() -> Void)?
+    var exchangeBtnTapped: (() -> Void)?
     let common = CommonS()
     let margin = 17.0
     let screenBounds = UIScreen.main.bounds
-    let pointSize = CGSize(width: 8, height: 8)
+    let pointSize = CGSize(width: 4, height: 4)
     lazy var lineView = UIView().then{
         $0.backgroundColor = common.lightGray()
     }
@@ -39,24 +41,22 @@ class DeliveryListTableViewCell: UITableViewCell {
     lazy var companyNameLbl = UILabel().then{
         $0.font = common.setFont(font: "bold", size: 10)
         $0.textColor = common.setColor(hex: "b1b1b1")
-        $0.text = "Test"
     }
     lazy var productNameLbl = UILabel().then{
         $0.font = common.setFont(font: "semibold", size: 15)
         $0.textColor = common.setColor(hex: "6f6f6f")
-        $0.text = "Test"
     }
     let starImgView = UIImageView().then{
         $0.image = UIImage(named: "star_btn")
+        $0.isHidden = true
     }
     lazy var ratingLbl = UILabel().then{
         $0.font = common.setFont(font: "semibold", size: 12)
-        $0.text = "Test"
+        $0.isHidden = true
     }
     lazy var priceLbl = UILabel().then{
         $0.font = common.setFont(font: "bold", size: 17)
         $0.textColor = common.setColor(hex: "#6f6f6f")
-        $0.text = "Test"
     }
     // 프로그레스 바
     let progressBarView = UIView().then{
@@ -74,7 +74,7 @@ class DeliveryListTableViewCell: UITableViewCell {
         $0.clipsToBounds = true
     }
     lazy var startBar = UIView().then{
-        $0.backgroundColor = common.lightGray()
+        $0.backgroundColor = common.setColor(hex: "#f5f5f5")
         $0.layer.cornerRadius = pointSize.height/2
         $0.clipsToBounds = true
     }
@@ -90,7 +90,7 @@ class DeliveryListTableViewCell: UITableViewCell {
         $0.clipsToBounds = true
     }
     lazy var shippingBar = UIView().then{
-        $0.backgroundColor = common.lightGray()
+        $0.backgroundColor = common.setColor(hex: "#f5f5f5")
         $0.layer.cornerRadius = pointSize.height/2
         $0.clipsToBounds = true
     }
@@ -106,7 +106,7 @@ class DeliveryListTableViewCell: UITableViewCell {
         $0.clipsToBounds = true
     }
     lazy var arrivalBar = UIView().then{
-        $0.backgroundColor = common.lightGray()
+        $0.backgroundColor = common.setColor(hex: "#f5f5f5")
         $0.layer.cornerRadius = pointSize.height/2
         $0.clipsToBounds = true
     }
@@ -140,6 +140,8 @@ class DeliveryListTableViewCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         self.orderDetailBtn.addTarget(self, action: #selector(touchOrderDetailBtn), for: .touchUpInside)
+        self.exchangeBtn.addTarget(self, action: #selector(touchExchangeBtn), for: .touchUpInside)
+        self.deliveryTrackingBtn.addTarget(self, action: #selector(touchDeliveryTrackingBtn), for: .touchUpInside)
         contentView.isUserInteractionEnabled = true
         addSubviewFunc()
         setLayout()
@@ -165,8 +167,8 @@ class DeliveryListTableViewCell: UITableViewCell {
         lineView.snp.makeConstraints{
             $0.top.equalToSuperview()
             $0.bottom.equalTo(super.snp.top).offset(2)
-            $0.left.equalToSuperview().offset(margin)
-            $0.right.equalToSuperview().offset(-margin)
+            $0.left.equalToSuperview()
+            $0.right.equalToSuperview()
         }
         situationBtn.snp.makeConstraints{
             $0.top.equalTo(lineView.snp.bottom).offset(12)
@@ -208,7 +210,7 @@ class DeliveryListTableViewCell: UITableViewCell {
         }
         orderDetailBtn.snp.makeConstraints{
             $0.right.equalToSuperview().offset(-margin2)
-            $0.centerY.equalTo(priceLbl)
+            $0.centerY.equalTo(situationBtn)
         }
         progressBarView.snp.makeConstraints{
             $0.top.equalTo(productInfoView.snp.bottom).offset(36.0)
@@ -283,5 +285,13 @@ class DeliveryListTableViewCell: UITableViewCell {
     @objc func touchOrderDetailBtn(){
         print("탭")
         orderDetailBtnTapped?()
+    }
+    @objc func touchExchangeBtn(){
+        print("탭")
+        exchangeBtnTapped?()
+    }
+    @objc func touchDeliveryTrackingBtn(){
+        print("탭")
+        deliveryTrackingTapped?()
     }
 }

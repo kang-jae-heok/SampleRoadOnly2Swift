@@ -22,6 +22,7 @@ class CheckNickViewController: UIViewController {
     func setTarget(){
         checkNickView.checkDuplicateBtn.addTarget(self, action: #selector(touchCheckDuplicateBtn), for: .touchUpInside)
         checkNickView.submitBtn.addTarget(self, action: #selector(touchSubmitBtn), for: .touchUpInside)
+        
     }
     
     @objc func touchCheckDuplicateBtn(){

@@ -137,6 +137,10 @@ class CommonS{
     //            }
     //        }
     //    }
+    func removeSpecialCharsFromString(text: String) -> String {
+        let okayChars = Set("abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLKMNOPQRSTUVWXYZ1234567890+-=().!_")
+        return text.filter {okayChars.contains($0) }
+    }
     func sendRequest(url: String, method: String, params: Dictionary<String, Any>, sender: String,  completion:@escaping (Any) -> Void) {
         AF.request(url,
                    method: HTTPMethod(rawValue: method),
@@ -147,7 +151,6 @@ class CommonS{
                              "Accept-Encoding":"gzip",
                              "Authorization":"Bearer    eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjM4N2NkNjVkZGUxOWExZjdkNGM0NTk2ODhlZTJkNTk1MWZkZjRlYTI5ZWQ1OWE1NTc2MjBlOTI5Y2M4OTNiZTAiLCJyb2xlIjoiY2xpZW50IiwiaWF0IjoxNjU0NTc5NzQ0LCJzdG9yZSI6IlZLS1RZTjIzVEJFUS5GOVg5R0pKQkVFNVEiLCJzdWIiOiJYUzRVRVRCOFNFVkcifQ.G1j5SEaS-sjgRf1dPTr0l7zeIPNVPKVNw2Ga49FfUG0" ])
         //.validate(statusCode: 200..<300)
-        
         .responseJSON { [self] (response) in
             //            print(response.result)
             print("sendURL -> " + url)
@@ -158,12 +161,13 @@ class CommonS{
             switch response.result {
             case .success(let value):
                 completion(value)
-            case .failure(let error): break
+            case .failure(let error):
                 // error handling
                 print(error)
             }
         }
     }
+ 
     func sendRequest2(url: String, method: String, params: Dictionary<String, Any>, sender: String,  completion:@escaping (Any) -> [[String:Any]]) {
         AF.request(url,
                    method: HTTPMethod(rawValue: method),
@@ -189,6 +193,50 @@ class CommonS{
             }
         }
     }
+    func iamportSendRequest(url: String, method: String, params: Dictionary<String, Any>, sender: String,  completion:@escaping (Any) -> Void) {
+        AF.request(url,
+                   method: HTTPMethod(rawValue: method),
+                   parameters: params,
+                   encoding: URLEncoding.default,
+                   headers: ["Content-Type":"application/x-www-form-urlencoded",
+                             "Accept":"application/json",
+                             "Accept-Encoding":"gzip",
+                             "Authorization": sender ])
+        //.validate(statusCode: 200..<300)
+        
+        .responseJSON { [self] (response) in
+            //            print(response.result)
+            print("sendURL -> " + url)
+            print(params)
+            //여기서 가져온 데이터를 자유롭게 활용하세요.
+            //            print(params)
+            //            print(response)
+            switch response.result {
+            case .success(let value):
+                completion(value)
+            case .failure(let error):
+                // error handling
+                print(error)
+            }
+        }
+    }
+    func getCurrentDateTime() -> String{
+        let formatter = DateFormatter() //객체 생성
+        formatter.dateStyle = .long
+        formatter.timeStyle = .medium
+        formatter.dateFormat = "yyyy-MM-dd" //데이터 포멧 설정
+        let str = formatter.string(from: Date()) //문자열로 바꾸기
+        return "\(str)"   //라벨에 출력
+    }
+    func getTimeIndex() -> String{
+        let formatter = DateFormatter() //객체 생성
+        formatter.dateStyle = .long
+        formatter.timeStyle = .medium
+        formatter.dateFormat = "yyyyMMddHHmmss" //데이터 포멧 설정
+        let str = formatter.string(from: Date()) //문자열로 바꾸기
+        return "\(str)"   //라벨에 출력
+    }
+    
     func stringToDate(string: String) -> Date {
         var returnDate = Date()
         let dateFormatter = DateFormatter()
@@ -247,7 +295,7 @@ class CommonS{
         let strDate = String(describing: date)
         print("strDate -> " + strDate)
         dateFormatter.dateFormat = "yyyy-MM-dd"
-//        dateFormatter.timeZone = TimeZone(identifier: "UTC")
+        //        dateFormatter.timeZone = TimeZone(identifier: "UTC")
         let date2 = dateFormatter.date(from: strDate)
         
         returnDate = date2!
@@ -261,101 +309,147 @@ class CommonS{
         return str
     }
     
-    func userUpdate(customerId: String, params: [String:Any], sender: UIViewController, completion: @escaping ([String:Any]) -> Void){
+    func userUpdateWithAddNcloud(customerId: String, params: [String:Any], sender: UIViewController, completion: @escaping ([String:Any]) -> Void){
         print(#function)
-        //        UserDefaults.standard.set(customerId, forKey: "customerId")
-        //        UserDefaults.standard.set(email, forKey: "user_email")
-        //        UserDefaults.standard.set(mobile, forKey: "user_mobile")
-        //        UserDefaults.standard.set(name, forKey: "user_name")
-        //        UserDefaults.standard.set(birthdate, forKey: "user_birth")
-        //        UserDefaults.standard.set(gender, forKey: "user_gender")
         self.sendRequest(url: "https://api.clayful.io/v1/customers/\(customerId)", method: "put", params: params, sender: ""){ resultJson in
             print("성공")
             print(resultJson)
-            guard let infoDic = resultJson as? [String:Any] else {return}
+            var imgUrl = String()
+            var gender = String()
+            guard let userDic = resultJson as? [String:Any] else {return}
+            guard let nameDic = userDic["name"] as? [String:Any] else {return}
+            guard let rawBirth = userDic["birthdate"] as? String else {return}
+            let convertBirth = rawBirth.prefix(10)
             
-            completion(infoDic)
-        }
-    }
-    func duplicateCheckOrMake(vc: UIViewController, customerId: String, bool: Bool, infoParams: [String:Any], social:String){
-        print("중복체크 함수!!")
-        guard let email = infoParams["email"] else {
-            return
-        }
-        guard let mobile = infoParams["mobile"] else { return }
-        var params = [String:Any]()
-        params = ["email":email , "mobile":mobile,"social":social]
-        if bool {
-            params.updateValue(customerId, forKey: "customer_id")
-        }
-        //중복 체크
-        self.sendRequest(url: "http://110.165.17.124/sampleroad/db/sr_user_insert.php", method: "post", params: params, sender: ""){ [self] reusultJson in
-            print(reusultJson)
-            let resultDic = reusultJson as! [String:Any]
-            let code = resultDic["error"] as! String
-            print(code)
-            if code == "1" && !bool{
-                //중복체크 -> 중복없음
-                print("중복체크 -> 중복없음")
-                duplicateCheckOrMake(vc: vc, customerId: customerId, bool: true, infoParams: infoParams, social: social)
-            }else if code == "2"{
-                print("중복체크 -> 중복")
-                deleteUserDefaults()
-                deleteUser(customerId: customerId)
-                vc.present(self.alert(title: "", message: "이미 가입이 되어있는 이메일입니다. \n 이메일로 로그인 해주세요."), animated: false)
-                print("@@@@@@@")
-            }else if code == "0"{
-                print("알수없는 오류")
-                deleteUserDefaults()
-                vc.present(self.alert(title: "", message: "오류!!"), animated: false)
-            }else if code == "1" && bool{
-                //db넣기 -> 성공
-                print("db넣기 -> 성공")
-                vc.navigationController?.pushViewController(CheckNickViewController(), animated: true)
-//                self.checkTypeFormDone(customerId: customerId, vc: vc)
+            if let avartarDic = userDic["avatar"] as? [String:Any] {
+                guard let imgUrl2 = avartarDic["url"] as? String else {return}
+                imgUrl = imgUrl2
+            }else {
+                imgUrl = "null"
+            }
+            if let genderCheck = userDic["gender"] as? String {
+                gender = genderCheck
+            }else {
+                gender = ""
+            }
+            guard let email = userDic["email"] as? String else {return}
+            guard let mobile = userDic["mobile"] as? String else {return}
+            guard let fullName = nameDic["full"] as? String else {return}
+            UserDefaults.standard.set(true, forKey: "auto_login")
+            UserDefaults.standard.set(customerId, forKey: "customer_id")
+            UserDefaults.standard.set(email, forKey: "user_email")
+            UserDefaults.standard.set(mobile, forKey: "user_mobile")
+            UserDefaults.standard.set(fullName, forKey: "user_name")
+            UserDefaults.standard.set(convertBirth, forKey: "user_birth")
+            UserDefaults.standard.set(gender, forKey: "user_gender")
+            UserDefaults.standard.set(imgUrl, forKey: "user_image")
+            self.addUserNcloud(customerId: customerId, vc: sender) {
+                completion(userDic)
             }
         }
     }
-    func duplicateCheckOrMake2(vc: UIViewController, customerId: String, bool: Bool, infoParams: [String:Any], social:String){
-        print("중복체크 함수!!")
-        guard let email = infoParams["email"] else {
-            return
+    func userUpdate(customerId: String, params: [String:Any], sender: UIViewController, completion: @escaping ([String:Any]) -> Void){
+        print(#function)
+        self.sendRequest(url: "https://api.clayful.io/v1/customers/\(customerId)", method: "put", params: params, sender: ""){ resultJson in
+            print("성공")
+            print(resultJson)
+            var imgUrl = String()
+            var gender = String()
+            guard let userDic = resultJson as? [String:Any] else {return}
+            guard let nameDic = userDic["name"] as? [String:Any] else {return}
+            guard let rawBirth = userDic["birthdate"] as? String else {return}
+            let convertBirth = rawBirth.prefix(10)
+            
+            if let avartarDic = userDic["avatar"] as? [String:Any] {
+                guard let imgUrl2 = avartarDic["url"] as? String else {return}
+                imgUrl = imgUrl2
+            }else {
+                imgUrl = "null"
+            }
+            if let genderCheck = userDic["gender"] as? String {
+                gender = genderCheck
+            }else {
+                gender = ""
+            }
+            guard let email = userDic["email"] as? String else {return}
+            guard let mobile = userDic["mobile"] as? String else {return}
+            guard let fullName = nameDic["full"] as? String else {return}
+            UserDefaults.standard.set(true, forKey: "auto_login")
+            UserDefaults.standard.set(customerId, forKey: "customer_id")
+            UserDefaults.standard.set(email, forKey: "user_email")
+            UserDefaults.standard.set(mobile, forKey: "user_mobile")
+            UserDefaults.standard.set(fullName, forKey: "user_name")
+            UserDefaults.standard.set(convertBirth, forKey: "user_birth")
+            UserDefaults.standard.set(gender, forKey: "user_gender")
+            UserDefaults.standard.set(imgUrl, forKey: "user_image")
+            completion(userDic)
+            
         }
-        guard let mobile = infoParams["mobile"] else { return }
+    }
+    func userUpdateWithNull(customerId: String, params: [String:Any], sender: UIViewController, completion: @escaping ([String:Any]) -> Void){
+        let url = "https://api.clayful.io/v1/customers/\(customerId)"
+        var a = [String : Any?]()
+        if params["gender"] as? String ?? "" == "null" {
+            a = ["gender":nil] as [String : Any?]
+        }
+        let b = a.merging(params, uniquingKeysWith: { (current, _) in current })
+        let header: HTTPHeaders = [
+            "Content-Type":"application/json",
+            "Accept":"application/json",
+            "Accept-Encoding":"gzip",
+            "Authorization":"Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjM4N2NkNjVkZGUxOWExZjdkNGM0NTk2ODhlZTJkNTk1MWZkZjRlYTI5ZWQ1OWE1NTc2MjBlOTI5Y2M4OTNiZTAiLCJyb2xlIjoiY2xpZW50IiwiaWF0IjoxNjU0NTc5NzQ0LCJzdG9yZSI6IlZLS1RZTjIzVEJFUS5GOVg5R0pKQkVFNVEiLCJzdWIiOiJYUzRVRVRCOFNFVkcifQ.G1j5SEaS-sjgRf1dPTr0l7zeIPNVPKVNw2Ga49FfUG0"
+        ]
+
+        let parameters: Parameters = b
+        print("####cartAddParams")
+        print(parameters)
+        AF.request(url,
+                   method: .put,
+                   parameters: parameters,
+                   encoding: JSONEncoding.default,
+                   headers: header
+        ).responseData(completionHandler: { [self] res in
+            switch res.result {
+                case .failure(let error):
+                    print(error)
+                case .success(let data):
+                print("성공")
+                guard let json = try? JSONSerialization.jsonObject(with: data),
+                      let dictionary = json as? [String: Any] else {
+                    return
+                }
+                print("###responseData")
+                print(dictionary)
+                completion(dictionary)
+            }
+        })
+    }
+    func addUserNcloud(customerId: String, vc: UIViewController, completion: @escaping () -> Void){
         var params = [String:Any]()
-        params = ["email":email , "mobile":mobile,"social":social]
-        if bool {
-            params.updateValue(customerId, forKey: "customer_id")
-        }
-        //중복 체크
-        self.sendRequest(url: "http://110.165.17.124/sampleroad/db/sr_user_insert.php", method: "post", params: params, sender: ""){ [self] reusultJson in
+        params.updateValue(customerId, forKey: "customer_id")
+        params.updateValue(1, forKey: "insert")
+        sendRequest(url: "http://110.165.17.124/sampleroad/v1/user.php", method: "post", params: params, sender: ""){ [self] reusultJson in
             print(reusultJson)
-            let resultDic = reusultJson as! [String:Any]
-            let code = resultDic["error"] as! String
-            print(code)
-            if code == "1" && !bool{
-                //중복체크 -> 중복없음
-                print("중복체크 -> 중복없음")
-                duplicateCheckOrMake2(vc: vc, customerId: customerId, bool: true, infoParams: infoParams, social: social)
-            }else if code == "2"{
-                print("에러코드 2")
-                self.checkTypeFormDone(customerId: customerId, vc: vc)
-            }else if code == "0"{
-                print("에러코드 0")
-                deleteUserDefaults()
-                vc.present(self.alert(title: "", message: "오류!!"), animated: false)
-            }else if code == "1" && bool{
-                //db넣기 -> 성공
-                print("db넣기 -> 성공")
-                self.checkTypeFormDone(customerId: customerId, vc: vc)
+            guard let resultDic = reusultJson as? [String:Any],
+                  let code = resultDic["error"] as? String
+            else {return}
+            if code == "1" {
+                completion()
+            }else{
+                //클레이풀 유저 삭제
+//                self.sendRequest(url: "https://api.clayful.io/v1/customers/\(customerId)", method: "delete", params: [:], sender: "") { resultJson in
+//                    self.deleteUserDefaults()
+//                    vc.present(self.alert(title: "에러", message: "잠시후 다시 시도해주세요"), animated: true)
+//                }
             }
         }
     }
+
     func checkDuplicateNick(vc: UIViewController, nick: String, completion: @escaping(Bool) -> Void) {
         var params = [String:Any]()
         params.updateValue(nick, forKey: "nick")
         params.updateValue("1", forKey: "check")
-        self.sendRequest(url: "http://110.165.17.124/sampleroad/db/sr_user_insert.php", method: "post", params: params, sender: "") { resultJson in
+        self.sendRequest(url: "http://110.165.17.124/sampleroad/v1/user.php", method: "post", params: params, sender: "") { resultJson in
             print(resultJson)
             guard let errorDic = resultJson as? [String:Any] else { return }
             guard let errorCode = errorDic["error"] as? String else { return }
@@ -368,31 +462,39 @@ class CommonS{
             }
         }
     }
-//    func checkDuplicateAndMakeNick(vc: UIViewController, nick: String){
-//        var params = [String:Any]()
-//        params.updateValue(nick, forKey: "nick")
-//        params.updateValue("1", forKey: "check")
-//        self.sendRequest(url: "http://110.165.17.124/sampleroad/db/sr_user_insert.php", method: "post", params: params, sender: "") { resultJson in
-//            print(resultJson)
-//            guard let errorDic = resultJson as? [String:Any] else { return }
-//            guard let errorCode = errorDic["error"] as? String else { return }
-//            if errorCode == "1" {
-//                self.updateNick(vc: vc, nick: nick)
-//            } else if errorCode == "2" {
-//                vc.present(self.alert(title: "", message: "중복된 닉네임입니다"), animated: true)
-//            }
-//        }
-//    }
+    func checkNcloudExist(vc: UIViewController, customerId: String, nick: String, completion: @escaping(Bool) -> Void) {
+        var params = [String:Any]()
+        params.updateValue(customerId, forKey: "customer_id")
+        params.updateValue(nick, forKey: "nick")
+        params.updateValue("1", forKey: "check")
+        self.sendRequest(url: "http://110.165.17.124/sampleroad/v1/user.php", method: "post", params: params, sender: "") { resultJson in
+            print(resultJson)
+            guard let errorDic = resultJson as? [String:Any] else { return }
+            guard let errorCode = errorDic["error"] as? String else { return }
+            if errorCode == "1" {
+                completion(true)
+            }else {
+                completion(false)
+            }
+        }
+    }
     func checkDuplicateAndMakeNick(vc: UIViewController,nick: String ) {
         let customerId = UserDefaults.standard.string(forKey: "customer_id") ?? ""
         var params2 = [String:Any]()
         params2.updateValue(nick, forKey: "nick")
         params2.updateValue(customerId, forKey: "customer_id")
-        self.sendRequest(url: "http://110.165.17.124/sampleroad/db/sr_user_insert.php", method: "post", params: params2, sender: "") { resultJson2 in
+        params2.updateValue(1, forKey: "update")
+        self.sendRequest(url: "http://110.165.17.124/sampleroad/v1/user.php", method: "post", params: params2, sender: "") { resultJson2 in
             guard let errorDic = resultJson2 as? [String:Any] else { return }
             guard let errorCode = errorDic["error"] as? String else { return }
             if errorCode == "1" {
-                self.userUpdate(customerId: customerId, params: ["alias":nick], sender: vc) {_ in
+                var params = [String:Any]()
+                params.updateValue(nick, forKey: "alias")
+                let nameDic = ["full": nick]
+                let jsonData = try! JSONSerialization.data(withJSONObject: nameDic, options: [])
+                let decodedName = String(data: jsonData, encoding: .utf8)!
+                params.updateValue(decodedName, forKey: "name")
+                self.userUpdate(customerId: customerId, params: params, sender: vc) {_ in
                     UserDefaults.standard.set(nick, forKey: "user_alias")
                     self.checkTypeFormDone(customerId: customerId, vc: vc)
                 }
@@ -401,64 +503,36 @@ class CommonS{
             }
         }
     }
-    func checkDuplicateAndMakeNick2(vc: UIViewController,nick: String, completion: @escaping() -> Void) {
-        let customerId = UserDefaults.standard.string(forKey: "customer_id") ?? ""
-        var params2 = [String:Any]()
-        params2.updateValue(nick, forKey: "nick")
-        params2.updateValue(customerId, forKey: "customer_id")
-        self.sendRequest(url: "http://110.165.17.124/sampleroad/db/sr_user_insert.php", method: "post", params: params2, sender: "") { resultJson2 in
-            guard let errorDic = resultJson2 as? [String:Any] else { return }
-            guard let errorCode = errorDic["error"] as? String else { return }
-            if errorCode == "1" {
-                self.userUpdate(customerId: customerId, params: ["alias":nick], sender: vc) {_ in
-                    UserDefaults.standard.set(nick, forKey: "user_alias")
-                    completion()
-                }
-            } else if errorCode == "2" {
-                vc.present(self.alert(title: "", message: "중복된 닉네임입니다"), animated: true)
-            }
-        }
-    }
-    func checkDuplicateAndMakeNick3(vc: UIViewController,nick: String, completion: @escaping() -> Void) {
-        var params = [String:Any]()
-        params.updateValue(nick, forKey: "nick")
-        params.updateValue("1", forKey: "check")
-        self.sendRequest(url: "http://110.165.17.124/sampleroad/db/sr_user_insert.php", method: "post", params: params, sender: "") { resultJson in
-            print(resultJson)
-            guard let errorDic = resultJson as? [String:Any] else { return }
-            guard let errorCode = errorDic["error"] as? String else { return }
-            if errorCode == "1" {
-                completion()
-            } else if errorCode == "2" {
-                vc.present(self.alert(title: "", message: "중복된 닉네임입니다"), animated: true)
-            }
-        }
-    }
- 
-
-  
     func deleteUserDefaults(){
         for key in UserDefaults.standard.dictionaryRepresentation().keys {
             UserDefaults.standard.removeObject(forKey: key.description)
         }
     }
-    func addUser(vc: UIViewController, customerId: String, infoParams: [String:Any],social: String){
+    func addUser(vc: UIViewController, customerId: String, infoParams: [String:Any], social: String){
         print("customerID" + customerId)
         var params = infoParams
         params.updateValue(customerId, forKey: "alias")
-        self.userUpdate(customerId: customerId, params: params, sender: vc) { _ in
-            self.duplicateCheckOrMake(vc: vc, customerId: customerId, bool: false, infoParams: infoParams, social: social)
+        self.userUpdateWithAddNcloud(customerId: customerId, params: params, sender: vc) { _ in
+            vc.navigationController?.pushViewController(CheckNickViewController(), animated: true)
         }
         
     }
-    func addUser2(vc: UIViewController, customerId: String, infoParams: [String:Any],social: String){
-        print("customerID" + customerId)
-        var params = infoParams
-        params.updateValue(customerId, forKey: "alias")
-        self.userUpdate(customerId: customerId, params: infoParams, sender: vc) { _ in
-            self.duplicateCheckOrMake(vc: vc, customerId: customerId, bool: false, infoParams: infoParams, social: social)
+    func deleteUserClayfulAndNcloud(customerId: String){
+        self.sendRequest(url: "https://api.clayful.io/v1/customers/\(customerId)", method: "delete", params: [:], sender: "") { resultJson in
+            self.deleteUserDB(customerId: customerId)
         }
-        
+    }
+    func deleteUserDB(customerId: String){
+        self.sendRequest(url: "http://110.165.17.124/sampleroad/v1/user.php", method: "post", params: ["customer_id": customerId, "delete": 1 ], sender:"" ) { [self] resultJson in
+            print("삭제됨")
+            for key in UserDefaults.standard.dictionaryRepresentation().keys {
+                UserDefaults.standard.removeObject(forKey: key.description)
+            }
+            UIApplication.shared.perform(#selector(NSXPCConnection.suspend))
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                exit(0)
+            }
+        }
     }
     func deleteUser(customerId: String){
         self.sendRequest(url: "https://api.clayful.io/v1/customers/\(customerId)", method: "delete", params: [:], sender: "") { resultJson in
@@ -494,36 +568,82 @@ class CommonS{
             }
         }
     }
+    func setButtonImageUrl(url: String, button: UIButton){
+        let cacheKey = NSString(string: url) // 캐시에 사용될 Key 값
+        
+        if let cachedImage = ImageCacheManager.share.object(forKey: cacheKey) { // 해당 Key 에 캐시이미지가 저장되어 있으면 이미지를 사용
+            print("cachedImage")
+            button.setImage(cachedImage, for: .normal)
+            button.layer.cornerRadius = button.frame.height/2
+            button.clipsToBounds = true
+            button.imageView?.contentMode = .scaleAspectFill
+            return
+        }
+        print("not")
+        DispatchQueue.global(qos: .background).async {
+            if let imageUrl = URL(string: url) {
+                URLSession.shared.dataTask(with: imageUrl) { (data, res, err) in
+                    if let _ = err {
+                        DispatchQueue.main.async { [self] in
+                            button.setImage(UIImage(named: ""), for: .normal)
+                            button.layer.cornerRadius = button.frame.height/2
+                            button.clipsToBounds = true
+                            button.imageView?.contentMode = .scaleAspectFill
+                        }
+                        return
+                    }
+                    DispatchQueue.main.async { [self] in
+                        if let data = data, let image = UIImage(data: data) {
+                            ImageCacheManager.share.setObject(image, forKey: cacheKey) // 다운로드된 이미지를 캐시에 저장
+                            button.setImage(image, for: .normal)
+                            button.layer.cornerRadius = button.frame.height/2
+                            button.clipsToBounds = true
+                            button.imageView?.contentMode = .scaleAspectFill
+                        }
+                    }
+                }.resume()
+            }
+        }
+    }
     func checkTypeFormDone(customerId: String, vc: UIViewController){
-        let params = ["customer_id":customerId]
-        print("유저 커스터머 아이디")
-        print(customerId)
-        self.sendRequest(url: "http://110.165.17.124/sampleroad/db/sr_survey_check.php", method: "post", params: params, sender: "") { resultJson in
-            let resultDic = resultJson as! [String:Any]
-            let errCode = resultDic["error"] as! String
-            print(resultDic)
-            var rootVc = UIViewController()
-            if errCode == "1"{
-                rootVc = MainContentViewController()
-                vc.navigationController!.pushViewController(rootVc, animated: true)
-            }else{
+        self.sendRequest(url: "http://110.165.17.124/sampleroad/v1/survey.php", method: "post", params: ["customer_id":customerId, "check": 1], sender: "") { resultJson in
+            print("스킨타입")
+            print(resultJson)
+            guard let skinInfoDic = resultJson as? [String:Any],
+                  let error = skinInfoDic["error"] as? String
+            else {return}
+            if error == "1" {
+                guard let skinType = skinInfoDic["skin_type"] as? String else {return}
+                guard let skinGomin = skinInfoDic["skin_gomin"] as? String else {return}
+                let skinTypeArr = skinType.components(separatedBy: " ")
+                let convertSkinType = skinTypeArr[0]
+                let skinGominArr = skinGomin.components(separatedBy: ",")
+                UserDefaults.standard.set(convertSkinType, forKey: "user_skin_type")
+                UserDefaults.standard.set(skinGominArr, forKey: "user_skin_gomin")
+                let rootVc = MainContentViewController()
+                vc.navigationController?.pushViewController(rootVc, animated: true)
+            }else {
                 if !UserDefaults.standard.bool(forKey: "PRDC_MODE"){
-                    rootVc = MainContentViewController()
+                    let rootVc = MainContentViewController()
                     vc.navigationController?.pushViewController(rootVc, animated: true)
                 }else{
-                    rootVc = WebViewViewController()
-                    vc.navigationController?.pushViewController(rootVc, animated: true)
+                    vc.navigationController?.pushViewController(WebViewViewController(), animated: true)
                 }
+               
             }
-            print(rootVc)
+          
         }
     }
     
-    func checkTypeFormDone2(customerId: String,completion: @escaping(Bool) -> Void){
-        let params = ["customer_id":customerId]
-        self.sendRequest(url: "http://110.165.17.124/sampleroad/db/sr_survey_check.php", method: "post", params: [:], sender: "") { resultJson in
-            let resultDic = resultJson as! [String:Any]
-            let errCode = resultDic["error"] as! String
+    func checkTypeFormDoneWithCompletion(customerId: String,completion: @escaping(Bool) -> Void){
+        let params = [
+            "customer_id": customerId,
+            "check": 1
+        ] as [String : Any]
+        self.sendRequest(url: "http://110.165.17.124/sampleroad/v1/survey.php", method: "post", params: params, sender: "") { resultJson in
+            guard let resultDic = resultJson as? [String:Any],
+                  let errCode = resultDic["error"] as? String
+            else {return}
             var rootVc = UIViewController()
             if errCode == "1"{
                 completion(true)
@@ -543,33 +663,190 @@ class CommonS{
         self.sendRequest(url: "https://api.clayful.io/v1/customers/\(customerId)", method: "get", params: [:], sender: "") { resultJson in
             print("결과")
             print(resultJson)
-            let userDic = resultJson as! [String:Any]
-            let nameDic = userDic["name"] as! [String:Any]
-            let birthDic = userDic["birthdate"] as! [String:Any]
-            let rawBirth =  birthDic["raw"] as! String
+            var imgUrl = String()
+            guard let userDic = resultJson as? [String:Any] else {return}
+            guard let nameDic = userDic["name"] as? [String:Any] else {return}
+            guard let birthDic = userDic["birthdate"] as? [String:Any] else {return}
+            guard let rawBirth =  birthDic["raw"] as? String else {return}
             let convertBirth = rawBirth.prefix(10)
-            print(userDic["email"]  as! String)
-            print(userDic["mobile"]  as! String)
-            print(nameDic["full"] as! String)
-            print(convertBirth)
-            print(String(describing: userDic["gender"]!))
-            UserDefaults.standard.set(true, forKey: "auto_login")
-            UserDefaults.standard.set(customerId, forKey: "customer_id")
-            UserDefaults.standard.set(userDic["email"] as! String, forKey: "user_email")
-            UserDefaults.standard.set(userDic["mobile"] as! String, forKey: "user_mobile")
-            UserDefaults.standard.set(nameDic["full"] as! String, forKey: "user_name")
-            UserDefaults.standard.set(convertBirth, forKey: "user_birth")
-            UserDefaults.standard.set(String(describing: userDic["gender"]), forKey: "user_gender")
-            print("커스터머 로그인")
-            if UserDefaults.contains("user_alias") {
-                self.checkTypeFormDone(customerId: customerId, vc: vc)
+            
+            if let avartarDic = userDic["avatar"] as? [String:Any] {
+                guard let imgUrl2 = avartarDic["url"] as? String else {return}
+                imgUrl = imgUrl2
             }else {
-                vc.navigationController?.pushViewController(CheckNickViewController(), animated: true)
+                imgUrl = "null"
+            }
+            if let gender = userDic["gender"] as? String{
+                UserDefaults.standard.set(gender, forKey: "user_gender")
+            } else {
+                UserDefaults.standard.set("null", forKey: "user_gender")
+            }
+            if let alias = userDic["alias"] as? String,
+               let email = userDic["email"] as? String,
+               let fullName = nameDic["full"] as? String,
+               let mobile = userDic["mobile"] as? String {
+                UserDefaults.standard.set(true, forKey: "auto_login")
+                UserDefaults.standard.set(customerId, forKey: "customer_id")
+                UserDefaults.standard.set(email, forKey: "user_email")
+                UserDefaults.standard.set(mobile, forKey: "user_mobile")
+                UserDefaults.standard.set(fullName, forKey: "user_name")
+                UserDefaults.standard.set(convertBirth, forKey: "user_birth")
+                UserDefaults.standard.set(imgUrl, forKey: "user_image")
+                print("커스터머 로그인")
+                if customerId == alias {
+                    vc.navigationController?.pushViewController(CheckNickViewController(), animated: true)
+                }else {
+                    self.checkTypeFormDone(customerId: customerId, vc: vc)
+                }
+            } else {
+                let alert = UIAlertController(title: "재가입 안내", message: "고객 정보 개편으로 일부 계정의 주문이 불가능한 점 양해 부탁드립니다.\n탈퇴 및 재가입 이후 정상 이용 가능합니다.", preferredStyle: UIAlertController.Style.alert)
+                let okAction = UIAlertAction(title: "확인", style: .default) { [self] (action) in
+                    deleteUserClayfulAndNcloud(customerId: customerId)
+                }
+                let noAction = UIAlertAction(title: "취소", style: .default) { [self] (action) in
+                }
+                alert.addAction(noAction)
+                alert.addAction(okAction)
+                vc.present(alert, animated: true, completion: nil)
+            }
+     
+        }
+    }
+    func getCustomerInfo2(customerId: String, vc: UIViewController,completion: @escaping(Bool) -> Void){
+        print("결과")
+        print(customerId)
+        self.sendRequest(url: "https://api.clayful.io/v1/customers/\(customerId)", method: "get", params: [:], sender: "") { resultJson in
+            var gender = String()
+            var email = String()
+            var mobile = String()
+            var name = String()
+            var alias = String()
+            var imgUrl = String()
+            var convertBirth = String()
+            if let userDic =  resultJson as? [String:Any],
+               let checkVerified = userDic["verified"] as? Bool
+            {
+                if let nameDic = userDic["name"] as? [String:Any],
+                   let full = nameDic["full"] as? String
+                {
+                    name = full
+                }else {
+                    name = "NONAME"
+                }
+                if let birthDic = userDic["birthdate"] as? [String:Any],
+                   let rawBirth =  birthDic["raw"] as? String {
+                    convertBirth = String(rawBirth.prefix(10))
+                }else {
+                    convertBirth = self.getCurrentDateTime()
+                }
+                if let alias2 = userDic["alias"] as? String {
+                    alias = alias2
+                }else {
+                    alias = customerId
+                }
+                if let email2 = userDic["email"] as? String {
+                    email = email2
+                }else {
+                    email = "sampleroadtest@gmail.com"
+                }
+                if let mobile2 = userDic["mobile"] as? String {
+                    mobile = mobile2
+                }else {
+                    mobile = "010-9999-9999"
+                }
+                if let avartarDic = userDic["avatar"] as? [String:Any] {
+                    guard let imgUrl2 = avartarDic["url"] as? String else {return}
+                    imgUrl = imgUrl2
+                }else {
+                    imgUrl = "null"
+                }
+                UserDefaults.standard.set(true, forKey: "auto_login")
+                UserDefaults.standard.set(customerId, forKey: "customer_id")
+                UserDefaults.standard.set(email, forKey: "user_email")
+                UserDefaults.standard.set(mobile, forKey: "user_mobile")
+                UserDefaults.standard.set(name, forKey: "user_name")
+                UserDefaults.standard.set(alias, forKey: "user_alias")
+                UserDefaults.standard.set(convertBirth, forKey: "user_birth")
+                UserDefaults.standard.set(String(describing: userDic["gender"]), forKey: "user_gender")
+                UserDefaults.standard.set(imgUrl, forKey: "user_image")
+                if customerId == alias {
+                    completion(false)
+                }else {
+                    completion(true)
+                }
             }
            
         }
+      
     }
-    
+    func objectTojsonString(from object:Any) -> String? {
+        guard let data = try? JSONSerialization.data(withJSONObject: object, options: .prettyPrinted) else {
+            return nil
+        }
+        return String(data: data, encoding: String.Encoding.utf8)
+    }
+    func dicToJsonString(dic: [String:Any]) -> String{
+        var jsonObj : String = ""
+        do {
+            let jsonCreate = try JSONSerialization.data(withJSONObject: dic, options: .prettyPrinted)
+            
+            // json 데이터를 변수에 삽입 실시
+            jsonObj = String(data: jsonCreate, encoding: .utf8) ?? ""
+            return jsonObj
+        } catch {
+            print(error.localizedDescription)
+            return jsonObj
+        }
+     
+    }
+    func JsonToDictionary(data: NSData) -> [String: Any]? {
+        let dataString = String(decoding: data, as: UTF8.self)
+        if let result = dataString.data(using: .utf8) {
+            do {
+                return try JSONSerialization.jsonObject(with: result, options: []) as? [String: Any]
+            } catch {
+                print(error.localizedDescription)
+            }
+        }
+        return nil
+    }
+    func JsonToDictionary2(data: Data) -> [String: Any]? {
+        let dataString = String(decoding: data, as: UTF8.self)
+        if let result = dataString.data(using: .utf8) {
+            do {
+                return try JSONSerialization.jsonObject(with: result, options: []) as? [String: Any]
+            } catch {
+                print(error.localizedDescription)
+            }
+        }
+        return nil
+    }
+    func makeShortUrl(url: String, completion: @escaping(String) -> Void){
+        print(url)
+        let url2 = "https://naveropenapi.apigw.ntruss.com/util/v1/shorturl?url=\(url)"
+        AF.request(url2,
+                   method: .get,
+                   encoding: URLEncoding.default,
+                   headers: ["X-NCP-APIGW-API-KEY-ID" : "pigmldt25l",
+                             "X-NCP-APIGW-API-KEY" : "qFtYI0FzrXFS1Muh50cscBJCf1D424bM1fnT2Bi1"
+                            ]
+        ).responseData { [weak self] res in
+            switch res.result {
+                case .failure(let error):
+                    print(error)
+                case .success(let data):
+                guard let json = try? JSONSerialization.jsonObject(with: data),
+                      let dictionary = json as? [String: Any],
+                      let result = dictionary["result"] as? [String:Any],
+                      let convertUrl = result["url"] as? String
+                else {
+                    return
+                }
+                completion(convertUrl)
+            }
+        }
+
+    }
     
 }
 extension UILabel {

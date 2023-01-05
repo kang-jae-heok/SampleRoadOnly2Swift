@@ -8,6 +8,7 @@
 import UIKit
 import KakaoSDKAuth
 import NaverThirdPartyLogin
+import FacebookCore
 
 
 @objc class SceneDelegate: UIResponder, UIWindowSceneDelegate {
@@ -22,16 +23,25 @@ import NaverThirdPartyLogin
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let windowScene = (scene as? UIWindowScene) else { return }
-        getAdmin()
-        UserDefaults.standard.set("https://service.iamport.kr/payments/success?success=", forKey: "PAY_SUCCESS_URL")
-        UserDefaults.standard.set("https://service.iamport.kr/payments/fail?success=", forKey: "PAY_FAILED_URL")
-        UserDefaults.standard.set("http://110.165.17.124/sampleroad/", forKey: "SERVER_URL")
-        window = UIWindow(windowScene: windowScene)
-        mainViewController = SplashViewController()
-        navController = UINavigationController(rootViewController: mainViewController)
-        navController.setNavigationBarHidden(true, animated: false)
-        window?.rootViewController = self.navController // 시작을 위에서 만든 내비게이션 컨트롤러로 해주면 끝!
-        window?.makeKeyAndVisible()
+        userDefaultsClear()
+        checkOrder()
+        getAdmin {
+            UserDefaults.standard.set("https://service.iamport.kr/payments/success?success=", forKey: "PAY_SUCCESS_URL")
+            UserDefaults.standard.set("https://service.iamport.kr/payments/fail?success=", forKey: "PAY_FAILED_URL")
+            UserDefaults.standard.set("https://service.iamport.kr/payments/vbank?imp_uid=", forKey: "VBANK_SUCCESS_URL")
+        
+            UserDefaults.standard.set("http://110.165.17.124/sampleroad/", forKey: "SERVER_URL")
+            UserDefaults.standard.set(nil, forKey: "sample_order")
+            self.window = UIWindow(windowScene: windowScene)
+            self.mainViewController = SplashViewController()
+            self.navController = UINavigationController(rootViewController: self.mainViewController)
+            self.navController.setNavigationBarHidden(true, animated: false)
+            self.window?.rootViewController = self.navController // 시작을 위에서 만든 내비게이션 컨트롤러로 해주면 끝!
+            self.window?.makeKeyAndVisible()
+        }
+   
+        
+       
          // 내비게이션 컨트롤러에 처음으로 보여질 화면을 rootView로 지정해주고!
         }
   
@@ -56,6 +66,7 @@ import NaverThirdPartyLogin
     func sceneWillEnterForeground(_ scene: UIScene) {
         // Called as the scene transitions from the background to the foreground.
         // Use this method to undo the changes made on entering the background.
+        
     }
 
     func sceneDidEnterBackground(_ scene: UIScene) {
@@ -64,78 +75,142 @@ import NaverThirdPartyLogin
         // to restore the scene back to its current state.
     }
     func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
-        if let url = URLContexts.first?.url {
-            if (AuthApi.isKakaoTalkLoginUrl(url)) {
-                _ = AuthController.handleOpenUrl(url: url)
-            }
-            print("카카오페이 결제")
-            if url.query != nil {
-                let dic = Common.parseQueryString(url.query!)
-                print("application openURL:(NSURL *)url dic  :  \(dic)")
-                if dic["scope"] != nil {
-                    if dic["scope"] as! String == "reset-password" {
-                        UserDefaults.standard.set(dic["reset-password"], forKey: "scope")
-                        UserDefaults.standard.set(dic["secret"], forKey: "secret")
-                        UserDefaults.standard.synchronize()
+            
+            
+            if let url = URLContexts.first?.url {
+                
+                ApplicationDelegate.shared.application(
+                    UIApplication.shared,
+                    open: url,
+                    sourceApplication: nil,
+                    annotation: [UIApplication.OpenURLOptionsKey.annotation]
+                )
+                
+                NSLog("openURLContexts url  :   %@", url.absoluteString);
+                print(url)
+                var isNaver = true
+                if (AuthApi.isKakaoTalkLoginUrl(url)) {
+                    isNaver = false
+                    _ = AuthController.handleOpenUrl(url: url)
+                }
+
+                if url.query != nil {
+                    
+                    let dic = Common.parseQueryString(url.query!)
+                    print("application openURL:(NSURL *)url dic  :  \(dic)")
+        
+                    
+                    if dic["scope"] != nil {
+                        isNaver = false
+                        guard let scope = dic["scope"] as? String else {return}
+                        if scope == "reset-password" {
+                            UserDefaults.standard.set(dic["secret"], forKey: "reset-secret")
+                            UserDefaults.standard.set(dic["customer"],forKey: "reset-customer")
+                            
+                            navController.pushViewController(ResetPassViewController(), animated: true)
+                        }
                     }
-                }
+                    if dic["product"] != nil {
+                        isNaver = false
+                        UserDefaults.standard.set(dic["product"], forKey: "share-product")
+                        UserDefaults.standard.synchronize()
+                        print("아아")
+                        common.sendRequest(url: "https://api.clayful.io/v1/products/\(dic["product"] ?? "")", method: "get", params: [:], sender: "") { resultJson in
+                            guard let resultDic = resultJson as? [String:Any] else {return}
+                            UserDefaults.standard.removeObject(forKey: "share-product")
+                            self.navController.pushViewController(DetailProductViewController(productDic: resultDic), animated: true)
+                        }
+                    }
 
-                if dic["product"] != nil {
-                    UserDefaults.standard.set(dic["product"], forKey: "share-product")
-                    UserDefaults.standard.synchronize()
-                }
+                    if url.absoluteString.contains("event") {
+                        isNaver = false
+                        let convertURL = url.absoluteString.components(separatedBy: "=")
+                        let event = convertURL.last
+                       
+                        common.sendRequest(url: "http://110.165.17.124/sampleroad/v1/event.php", method: "post", params: ["event_id": event ?? "", "customer_id":  UserDefaults.standard.string(forKey: "customer_id") ?? ""], sender: "") { resultJson in
+                            guard let resultDic = resultJson as? [String:Any],
+                                  let event = resultDic["event"] as? [String:Any]
+                            else {return}
+                            print("#######resultDic")
+                            UserDefaults.standard.removeObject(forKey: "share-event")
+                            self.navController.pushViewController(EventDetailSViewController(initDic: event), animated: true)
+                        }
+                    }
+                    
+                }else {
+                    
 
-                if dic["event"] != nil {
-                    UserDefaults.standard.set(dic["event"], forKey: "share-event")
-                    UserDefaults.standard.synchronize()
                 }
+                
+                if isNaver {
+                    NaverThirdPartyLoginConnection
+                      .getSharedInstance()?
+                      .receiveAccessToken(URLContexts.first?.url)
+                }
+                
             }
+
+            
         }
-        NaverThirdPartyLoginConnection
-          .getSharedInstance()?
-          .receiveAccessToken(URLContexts.first?.url)
-      
-        
-//        NSDictionary* dic = [self parseQueryString:[url query]];
-//            NSLog(@"application openURL:(NSURL *)url dic  :  %@",dic);
-//            if ([dic valueForKey:@"scope"]) {
-//                if ([[dic valueForKey:@"scope"] isEqualToString:@"reset-password"]) {
-//                    [[NSUserDefaults standardUserDefaults] setObject:[dic valueForKey:@"reset-password"] forKey:@"scope"];
-//                    [[NSUserDefaults standardUserDefaults] setObject:[dic valueForKey:@"secret"] forKey:@"secret"];
-//                    [[NSUserDefaults standardUserDefaults] synchronize];
-//                }
-//
-//            }
-//
-//            if ([dic valueForKey:@"product"]) {
-//                [[NSUserDefaults standardUserDefaults] setObject:[dic valueForKey:@"product"] forKey:@"share-product"];
-//                [[NSUserDefaults standardUserDefaults] synchronize];
-//            }
-//
-//            if ([dic valueForKey:@"event"]) {
-//                [[NSUserDefaults standardUserDefaults] setObject:[dic valueForKey:@"event"] forKey:@"share-event"];
-//                [[NSUserDefaults standardUserDefaults] synchronize];
-//            }
-        
-    }
     
     @objc func returnNavi() -> UINavigationController {
         return self.navController
     }
-    func getAdmin(){
-        common.sendRequest(url: "http://110.165.17.124/sampleroad/db/sr_admin_select.php", method: "post", params: [:], sender: "") { resultJson in
-            self.adminDic = resultJson as! [String:Any]
-            print(type(of: self.adminDic["REVIEW_VERSION"]!))
+    //추후에 삭제해야됨 
+    func userDefaultsClear(){
+        if !UserDefaults.contains("isFirstActive") {
+            for key in UserDefaults.standard.dictionaryRepresentation().keys {
+                        UserDefaults.standard.removeObject(forKey: key.description)
+                    }
+            UserDefaults.standard.set(false, forKey: "isFirstActive")
+        }
+    }
+    //주문중에서 나갔을때
+    func checkOrder(){
+        if UserDefaults.contains("merchant_uid") {
+            var params = [String:Any]()
+            let orderId = UserDefaults.standard.string(forKey: "merchant_uid") ?? ""
+            guard let byString = UserDefaults.standard.string(forKey: "pay_callback") else {return}
+            var by = String()
+            if byString == "failed-customer" {
+                by = "customer"
+            }else {
+                by = "store"
+            }
+            params.updateValue(by, forKey: "by")
+            params.updateValue("", forKey: "reason")
+            UserDefaults.standard.removeObject(forKey: "pay_callback")
+            common.sendRequest(url: "https://api.clayful.io/v1/orders/\(orderId)/cancellation", method: "post", params: params, sender: "") { resultJson in
+                print(resultJson)
+                UserDefaults.standard.removeObject(forKey: "merchant_uid")
+                UserDefaults.standard.removeObject(forKey: "coupon")
+            }
+        }
+    }
+    func getAdmin( completion: @escaping () -> Void){
+        common.sendRequest(url: "http://110.165.17.124/sampleroad/v1/setting.php", method: "post", params: [:], sender: "") { resultJson in
+            guard let resultDic = resultJson as? [String:Any],
+                  let admin = resultDic["admin"] as? [String:Any],
+                  let count = resultDic["count"] as? String,
+                  let banner = resultDic["banner"] as? [[String:Any]],
+                  let categories = resultDic["categories"] as? String,
+                  let newestVersion = admin["APP_VERSION"] as? String
+             else {return}
+            UserDefaults.standard.set(count, forKey: "setting-count")
+            UserDefaults.standard.set(banner, forKey: "setting-banner")
+            UserDefaults.standard.set(categories, forKey: "setting-categories")
             guard let localVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String else {
                 return
             }
+            UserDefaults.standard.set(localVersion, forKey: "current_version")
+            UserDefaults.standard.set(newestVersion, forKey: "newest_version")
 //            guard let verCheck = self.adminDic["REVIEW_VERSION"]!
-            if self.adminDic["REVIEW_VERSION"] is NSNull {
+            if admin["REVIEW_VERSION"] is NSNull {
                 UserDefaults.standard.set(true, forKey: "PRDC_MODE")
                 print("유저 버전")
                 print(UserDefaults.standard.bool(forKey: "PRDC_MODE"))
             }else{
-                if self.adminDic["REVIEW_VERSION"] as! String == localVersion {
+                if admin["REVIEW_VERSION"] as! String == localVersion {
                     print("리뷰 버전")
                     UserDefaults.standard.set(false, forKey: "PRDC_MODE")
                 }else {
@@ -143,22 +218,16 @@ import NaverThirdPartyLogin
                     UserDefaults.standard.set(true, forKey: "PRDC_MODE")
                 }
                 print(UserDefaults.standard.bool(forKey: "PRDC_MODE"))
-//                if adminDic["APP_VERSION"] == adminDic["REVIEW_VERSION"] {
-//
-//                }
+               
             }
-            
-            
-            if self.adminDic["BILLING_TEST_I"] as! String == "1" {
+            if admin["BILLING_TEST_I"] as! String == "1" {
                 UserDefaults.standard.set(true, forKey: "BILLING_TEST")
             }else {
                 UserDefaults.standard.set(false, forKey: "BILLING_TEST")
             }
+            completion()
         }
     }
-  
-       
-
 }
 
 

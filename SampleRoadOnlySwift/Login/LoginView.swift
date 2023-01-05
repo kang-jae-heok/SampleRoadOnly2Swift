@@ -21,8 +21,6 @@ class LoginView: UIView{
         $0.textField.isSecureTextEntry = true
     }
     var checkCheckBtn = Bool()
-    //버튼과 시작하기 사이 길이
-    lazy var betweenY = screenBounds.height/2 - screenBounds.width/12 - screenBounds.width/4
 
     lazy var loginBtn = UIButton().then{
         $0.setTitle("시작하기", for: .normal)
@@ -101,21 +99,41 @@ class LoginView: UIView{
             $0.top.left.right.equalToSuperview()
             $0.bottom.equalTo(self.snp.top).offset(screenBounds.width/4)
         }
-        loginBtn.snp.makeConstraints{
-            $0.centerX.equalToSuperview()
-            $0.top.equalTo(findEmailBtn.snp.bottom).offset(40)
-            $0.size.equalTo(CGSize(width: screenBounds.width - margin * 2, height: screenBounds.width/6))
+        // SE 1 기종 분기 처리
+        if screenBounds.height < 600 {
+            loginBtn.snp.makeConstraints{
+                $0.centerX.equalToSuperview()
+                $0.top.equalTo(findEmailBtn.snp.bottom).offset(10)
+                $0.size.equalTo(CGSize(width: screenBounds.width - margin * 2 * screenRatio, height: screenBounds.width/6 * screenRatio) )
+            }
+            kakaoBtn.snp.makeConstraints{
+                $0.right.equalTo(self.snp.centerX).offset(-3)
+                $0.size.equalTo(CGSize(width: 100 * screenRatio, height: 50 * screenRatio))
+                $0.top.equalTo(loginBtn.snp.bottom).offset(10)
+            }
+            naverBtn.snp.makeConstraints{
+                $0.top.equalTo(loginBtn.snp.bottom).offset(10)
+                $0.left.equalTo(self.snp.centerX).offset(3)
+                $0.size.equalTo(CGSize(width: 100 * screenRatio, height: 50 * screenRatio))
+            }
+        }else {
+            loginBtn.snp.makeConstraints{
+                $0.centerX.equalToSuperview()
+                $0.top.equalTo(findEmailBtn.snp.bottom).offset(40)
+                $0.size.equalTo(CGSize(width: screenBounds.width - margin * 2 * screenRatio, height: screenBounds.width/6 * screenRatio) )
+            }
+            kakaoBtn.snp.makeConstraints{
+                $0.right.equalTo(self.snp.centerX).offset(-3)
+                $0.size.equalTo(CGSize(width: 100 * screenRatio, height: 50 * screenRatio))
+                $0.top.equalTo(loginBtn.snp.bottom).offset(40)
+            }
+            naverBtn.snp.makeConstraints{
+                $0.top.equalTo(loginBtn.snp.bottom).offset(40)
+                $0.left.equalTo(self.snp.centerX).offset(3)
+                $0.size.equalTo(CGSize(width: 100 * screenRatio, height: 50 * screenRatio))
+            }
         }
-        kakaoBtn.snp.makeConstraints{
-            $0.right.equalTo(self.snp.centerX).offset(-3)
-            $0.size.equalTo(CGSize(width: 100, height: 50))
-            $0.top.equalTo(loginBtn.snp.bottom).offset(40)
-        }
-        naverBtn.snp.makeConstraints{
-            $0.top.equalTo(loginBtn.snp.bottom).offset(40)
-            $0.left.equalTo(self.snp.centerX).offset(3)
-            $0.size.equalTo(CGSize(width: 100, height: 50))
-        }
+     
         emailView.snp.makeConstraints{
             $0.top.equalTo(topView.snp.bottom).offset(40)
             $0.left.right.equalToSuperview()

@@ -23,27 +23,31 @@ class LikeProductView: UIView {
     }
     lazy var allDeleteBtn = UIButton().then{
         $0.setTitle("전체 삭제", for: .normal)
-        $0.setTitleColor(common.setColor(hex: "$b1b1b1"), for: .normal)
-        $0.titleLabel?.font = common.setFont(font: "bold", size: 10)
+        $0.setTitleColor(common.gray(), for: .normal)
+        $0.titleLabel?.font = common.setFont(font: "bold", size: 12)
+        $0.layer.borderColor  = common.gray().cgColor
         $0.layer.borderWidth = 1
     }
     lazy var topLineView = UIView().then{
         $0.backgroundColor = common.gray()
     }
     let likeProductTableView = UITableView()
+    let noneView = NoneView().then {
+        $0.tit.text = "찜한 제품이 없습니다"
+        $0.isHidden = true
+    }
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.backgroundColor = .white
         addSubviewFunc()
         setLayout()
-       
     }
     
     required init?(coder: NSCoder) {
         fatalError("initFail")
     }
     func addSubviewFunc(){
-        [topView,countLbl,allDeleteBtn,topLineView,likeProductTableView].forEach{
+        [topView,countLbl,allDeleteBtn,topLineView,likeProductTableView,noneView].forEach{
             self.addSubview($0)
         }
     }
@@ -53,13 +57,13 @@ class LikeProductView: UIView {
             $0.size.height.equalTo(screenBounds.width/4)
         }
         countLbl.snp.makeConstraints{
-            $0.top.equalTo(topView.snp.bottom).offset(margin2)
+            $0.centerY.equalTo(allDeleteBtn)
             $0.left.equalToSuperview().offset(margin2)
         }
         allDeleteBtn.snp.makeConstraints{
             $0.top.equalTo(topView.snp.bottom).offset(margin2)
             $0.right.equalToSuperview().offset(-margin2)
-            $0.size.equalTo(CGSize(width: margin2 * 3, height: margin2))
+            $0.size.equalTo(CGSize(width: margin2 * 4, height: margin2 * 2))
         }
         topLineView.snp.makeConstraints{
             $0.top.equalTo(allDeleteBtn.snp.bottom).offset(margin2)
@@ -69,6 +73,9 @@ class LikeProductView: UIView {
         likeProductTableView.snp.makeConstraints{
             $0.left.right.bottom.equalToSuperview()
             $0.top.equalTo(topLineView.snp.bottom)
+        }
+        noneView.snp.makeConstraints {
+            $0.edges.equalTo(likeProductTableView)
         }
         
     }

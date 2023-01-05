@@ -41,24 +41,20 @@ class BannerCollectionView: UIView, UICollectionViewDelegate, UICollectionViewDa
         }
     }
     func getBannerImg(){
-        let params = ["type":"home"]
-        common.sendRequest(url: "http://110.165.17.124/sampleroad/db/sr_banner_select_test.php", method: "post", params: params, sender: "") { [self] resultJson in
-            let bannerInfoDicArr = resultJson as! [[String:Any]]
-            print("$$$$$$$$$$")
-            print(bannerInfoDicArr)
-            self.bannerDicArr = bannerInfoDicArr
-            bannerCollectionView.delegate = self
-            bannerCollectionView.dataSource = self
-            bannerCollectionView.reloadData()
-            bannerTimer()
-//            self.common.setImageUrl(url: "http://110.165.17.124/sampleroad/images/banner/\(bannerPath)", imageView: self.mainContentView.bannerImgView)
-        }
+        guard let settingBannerDicArr = UserDefaults.standard.value(forKey: "setting-banner") as? [[String: Any]] else {return}
+        self.bannerDicArr = settingBannerDicArr
+        bannerCollectionView.delegate = self
+        bannerCollectionView.dataSource = self
+        bannerCollectionView.reloadData()
+        bannerTimer()
     }
     func getProductDic(prductId: String){
         common.sendRequest(url: "https://api.clayful.io/v1/products/\(prductId)", method: "get", params: [:], sender: "") { resultJson in
             let infoDic = resultJson as! [String:Any]
             let convertDic = NSMutableDictionary(dictionary: infoDic)
-            self.parentViewController?.navigationController?.pushViewController(ProductDetailViewController(data: convertDic), animated: true)
+            guard let productId = convertDic["_id"] as? String else {return}
+            let vc = DetailProductViewController(productDic: infoDic)
+            self.parentViewController?.navigationController?.pushViewController(vc, animated: true)
         }
     }
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -73,10 +69,8 @@ class BannerCollectionView: UIView, UICollectionViewDelegate, UICollectionViewDa
             let actionURL = bannerDic["banner_action"] as! String
             let actionType = actionURL.components(separatedBy: "://")
             if actionType[0] == "product" {
-                // 내일 대표님한테 물어봐야 되는 곳
                 print(actionType[1])
                 getProductDic(prductId: actionType[1])
-                print("ㄲㄲ")
             }else{
                 //나중에 코드 넣을 곳
             }

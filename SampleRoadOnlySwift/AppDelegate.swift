@@ -10,6 +10,7 @@ import KakaoSDKCommon
 import NaverThirdPartyLogin
 import IQKeyboardManagerSwift
 import iamport_ios
+import FirebaseCore
 @main
 
 @objc class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -23,6 +24,7 @@ import iamport_ios
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         KakaoSDK.initSDK(appKey: "4574ebf3c9e9e5765331fe01d3e5181e")
+        FirebaseApp.configure()
         IQKeyboardManager.shared.enable = true
         IQKeyboardManager.shared.enableAutoToolbar = false
         IQKeyboardManager.shared.shouldResignOnTouchOutside = true
@@ -37,10 +39,10 @@ import iamport_ios
         /// 사파리로 로그인
         instance!.isInAppOauthEnable = true
         
-        instance?.serviceUrlScheme = "naverlogin" // 앱을 등록할 때 입력한 URL Scheme
+        instance?.serviceUrlScheme = "sampleroad" // 앱을 등록할 때 입력한 URL Scheme
         instance?.consumerKey = "YhdqBjtCMkKxxip6Egxy" // 상수 - client id
         instance?.consumerSecret = "nMdSqYG_gq" // pw
-        instance?.appName = "sampleload" // app name
+        instance?.appName = "sampleroad" // app name
         return true
     }
     func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {

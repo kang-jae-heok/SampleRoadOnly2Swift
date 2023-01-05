@@ -13,7 +13,7 @@ class ReceivedSampleView: UIView {
     let screenBounds = UIScreen.main.bounds
     
     let topView = SimpleTopView().then {
-        $0.tit.text = "받아온 샘플"
+        $0.tit.text = "받아본 샘플"
     }
     lazy var countLbl = UILabel().then{
         $0.textColor = common.pointColor()
@@ -24,6 +24,10 @@ class ReceivedSampleView: UIView {
         $0.backgroundColor = common.gray()
     }
     let receivedSampleTableView = UITableView()
+    let noneSampleView = NoneView().then{
+        $0.tit.text = "받아본 샘플이 없습니다"
+        $0.isHidden = true
+    }
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.backgroundColor = .white
@@ -37,7 +41,7 @@ class ReceivedSampleView: UIView {
         fatalError("initFail")
     }
     func addSubviewFunc(){
-        [topView,countLbl,topLineView,receivedSampleTableView].forEach{
+        [topView,countLbl,topLineView,receivedSampleTableView,noneSampleView].forEach{
             self.addSubview($0)
         }
     }
@@ -58,6 +62,9 @@ class ReceivedSampleView: UIView {
         receivedSampleTableView.snp.makeConstraints{
             $0.left.right.bottom.equalToSuperview()
             $0.top.equalTo(topLineView.snp.bottom)
+        }
+        noneSampleView.snp.makeConstraints {
+            $0.edges.equalTo(receivedSampleTableView)
         }
         
     }

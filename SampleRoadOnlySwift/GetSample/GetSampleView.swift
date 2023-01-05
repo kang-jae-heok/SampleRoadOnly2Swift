@@ -27,7 +27,7 @@ class GetSampleView: UIView{
     lazy var tit = UILabel().then{
         $0.text = "샘플받기"
         $0.textColor = common.pointColor()
-        $0.font = common.setFont(font: "bold", size: 17)
+        $0.font = common.setFont(font: "bold", size: 20)
     }
     lazy var closeBtn = UIButton().then{
         let img = UIImage(named: "x_btn")!.withRenderingMode(UIImage.RenderingMode.alwaysTemplate)
@@ -38,7 +38,7 @@ class GetSampleView: UIView{
     lazy var typeTit = UILabel().then{
         $0.textColor = .white
         $0.backgroundColor = common.pointColor()
-        $0.font = common.setFont(font: "bold", size: 20)
+        $0.font = common.setFont(font: "bold", size: 17)
         $0.text = typeTitArr[0]
         $0.textAlignment = .center
     }
@@ -56,10 +56,13 @@ class GetSampleView: UIView{
     }
     let flowLayout = UICollectionViewFlowLayout().then{
         $0.scrollDirection = .horizontal
+        $0.minimumInteritemSpacing = 17
+        $0.minimumLineSpacing = 17
     }
    
     lazy var sampleCollectionView = UICollectionView(frame: .zero, collectionViewLayout: flowLayout).then{
         $0.backgroundColor = .white
+        $0.contentInset = UIEdgeInsets(top: 0, left: margin, bottom: 0, right: margin)
     }
     lazy var data = [sampleItems(sampleImgURL: "a", companyName: "test", sampleName: "test"),sampleItems(sampleImgURL: "a", companyName: "test2", sampleName: "test2"),sampleItems(sampleImgURL: "a", companyName: "test", sampleName: "test")]
     var sampleArr = [[String:Any]]()
@@ -68,19 +71,22 @@ class GetSampleView: UIView{
         $0.clipsToBounds = true
     }
     lazy var nextBtn = UIButton().then{
-        $0.setTitle("다음", for: .normal)
+        $0.setTitle("다음 >", for: .normal)
         $0.backgroundColor = common.pointColor()
+        $0.titleLabel?.font = common.setFont(font: "bold", size: 17)
         $0.layer.cornerRadius = 5
     }
     lazy var backBtn = UIButton().then{
-        $0.setTitle("이전", for: .normal)
+        $0.setTitle("< 이전", for: .normal)
         $0.backgroundColor = common.pointColor()
+        $0.titleLabel?.font = common.setFont(font: "bold", size: 17)
         $0.layer.cornerRadius = 5
         $0.isHidden = true
     }
     lazy var applicateBtn = UIButton().then{
         $0.setTitle("신청하기", for: .normal)
         $0.backgroundColor = common.pointColor()
+        $0.titleLabel?.font = common.setFont(font: "bold", size: 17)
         $0.layer.cornerRadius = 5
         $0.isHidden = true
         $0.addTarget(self, action: #selector(touchApplicateBtn), for: .touchUpInside)
@@ -96,6 +102,20 @@ class GetSampleView: UIView{
         $0.isLayoutMarginsRelativeArrangement = true
         $0.directionalLayoutMargins = NSDirectionalEdgeInsets(top: btnSize/2 + 1.5, leading: margin, bottom: btnSize/2 + 1.5, trailing: margin)
     }
+    lazy var noneSelectedView: UIView = {
+        let view = UIView()
+        let tit = UILabel().then {
+            $0.text = "선택된 제품이 없습니다"
+            $0.textColor = common2.setColor(hex: "#b1b1b1")
+            $0.font = common2.setFont(font: "bold", size: 16)
+        }
+        view.addSubview(tit)
+        tit.snp.makeConstraints {
+            $0.centerY.centerX.equalToSuperview()
+        }
+        view.backgroundColor = .white
+        return view
+    }()
     lazy var selectedViews: [UIView] = {
         var views = [UIView]()
         for i in 0...2 {
@@ -192,7 +212,7 @@ class GetSampleView: UIView{
         [topView,scrlView,bottomBtnView,alphaView].forEach{
             self.addSubview($0)
         }
-        [selectedStackView,typeTit,subTit,sampleCollectionView].forEach{
+        [selectedStackView,noneSelectedView,typeTit,subTit,sampleCollectionView].forEach{
             scrlView.addSubview($0)
         }
         [tit,closeBtn].forEach{
@@ -229,45 +249,48 @@ class GetSampleView: UIView{
             $0.top.left.width.equalToSuperview()
             $0.size.height.equalTo(screenBounds.width/2 - 50)
         }
+        noneSelectedView.snp.makeConstraints {
+            $0.edges.equalTo(selectedStackView)
+        }
         
         typeTit.snp.makeConstraints{
             $0.top.equalTo(selectedStackView.snp.bottom)
             $0.left.right.equalToSuperview()
             $0.size.width.equalTo(screenBounds.width)
-            $0.bottom.equalTo(selectedStackView.snp.bottom).offset(70)
+            $0.height.equalTo(50)
         }
         subTit.snp.makeConstraints{
-            $0.top.equalTo(typeTit.snp.bottom).offset(10)
+            $0.top.equalTo(typeTit.snp.bottom).offset(20)
             $0.left.equalToSuperview().offset(margin)
             $0.size.width.equalTo(screenBounds.width - margin * 2)
-            $0.bottom.equalTo(typeTit.snp.bottom).offset(10 + 70)
+            $0.height.equalTo(50)
         }
         sampleCollectionView.snp.makeConstraints{
-            $0.top.equalTo(subTit.snp.bottom).offset(10)
+            $0.top.equalTo(subTit.snp.bottom)
             $0.left.equalToSuperview()
             $0.size.width.equalTo(screenBounds.width)
-            $0.bottom.equalToSuperview().offset(-50)
+            $0.bottom.equalToSuperview().offset(-80)
         }
         bottomBtnView.snp.makeConstraints{
             $0.bottom.left.right.equalToSuperview()
-            $0.top.equalTo(super.snp.bottom).offset(-90)
+            $0.height.equalTo(90)
         }
         nextBtn.snp.makeConstraints{
             $0.left.equalTo(super.snp.centerX).offset(10)
             $0.right.equalToSuperview().offset(-margin)
-            $0.centerY.equalToSuperview()
+            $0.top.equalToSuperview()
             $0.height.equalTo(50)
         }
         backBtn.snp.makeConstraints{
             $0.right.equalTo(super.snp.centerX).offset(-10)
             $0.left.equalToSuperview().offset(margin)
-            $0.centerY.equalToSuperview()
+            $0.top.equalToSuperview()
             $0.height.equalTo(50)
         }
         applicateBtn.snp.makeConstraints{
             $0.left.equalToSuperview().offset(margin)
             $0.right.equalToSuperview().offset(-margin)
-            $0.centerY.equalToSuperview()
+            $0.top.equalToSuperview()
             $0.height.equalTo(50)
         }
         selectedViews.forEach{
@@ -277,8 +300,8 @@ class GetSampleView: UIView{
             }
         }
         selectedSampleView.snp.makeConstraints{
-            $0.top.equalToSuperview().offset(150)
-            $0.bottom.equalToSuperview().offset(-150)
+            $0.top.equalToSuperview().offset(150 * screenRatio)
+            $0.bottom.equalToSuperview().offset(-150 * screenRatio)
             $0.left.equalToSuperview().offset(margin)
             $0.right.equalToSuperview().offset(-margin)
         }
@@ -306,8 +329,42 @@ class GetSampleView: UIView{
         //
         //        NSString *cacheKey = [dic valueForKey:@"name"];
         
-        common.sendRequest(url: "https://api.clayful.io/v1/products?search:keywords=\(String(describing: encodedType!))&variantQuantityMin=1", method: "get", params: [:], sender: "") { [self] resultJson in
-            sampleArr = resultJson as! [[String:Any]]
+        common.sendRequest(url: "https://api.clayful.io/v1/products?search:keywords=\(String(describing: encodedType!))", method: "get", params: [:], sender: "") { [self] resultJson in
+            guard let resultArr = resultJson as? [[String:Any]] else {return}
+            print(type)
+            sampleArr.removeAll()
+            print("@@@sampleArr")
+            print(common2.objectTojsonString(from: resultArr[0]) )
+            print("@@@sampleArrEnd")
+            if resultArr.count != 0 {
+                for i in 0...resultArr.count - 1 {
+                    var targetProduct:[String:Any]?
+                    guard let item = resultArr[i] as? [String:Any],
+                          let variants = item["variants"] as? [[String:Any]]
+                    else {return}
+                    for v in variants {
+                        guard let types = v["types"] as? [[String:Any]],
+                              let variation = types[0]["variation"] as? [String:Any],
+                              let value = variation["value"] as? String
+                        else {return}
+                        print(value)
+                        if value == "샘플" {
+                            targetProduct = v
+                            break;
+                        }
+                    }
+                    guard let quantityDic = targetProduct!["quantity"] as? [String:Any],
+                          let rawQuantity = quantityDic["raw"] as? Int
+                    else {
+                        sampleArr.append(resultArr[i])
+                        continue
+                    }
+                    if rawQuantity > 0 {
+                        sampleArr.append(resultArr[i])
+                    }
+                }
+            }
+           
             sampleCollectionView.delegate = self
             sampleCollectionView.dataSource = self
             sampleCollectionView.reloadData()
@@ -366,6 +423,12 @@ class GetSampleView: UIView{
             nextBtn.isHidden = false
             backBtn.isHidden = true
         }
+        if selectedArr.count == 0 {
+            noneSelectedView.isHidden = false
+        }else {
+            noneSelectedView.isHidden = true
+        }
+        
     }
     @objc func touchApplicateBtn(){
         alphaView.isHidden = false
@@ -401,14 +464,15 @@ class GetSampleView: UIView{
     }
     @objc func touchDetailBtn(sender: UIButton){
         let converDic = NSMutableDictionary(dictionary: sampleArr[sender.tag])
-        let vc = ProductDetailViewController(data: converDic)
+        guard let productId = converDic["_id"] as? String else {return}
+        let vc = DetailProductViewController(productDic: sampleArr[sender.tag])
         parentViewController?.navigationController?.pushViewController(vc, animated: true)
     }
     
 }
 extension GetSampleView: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: screenBounds.width/2 - 50, height: screenBounds.height * 2 / 5)
+        return CGSize(width: screenBounds.width/2 - 50, height: screenBounds.height * 1.7 / 5)
     }
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         print(sampleArr.count)
@@ -427,7 +491,7 @@ extension GetSampleView: UICollectionViewDelegate, UICollectionViewDataSource, U
         cell.detailBtn.tag = indexPath.row
         cell.detailBtn.addTarget(self, action: #selector(touchDetailBtn(sender:)), for: .touchUpInside)
         common.setImageUrl(url: encoded!, imageView: cell.sampleImgView)
-        
+        cell.layer.cornerRadius = 8
         
         return cell
     }

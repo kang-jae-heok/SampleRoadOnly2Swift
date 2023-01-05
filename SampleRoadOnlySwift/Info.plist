@@ -24,6 +24,23 @@
 				<string>naverlogin</string>
 			</array>
 		</dict>
+        <dict>
+        <key>CFBundleURLTypes</key>
+        <array>
+          <dict>
+          <key>CFBundleURLSchemes</key>
+          <array>
+            <string>fb408573474692999</string>
+          </array>
+          </dict>
+        </array>
+        <key>FacebookAppID</key>
+        <string>408573474692999</string>
+        <key>FacebookClientToken</key>
+        <string>eaa573dbb152c5d4748da393042f8875</string>
+        <key>FacebookDisplayName</key>
+        <string>sampleroad</string>
+        </dict>
 		<dict>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
@@ -39,6 +56,8 @@
 	</array>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
+        <string>fbapi</string>
+        <string>fb-messenger-share-api</string>
 		<string>kakaolink</string>
 		<string>kakaokompassauth</string>
 		<string>naversearchapp</string>

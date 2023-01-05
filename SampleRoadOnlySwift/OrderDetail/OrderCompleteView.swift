@@ -12,7 +12,11 @@ class OrderCompleteView: UIView {
     let screenBounds = UIScreen.main.bounds
     lazy var titLbl = UILabel().then{
         $0.font = common.setFont(font: "bold", size: 20)
+        $0.textColor = common.pointColor()
         $0.textAlignment = .center
+    }
+    lazy var backBtn = UIButton().then {
+        $0.setImage(UIImage(named: "back_btn"), for: .normal)
     }
     lazy var subTit = UILabel().then{
         $0.font = common.setFont(font: "semibold", size: 15)
@@ -21,146 +25,168 @@ class OrderCompleteView: UIView {
     let scrlView  = UIScrollView().then{
         $0.backgroundColor = .clear
     }
+    lazy var subInfoView: UIView = {
+        let view = UIView()
+        view.backgroundColor = common.setColor(hex: "#f5f5f5")
+        [dateLbl,orderNumberLabel].forEach {
+            view.addSubview($0)
+        }
+        dateLbl.snp.makeConstraints {
+            $0.left.equalToSuperview().offset(margin2)
+            $0.centerY.equalToSuperview()
+        }
+        orderNumberLabel.snp.makeConstraints {
+            $0.right.equalToSuperview().offset(-margin2)
+            $0.centerY.equalToSuperview()
+        }
+        return view
+    }()
+    lazy var dateLbl = UILabel().then {
+        $0.font = common.setFont(font: "semibold", size: 15)
+        $0.textColor = .black
+        $0.text = "test"
+    }
+    lazy var orderNumberLabel = UILabel().then {
+        $0.font = common.setFont(font: "semibold", size: 15)
+        $0.textColor = .black
+        $0.text = "test"
+    }
+ 
+    lazy var stackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.axis = .vertical
+        stackView.spacing = 0
+        stackView.alignment = .fill
+        stackView.distribution = .fillEqually
+        stackView.backgroundColor = common.setColor(hex: "#f5f5f5")
+        return stackView
+    }()
     // 배송지 정보
     lazy var shippingInformationView = UIView().then{
-        $0.backgroundColor = common.gray()
+        $0.backgroundColor = common.setColor(hex: "#f5f5f5")
     }
     lazy var shippingTit = UILabel().then{
         $0.text = "배송지정보"
+        $0.textColor = common.setColor(hex: "6f6f6f")
         $0.font = common.setFont(font: "bold", size: 15)
     }
     lazy var shippingLineView = UIView().then{
-        $0.backgroundColor = .darkGray
+        $0.backgroundColor = common.lightGray()
     }
     // 배송지 정보 - 수령인
     lazy var recipientLbl = UILabel().then{
         $0.text = "수령인"
+        $0.textColor = common.setColor(hex: "6f6f6f")
         $0.font = common.setFont(font: "bold", size: 15)
     }
     lazy var recipient = UILabel().then{
         $0.font = common.setFont(font: "bold", size: 15)
+        $0.textColor = common.setColor(hex: "6f6f6f")
     }
     // 배송지 정보 - 연락처
     lazy var telNumLbl = UILabel().then{
         $0.text = "연락처"
         $0.font = common.setFont(font: "bold", size: 15)
+        $0.textColor = common.setColor(hex: "6f6f6f")
     }
     lazy var telNum = UILabel().then{
         $0.font = common.setFont(font: "semibold", size: 15)
+        $0.textColor = common.setColor(hex: "6f6f6f")
     }
     // 배송지 정보 - 배송지
     lazy var addressLbl = UILabel().then{
         $0.text = "배송지"
         $0.font = common.setFont(font: "bold", size: 15)
+        $0.textColor = common.setColor(hex: "6f6f6f")
     }
     lazy var addressNum = UILabel().then{
         $0.font = common.setFont(font: "bold", size: 15)
+        $0.textColor = common.setColor(hex: "6f6f6f")
     }
     lazy var address = UILabel().then{
         $0.font = common.setFont(font: "bold", size: 15)
+        $0.textColor = common.setColor(hex: "6f6f6f")
         $0.numberOfLines = 0
     }
     // 배송지 정보 - 배송요청사항
     lazy var deliveryRequestLbl = UILabel().then{
         $0.text = "배송요청"
         $0.font = common.setFont(font: "bold", size: 15)
+        $0.textColor = common.setColor(hex: "6f6f6f")
     }
     lazy var deliveryRequest = UILabel().then{
         $0.font = common.setFont(font: "bold", size: 15)
+        $0.textColor = common.setColor(hex: "6f6f6f")
     }
     // 결제정보
     lazy var paymentInformationView = UIView().then{
-        $0.backgroundColor = .lightGray
+        $0.backgroundColor = common.setColor(hex: "#f5f5f5")
     }
     lazy var paymentInformationTit = UILabel().then{
         $0.text = "결제정보"
         $0.font = common.setFont(font: "bold", size: 15)
+        $0.textColor = common.setColor(hex: "6f6f6f")
+    }
+    lazy var secondLineView = UIView().then {
+        $0.backgroundColor = common.lightGray()
     }
     // 결제정보 - 결제수단
     lazy var paymentMethodLbl = UILabel().then{
         $0.text = "결제수단"
         $0.font = common.setFont(font: "bold", size: 15)
+        $0.textColor = common.setColor(hex: "6f6f6f")
     }
     lazy var paymentMethod = UILabel().then{
         $0.font = common.setFont(font: "bold", size: 15)
+        $0.numberOfLines = 0
+        $0.textAlignment = .right
+        $0.textColor = common.setColor(hex: "6f6f6f")
     }
     // 결제정보 - 총 주문 금액
     lazy var orderTotalPriceLbl = UILabel().then{
         $0.text = "총 주문 금액"
         $0.font = common.setFont(font: "bold", size: 15)
+        $0.textColor = common.setColor(hex: "6f6f6f")
     }
     lazy var orderTotalPrice = UILabel().then{
         $0.font = common.setFont(font: "bold", size: 15)
+        $0.textColor = common.pointColor()
         $0.textColor = common.pointColor()
     }
     // 결제정보 - 금액
     // 결제정보 - 금액 - 상품금액
     lazy var priceDetailView = UIView().then{
-        $0.backgroundColor = common.pointColor()
+        $0.backgroundColor = common.lightGray()
     }
     lazy var productPriceLbl = UILabel().then{
         $0.text = "상품금액"
-        $0.font = common.setFont(font: "bold", size: 13)
+        $0.font = common.setFont(font: "bold", size: 15)
+        $0.textColor = common.setColor(hex: "6f6f6f")
     }
     lazy var productPrice = UILabel().then{
-        $0.font = common.setFont(font: "bold", size: 13)
+        $0.font = common.setFont(font: "bold", size: 15)
+        $0.textColor = common.setColor(hex: "6f6f6f")
     }
     // 결제정보 - 금액 - 배송비
     lazy var deliveryPriceLbl = UILabel().then{
         $0.text = "배송비"
-        $0.font = common.setFont(font: "bold", size: 13)
+        $0.font = common.setFont(font: "bold", size: 15)
+        $0.textColor = common.setColor(hex: "6f6f6f")
     }
     lazy var deliveryPrice = UILabel().then{
-        $0.font = common.setFont(font: "bold", size: 13)
+        $0.font = common.setFont(font: "bold", size: 15)
+        $0.textColor = common.setColor(hex: "6f6f6f")
     }
     // 결제정보 - 금액 - 쿠폰할인
     lazy var couponDiscountLbl = UILabel().then{
         $0.text = "쿠폰할인"
-        $0.font = common.setFont(font: "bold", size: 13)
+        $0.font = common.setFont(font: "bold", size: 15)
+        $0.textColor = common.setColor(hex: "6f6f6f")
     }
     lazy var couponDiscount = UILabel().then{
-        $0.font = common.setFont(font: "bold", size: 13)
-    }
-    // 결제정보 - 금액 - 포인트 사용
-    lazy var pointLbl = UILabel().then{
-        $0.text = "포인트 사용"
-        $0.font = common.setFont(font: "bold", size: 13)
-    }
-    lazy var point = UILabel().then{
-        $0.font = common.setFont(font: "bold", size: 13)
-    }
-    // 적립 포인트
-    lazy var savedPointView = UIView().then{
-        $0.backgroundColor = common.lightGray()
-    }
-    lazy var savedPointLbl = UILabel().then{
-        $0.text = "적립 포인트"
         $0.font = common.setFont(font: "bold", size: 15)
+        $0.textColor = common.setColor(hex: "6f6f6f")
     }
-    lazy var savedPoint = UILabel().then{
-        $0.font = common.setFont(font: "semibold", size: 15)
-        $0.asFont(targetStringList: ["최대"], font: common.setFont(font: "bold", size: 15))
-    }
-    lazy var earnTextReviewLbl = UILabel().then{
-        $0.text = "텍스트 리뷰 적립"
-        $0.font = common.setFont(font: "bold", size: 13)
-    }
-    lazy var earnTextReview = UILabel().then{
-        $0.font = common.setFont(font: "semibold", size: 13)
-    }
-    lazy var earnPhotoReviewLbl = UILabel().then{
-        $0.text = "텍스트 리뷰 적립"
-        $0.font = common.setFont(font: "bold", size: 13)
-    }
-    lazy var earnPhotoReview = UILabel().then{
-        $0.font = common.setFont(font: "semibold", size: 13)
-    }
-    lazy var homeBtn = UIButton().then{
-        $0.backgroundColor = common.pointColor()
-        $0.setTitleColor(.white, for: .normal)
-        $0.titleLabel?.font = common.setFont(font: "bold", size: 20)
-    }
-    
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.backgroundColor = .white
@@ -171,47 +197,57 @@ class OrderCompleteView: UIView {
         fatalError("init fail")
     }
     func addSubviewFunc(){
-        [titLbl,subTit,scrlView,homeBtn].forEach{
+        [titLbl,subTit,scrlView,backBtn].forEach{
             self.addSubview($0)
         }
-        [shippingInformationView,paymentInformationView,savedPointLbl,savedPoint,savedPointView].forEach{
+        [subInfoView,stackView,shippingInformationView,paymentInformationView].forEach{
             scrlView.addSubview($0)
         }
         [shippingTit,shippingLineView,recipientLbl,recipient,telNumLbl,telNum,addressLbl,addressNum,address,deliveryRequestLbl,deliveryRequest].forEach{
             shippingInformationView.addSubview($0)
         }
-        [paymentInformationTit,paymentMethodLbl,paymentMethod,orderTotalPriceLbl,orderTotalPrice,priceDetailView].forEach{
+        [paymentInformationTit,paymentMethodLbl,paymentMethod,orderTotalPriceLbl,orderTotalPrice,secondLineView,priceDetailView].forEach{
             paymentInformationView.addSubview($0)
         }
-        [productPriceLbl,productPrice,deliveryPriceLbl,deliveryPrice,couponDiscountLbl,couponDiscount,pointLbl,point].forEach{
+        [productPriceLbl,productPrice,deliveryPriceLbl,deliveryPrice,couponDiscountLbl,couponDiscount].forEach{
             priceDetailView.addSubview($0)
-        }
-        [earnTextReviewLbl,earnTextReview,earnPhotoReviewLbl,earnPhotoReview].forEach{
-            savedPointView.addSubview($0)
         }
     }
     func setLayout(){
         titLbl.snp.makeConstraints {
-            $0.top.equalToSuperview().offset(50)
+            $0.top.equalToSuperview().offset(screenBounds.width/4 - titLbl.font.pointSize)
             $0.left.right.equalToSuperview()
+        }
+        backBtn.snp.makeConstraints {
+            $0.left.equalToSuperview().offset(margin2)
+            $0.centerY.equalTo(titLbl)
         }
         subTit.snp.makeConstraints {
             $0.top.equalTo(titLbl.snp.bottom).offset(10)
             $0.left.right.equalToSuperview()
         }
         scrlView.snp.makeConstraints {
-            $0.top.equalTo(subTit.snp.bottom).offset(50)
+            $0.top.equalTo(subTit.snp.bottom).offset(10)
             $0.left.right.bottom.equalToSuperview()
         }
-        shippingInformationView.snp.makeConstraints {
+        subInfoView.snp.makeConstraints {
             $0.top.left.right.equalToSuperview()
+            $0.height.equalTo(50)
+        }
+        stackView.snp.makeConstraints {
+            $0.top.equalTo(subInfoView.snp.bottom).offset(40 * screenRatio)
+            $0.left.right.equalToSuperview()
+        }
+        shippingInformationView.snp.makeConstraints {
+            $0.top.equalTo(stackView.snp.bottom).offset(40 * screenRatio)
+            $0.left.right.equalToSuperview()
         }
         shippingTit.snp.makeConstraints {
-            $0.top.equalToSuperview().offset(10 * screenRatio)
+            $0.top.equalToSuperview().offset(15 * screenRatio)
             $0.left.equalToSuperview().offset(margin2)
         }
         shippingLineView.snp.makeConstraints {
-            $0.top.equalTo(shippingTit.snp.bottom).offset(10 * screenRatio)
+            $0.top.equalTo(shippingTit.snp.bottom).offset(15 * screenRatio)
             $0.left.right.equalToSuperview()
             $0.height.equalTo(2)
         }
@@ -257,13 +293,20 @@ class OrderCompleteView: UIView {
         paymentInformationView.snp.makeConstraints {
             $0.top.equalTo(shippingInformationView.snp.bottom).offset(40 * screenRatio)
             $0.left.right.equalToSuperview()
+            $0.width.equalTo(screenBounds2.width)
+            $0.bottom.equalToSuperview().offset(-50)
         }
         paymentInformationTit.snp.makeConstraints {
-            $0.top.equalToSuperview().offset(10 * screenRatio)
+            $0.top.equalToSuperview().offset(15 * screenRatio)
             $0.left.equalToSuperview().offset(margin2)
         }
+        secondLineView.snp.makeConstraints {
+            $0.top.equalTo(paymentInformationTit.snp.bottom).offset(20 * screenRatio)
+            $0.left.right.equalToSuperview()
+            $0.height.equalTo(2)
+        }
         paymentMethodLbl.snp.makeConstraints {
-            $0.top.equalTo(paymentInformationTit.snp.bottom).offset(13 * screenRatio)
+            $0.top.equalTo(secondLineView.snp.bottom).offset(20 * screenRatio)
             $0.left.equalToSuperview().offset(margin2)
         }
         paymentMethod.snp.makeConstraints {
@@ -271,7 +314,7 @@ class OrderCompleteView: UIView {
             $0.right.equalToSuperview().offset(-margin2)
         }
         orderTotalPriceLbl.snp.makeConstraints {
-            $0.top.equalTo(paymentMethod.snp.bottom).offset(13 * screenRatio)
+            $0.top.equalTo(paymentMethod.snp.bottom).offset(20 * screenRatio)
             $0.left.equalToSuperview().offset(margin2)
         }
         orderTotalPrice.snp.makeConstraints {
@@ -283,7 +326,7 @@ class OrderCompleteView: UIView {
             $0.left.right.bottom.equalToSuperview()
         }
         productPriceLbl.snp.makeConstraints {
-            $0.top.equalToSuperview().offset(10 * screenRatio)
+            $0.top.equalToSuperview().offset(20 * screenRatio)
             $0.left.equalToSuperview().offset(margin2)
         }
         productPrice.snp.makeConstraints {
@@ -291,66 +334,26 @@ class OrderCompleteView: UIView {
             $0.right.equalToSuperview().offset(-margin2)
         }
         deliveryPriceLbl.snp.makeConstraints {
-            $0.top.equalTo(productPriceLbl.snp.bottom).offset(10 * screenRatio)
-            $0.left.equalToSuperview().offset(margin2 )
+            $0.top.equalTo(productPriceLbl.snp.bottom).offset(20 * screenRatio)
+            $0.left.equalToSuperview().offset(margin2)
         }
         deliveryPrice.snp.makeConstraints {
             $0.top.equalTo(deliveryPriceLbl)
             $0.right.equalToSuperview().offset(-margin2)
         }
         couponDiscountLbl.snp.makeConstraints {
-            $0.top.equalTo(deliveryPriceLbl.snp.bottom).offset(10 * screenRatio)
-            $0.left.equalToSuperview().offset(margin2 )
+            $0.top.equalTo(deliveryPriceLbl.snp.bottom).offset(20 * screenRatio)
+            $0.left.equalToSuperview().offset(margin2)
+            $0.height.equalTo(couponDiscount.font.pointSize)
+            $0.bottom.equalToSuperview().offset(-10)
         }
         couponDiscount.snp.makeConstraints {
-            $0.top.equalTo(couponDiscountLbl)
+            $0.top.equalTo(deliveryPriceLbl.snp.bottom).offset(20 * screenRatio)
             $0.right.equalToSuperview().offset(-margin2)
-        }
-        pointLbl.snp.makeConstraints {
-            $0.top.equalTo(couponDiscountLbl.snp.bottom).offset(10 * screenRatio)
-            $0.left.equalToSuperview().offset(margin2)
+            $0.height.equalTo(couponDiscount.font.pointSize)
             $0.bottom.equalToSuperview().offset(-10)
-        }
-        point.snp.makeConstraints {
-            $0.top.equalTo(pointLbl)
-            $0.right.equalToSuperview().offset(-margin2)
-        }
-        
-        savedPointLbl.snp.makeConstraints {
-            $0.top.equalTo(paymentInformationView.snp.bottom).offset(50 * screenRatio)
-            $0.left.equalToSuperview().offset(margin2)
-        }
-        savedPoint.snp.makeConstraints {
-            $0.top.equalTo(savedPointLbl)
-            $0.right.equalToSuperview().offset(-margin2)
-        }
-        savedPointView.snp.makeConstraints {
-            $0.top.equalTo(savedPointLbl.snp.bottom).offset(20 * screenRatio)
-            $0.left.right.equalToSuperview()
-            $0.width.equalTo(screenBounds.width)
-            $0.bottom.equalToSuperview().offset(-150 * screenRatio)
-        }
-        earnTextReviewLbl.snp.makeConstraints {
-            $0.bottom.equalTo(savedPointView.snp.centerY).offset(-5 * screenRatio)
-            $0.left.equalToSuperview().offset(margin2)
-        }
-        earnTextReview.snp.makeConstraints {
-            $0.top.equalTo(earnTextReviewLbl)
-            $0.right.equalToSuperview().offset(-margin2)
-        }
-        earnPhotoReviewLbl.snp.makeConstraints {
-            $0.top.equalTo(savedPointView.snp.centerY).offset(5)
-            $0.left.equalToSuperview().offset(margin2)
-            $0.bottom.equalToSuperview().offset(-10)
-        }
-        earnPhotoReview.snp.makeConstraints {
-            $0.top.equalTo(earnPhotoReviewLbl)
-            $0.right.equalToSuperview().offset(-margin2)
-        }
-        homeBtn.snp.makeConstraints {
-            $0.left.right.bottom.equalToSuperview()
-            $0.height.equalTo(100)
         }
     }
+    
  
 }

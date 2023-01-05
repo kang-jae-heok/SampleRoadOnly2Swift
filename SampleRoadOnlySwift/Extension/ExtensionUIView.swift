@@ -39,5 +39,9 @@ extension UIView {
         let viewWithTag = view.viewWithTag(100)
         viewWithTag?.removeFromSuperview()
     }
+    var customerId2: String {
+        let customerId = UserDefaults.standard.string(forKey: "customer_id") ?? ""
+        return customerId
+    }
     
 }

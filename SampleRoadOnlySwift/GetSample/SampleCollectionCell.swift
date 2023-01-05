@@ -11,8 +11,9 @@ class SampleCollectionCell: UICollectionViewCell {
     let common = CommonS()
     let margin = 17.0
     let screenBounds = UIScreen.main.bounds
+    lazy var screenRatio2 = screenBounds.width/414.0
     let sampleImgView = UIImageView().then{
-        $0.backgroundColor = .white
+        $0.backgroundColor = .clear
     }
     lazy var detailBtn = UIButton().then{
         $0.backgroundColor = common.pointColor()
@@ -24,13 +25,15 @@ class SampleCollectionCell: UICollectionViewCell {
     var sampleInfoView = UIView()
     lazy var companyLbl = UILabel().then{
         $0.textAlignment = .center
-        $0.font = common.setFont(font: "regular", size: 10)
+        $0.textColor = common.setColor(hex: "#6f6f6f")
+        $0.font = common.setFont(font: "regular", size: 11)
     }
     lazy var sampleName = UILabel().then{
         $0.lineBreakMode = .byWordWrapping
         $0.numberOfLines = 2
         $0.textAlignment = .center
-        $0.font = common.setFont(font: "regular", size: 15)
+        $0.textColor = common.setColor(hex: "#6f6f6f")
+        $0.font = common.setFont(font: "regular", size: 13)
     }
     
     override init(frame: CGRect) {
@@ -61,7 +64,7 @@ class SampleCollectionCell: UICollectionViewCell {
         detailBtn.snp.makeConstraints{
             $0.centerX.equalToSuperview()
             $0.bottom.equalToSuperview().offset(-margin)
-            $0.size.equalTo(CGSize(width: screenBounds.width/5 , height: 30))
+            $0.size.equalTo(CGSize(width: screenBounds.width/5 , height: 30 * screenRatio2))
         }
         sampleInfoView.snp.makeConstraints{
             $0.top.equalTo(sampleImgView.snp.bottom)

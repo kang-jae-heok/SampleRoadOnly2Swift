@@ -258,9 +258,15 @@ class AgreeView : UIView {
     }
     func checkAllCheck(){
         var bool = true
+        var checkBool = true
         [firstCheckBtn,secondCheckBtn,thirdCheckBtn,fourthCheckBtn].forEach{
             if $0.backgroundColor != common.pointColor(){
                 bool = false
+            }
+        }
+        [firstCheckBtn,secondCheckBtn,thirdCheckBtn].forEach{
+            if $0.backgroundColor != common.pointColor(){
+                checkBool = false
             }
         }
         if bool {
@@ -274,6 +280,9 @@ class AgreeView : UIView {
             allCheckLbl.textColor = common.gray()
             allCheckBtn.layer.borderColor = common.gray().cgColor
             allCheckBtn.backgroundColor = .clear
+        }
+        if checkBool {
+            nextBtn.backgroundColor = common.pointColor()
         }
     }
 }

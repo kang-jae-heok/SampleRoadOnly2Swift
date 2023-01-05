@@ -29,7 +29,6 @@ class FindPassView: UIView{
         $0.titleLabel?.font = common.setFont(font: "semibold", size: 15)
         $0.setTitleColor(.white, for: .normal)
         $0.clipsToBounds = true
-        
     }
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -64,11 +63,13 @@ class FindPassView: UIView{
             $0.centerY.equalTo(emailTextField.textField.snp.centerY).offset(-3)
             $0.right.equalTo(emailTextField.line.snp.right)
             $0.size.equalTo(CGSize(width: screenBounds.width/7, height: screenBounds.width/14))
+            print(screenBounds.width/14)
             sendBtn.layer.cornerRadius =  screenBounds.width/28
         }
         emailTextField.snp.makeConstraints{
             $0.top.equalTo(topView.snp.bottom).offset(screenBounds.height/7)
             $0.left.right.equalToSuperview()
+            $0.height.equalTo(70)
 
         }
         title.snp.makeConstraints{
@@ -80,7 +81,7 @@ class FindPassView: UIView{
 extension FindPassView: UITextFieldDelegate{
     func textFieldDidChangeSelection(_ textField: UITextField) {
         common.checkMaxLength(textField: emailTextField.textField, maxLength: 30)
-        if emailTextField.textField.text?.count ?? 0 > 0{
+        if common.isValidEmail(testStr: emailTextField.textField.text ?? ""){
             sendBtn.backgroundColor = common.pointColor()
         }else{
             sendBtn.backgroundColor = common.lightGray()

@@ -94,17 +94,16 @@ class SplashViewController: UIViewController {
         }
     }
     func getSampleCount(){
-        
-        common.sendRequest(url: "http://110.165.17.124/sampleroad/db/sr_setting_select.php", method: "post", params: [:], sender: "") { resultJson in
-            let dicArr = resultJson as! [[String:Any]]
-            self.sampleLbl.configure(with: dicArr[1]["count"] as! String, textFont: self.common.setFont(font: "extraBold", size: 29), textColor: self.common.pointColor())
-        }
+        let sampleCount = UserDefaults.standard.string(forKey: "setting-count") ?? ""
+        print("#####")
+        print(sampleCount)
+        self.sampleLbl.configure(with:sampleCount, textFont: self.common.setFont(font: "extraBold", size: 29), textColor: self.common.pointColor())
     }
     func loadNextVC() {
         DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
             if UserDefaults.contains("auto_login") {
                 if UserDefaults.standard.bool(forKey: "auto_login") {
-                    if UserDefaults.contains("naver_token") {
+                    if UserDefaults.contains("naver_token") {   
                         if Date().dateCompare(fromDate: UserDefaults.standard.object(forKey: "naver_expireAt") as! Date) != "Future" {
                             self.getRefreshToken()
                         }else {
@@ -113,18 +112,19 @@ class SplashViewController: UIViewController {
                     }else if UserDefaults.contains("kakao_token") {
                         self.loginClayful(platform: "kakao")
                     }else {
-                        self.common.checkTypeFormDone2(customerId: UserDefaults.standard.string(forKey: "customer_id") ?? "") { [self] result in
-                            if result {
-                                self.navigationController?.pushViewController(MainContentViewController(), animated: true)
-                            }else{
-                                var vc = UIViewController()
-                                if !UserDefaults.standard.bool(forKey: "PRDC_MODE"){
-                                    vc = MainContentViewController()
-                                    
+                        self.common2.getCustomerInfo2(customerId:  UserDefaults.standard.string(forKey: "customer_id") ?? "", vc: self) { _ in
+                            self.common.checkTypeFormDoneWithCompletion(customerId: UserDefaults.standard.string(forKey: "customer_id") ?? "") { [self] result in
+                                if result {
+                                    self.navigationController?.pushViewController(MainContentViewController(), animated: true)
                                 }else{
-                                    vc = WebViewViewController()
+                                    var vc = UIViewController()
+                                    if !UserDefaults.standard.bool(forKey: "PRDC_MODE"){
+                                        vc = MainContentViewController()
+                                    }else{
+                                        vc = WebViewViewController()
+                                    }
+                                    self.navigationController?.pushViewController(vc, animated: true)
                                 }
-                                self.navigationController?.pushViewController(vc, animated: true)
                             }
                         }
                     }
@@ -147,8 +147,13 @@ class SplashViewController: UIViewController {
         common.sendRequest(url: "https://api.clayful.io/v1/customers/auth/\(platform)" , method: "POST", params: params, sender: ""){ resultJson in
             let resultJson = resultJson as! [String:Any]
             print(resultJson)
-            let customerId = resultJson["customer"] as! String
-            self.common.getCustomerInfo(customerId: customerId,vc: self)
+            if resultJson["error"] == nil {
+                let customerId = resultJson["customer"] as! String
+                self.common.getCustomerInfo(customerId: customerId,vc: self)
+            }else {
+                self.navigationController?.pushViewController(MainViewSController(), animated: true)
+            }
+           
         }
     }
     func getRefreshToken(){

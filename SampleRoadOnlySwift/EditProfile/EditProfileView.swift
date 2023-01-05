@@ -19,16 +19,30 @@ class EditProfileView: UIView, UITextFieldDelegate {
         $0.addTarget(self, action: #selector(touchSaveBtn), for: .touchUpInside)
     }
     let sclView = UIScrollView()
-    let originalInfoView = UIView()
-    lazy var originalTitBackgroundView = UIView().then {
+    lazy var profileBtn = UIButton().then {
+        if UserDefaults.standard.string(forKey: "user_image") ?? "" == ""  ||  !UserDefaults.contains("user_image") ||  UserDefaults.standard.string(forKey: "user_image") == "null"{
+            $0.setImage(UIImage(named: "profile_btn"), for: .normal)
+        }else {
+            common2.setButtonImageUrl(url: UserDefaults.standard.string(forKey: "user_image")!, button: $0)
+        }
+        $0.clipsToBounds = true
         $0.backgroundColor = common2.pointColor()
+        $0.imageView?.contentMode = .scaleAspectFill
+    }
+    let editProfileBtn = UIButton().then {
+        $0.setImage(UIImage(named: "edit_profile_btn"), for: .normal)
+    }
+    let originalInfoView = UIView()
+    
+    lazy var originalTitBackgroundView = UIView().then {
+        $0.backgroundColor = common2.pointColor().withAlphaComponent(0.5)
     }
     lazy var originalTit = UILabel().then {
         $0.font = common2.setFont(font: "regular", size: 13)
-        $0.text = "\(UserDefaults.standard.string(forKey: "user_name") ?? "") 님의 기본 정보"
-        $0.asFontColor(targetStringList: ["\(UserDefaults.standard.string(forKey: "user_name") ?? "")"], font: common2.setFont(font: "bold", size: 13), color: .blue)
+        $0.text = "\(UserDefaults.standard.string(forKey: "user_alias") ?? "") 님의 기본 정보"
+        $0.asFontColor(targetStringList: ["\(UserDefaults.standard.string(forKey: "user_alias") ?? "")"], font: common2.setFont(font: "bold", size: 16), color: UIColor.black)
     }
-    
+
     lazy var emailLbl = UILabel().then {
         $0.text = "이메일"
         $0.font = common2.setFont(font: "bold", size: 13)
@@ -46,7 +60,7 @@ class EditProfileView: UIView, UITextFieldDelegate {
             NSAttributedString.Key.foregroundColor: UIColor.black.withAlphaComponent(0.5),
             NSAttributedString.Key.font : common2.setFont(font: "medium", size: 18)
         ]
-        placeholderStr = UserDefaults.standard.string(forKey: "user_name") ?? "샘플털이범"
+        placeholderStr = UserDefaults.standard.string(forKey: "user_alias") ?? "샘플털이범"
         $0.placeholder = placeholderStr
         $0.attributedPlaceholder = NSAttributedString(string: placeholderStr, attributes:attributes)
     }
@@ -78,14 +92,14 @@ class EditProfileView: UIView, UITextFieldDelegate {
         $0.isSecureTextEntry = true
     }
     lazy var passwordTextFieldLineView = UIView().then{
-        $0.backgroundColor = common2.pointColor()
+        $0.backgroundColor = common2.pointColor().withAlphaComponent(0.5)
     }
     let detailInfoView = UIView()
     lazy var detailTitBackgroundView = UIView().then {
-        $0.backgroundColor = common2.pointColor()
+        $0.backgroundColor = common2.pointColor().withAlphaComponent(0.5)
     }
     lazy var detailTit = UILabel().then {
-        $0.font = common2.setFont(font: "bold", size: 13)
+        $0.font = common2.setFont(font: "bold", size: 16)
         $0.text = "상세 정보  고객님을 위한 화장품을 추천해드리는데 필요합니다:)"
         $0.asFont(targetStringList: ["고객님을 위한 화장품을 추천해드리는데 필요합니다:)"], font: common2.setFont(font: "regular", size: 10))
     }
@@ -157,7 +171,13 @@ class EditProfileView: UIView, UITextFieldDelegate {
         for i in 0...3 {
             let btn = UIButton().then {
                 $0.setTitle(skinTypeArr[i], for: .normal)
-                $0.setTitleColor(common2.pointColor(), for: .normal)
+                if UserDefaults.standard.string(forKey: "user_skin_type") ?? ""  == skinTypeArr[i]{
+                    $0.setTitleColor(.white, for: .normal)
+                    $0.backgroundColor = common2.pointColor()
+                }else {
+                    $0.setTitleColor(common2.pointColor(), for: .normal)
+                    $0.backgroundColor = .clear
+                }
                 $0.layer.cornerRadius = 5
                 $0.layer.borderColor = common2.pointColor().cgColor
                 $0.layer.borderWidth = 1
@@ -186,6 +206,13 @@ class EditProfileView: UIView, UITextFieldDelegate {
                 $0.titleLabel?.font = common2.setFont(font: "bold", size: 13)
                 $0.tag = i
                 $0.addTarget(self, action: #selector(touchSkinWorriesBtn(sender:)), for: .touchUpInside)
+                guard let skinGominArr = UserDefaults.standard.value(forKey: "user_skin_gomin") as? [String] else {return}
+                if skinGominArr.count != 0 {
+                    if skinGominArr.contains(skinWorriesArr[i]) {
+                        $0.setTitleColor(.white, for: .normal)
+                        $0.backgroundColor = common2.pointColor()
+                    }
+                }
             }
             btns.append(btn)
         }
@@ -235,6 +262,21 @@ class EditProfileView: UIView, UITextFieldDelegate {
         age.delegate = self
         addSubviewFunc()
         setLayout()
+        print("성별")
+//        guard let gender = UserDefaults.standard.string(forKey: "user_gender")  else {return}
+        let gender = UserDefaults.standard.string(forKey: "user_gender")!
+        
+        print(gender)
+        if gender == "male" {
+            manBtn.setTitleColor(.white, for: .normal)
+            manBtn.backgroundColor = common2.pointColor()
+        }else if gender == "female" {
+            womanBtn.setTitleColor(.white, for: .normal)
+            womanBtn.backgroundColor = common2.pointColor()
+        }else {
+            noneBtn.setTitleColor(.white, for: .normal)
+            noneBtn.backgroundColor = common2.pointColor()
+        }
     }
     required init?(coder: NSCoder) {
         fatalError("init fail(EditProfileView)")
@@ -243,17 +285,12 @@ class EditProfileView: UIView, UITextFieldDelegate {
         [topView,sclView].forEach{
             self.addSubview($0)
         }
-        [originalInfoView,detailInfoView].forEach{
+        [profileBtn,editProfileBtn,originalInfoView,detailInfoView].forEach{
             sclView.addSubview($0)
         }
         topView.addSubview(saveBtn)
         [originalTitBackgroundView,emailLbl,email,nameLbl,nameTextField,nameDuplicateCheckBtn,nameTextFieldLineView,subNameLbl].forEach {
             originalInfoView.addSubview($0)
-        }
-        if UserDefaults.standard.string(forKey: "kakao_token") == nil && UserDefaults.standard.string(forKey: "naver_token") == nil {
-            [passwordTextField,passwordLbl,passwordTextFieldLineView].forEach {
-                originalInfoView.addSubview($0)
-            }
         }
         [detailTitBackgroundView,genderLbl,womanBtn,manBtn,noneBtn,subGenderLbl,ageLbl,age,skinTypeLbl,skinTypeBtns[0],skinTypeBtns[1],skinTypeBtns[2],skinTypeBtns[3],skinWorriesLbl,skinWorriesBtns[0],skinWorriesBtns[1],skinWorriesBtns[2],skinWorriesBtns[3],skinWorriesBtns[4]].forEach {
             detailInfoView.addSubview($0)
@@ -271,12 +308,21 @@ class EditProfileView: UIView, UITextFieldDelegate {
             $0.right.equalToSuperview().offset(-margin2)
         }
         sclView.snp.makeConstraints {
-            $0.top.equalTo(topView.snp.bottom).offset(50)
+            $0.top.equalTo(topView.snp.bottom).offset(margin2)
             $0.left.right.equalToSuperview()
             $0.bottom.equalToSuperview()
         }
+        profileBtn.snp.makeConstraints {
+            $0.top.equalToSuperview().offset(20)
+            $0.centerX.equalToSuperview()
+            $0.size.equalTo(CGSize(width: 100, height: 100))
+        }
+        profileBtn.layer.cornerRadius = 50
+        editProfileBtn.snp.makeConstraints {
+            $0.right.bottom.equalTo(profileBtn).offset(-5)
+        }
         originalInfoView.snp.makeConstraints {
-            $0.top.equalTo(topView.snp.bottom).offset(50)
+            $0.top.equalTo(profileBtn.snp.bottom).offset(20)
             $0.left.right.equalToSuperview()
             $0.width.equalTo(screenBounds2.width)
         }
@@ -293,7 +339,7 @@ class EditProfileView: UIView, UITextFieldDelegate {
         }
         emailLbl.snp.makeConstraints {
             $0.left.equalToSuperview().offset(margin2)
-            $0.top.equalTo(originalTitBackgroundView.snp.bottom).offset(margin2)
+            $0.top.equalTo(originalTitBackgroundView.snp.bottom).offset(30)
         }
         email.snp.makeConstraints {
             $0.left.equalToSuperview().offset(screenBounds2.width/4)
@@ -301,11 +347,11 @@ class EditProfileView: UIView, UITextFieldDelegate {
         }
         nameLbl.snp.makeConstraints {
             $0.left.equalTo(emailLbl)
-            $0.top.equalTo(email.snp.bottom).offset(margin2)
+            $0.top.equalTo(email.snp.bottom).offset(50)
         }
         nameTextFieldLineView.snp.makeConstraints {
             $0.left.equalTo(email)
-            $0.right.equalToSuperview().offset(-margin2 * 2)
+            $0.right.equalToSuperview().offset(-margin2)
             $0.bottom.equalTo(nameLbl).offset(5)
             $0.size.height.equalTo(2)
         }
@@ -316,36 +362,18 @@ class EditProfileView: UIView, UITextFieldDelegate {
         nameTextField.snp.makeConstraints {
             $0.left.equalTo(nameTextFieldLineView)
             $0.centerY.equalTo(nameLbl)
+            $0.right.equalTo(nameDuplicateCheckBtn.snp.left)
         }
         nameDuplicateCheckBtn.snp.makeConstraints {
             $0.right.equalTo(nameTextFieldLineView)
             $0.bottom.equalTo(nameTextFieldLineView.snp.top).offset(-2)
             $0.width.equalTo(50)
+            
         }
-        if UserDefaults.standard.string(forKey: "kakao_token") != nil || UserDefaults.standard.string(forKey: "naver_token") != nil {
-            subNameLbl.snp.makeConstraints {
-                $0.bottom.equalToSuperview().offset(-30)
-            }
-        }else {
-            passwordLbl.snp.makeConstraints {
-                $0.left.equalTo(emailLbl)
-                $0.centerY.equalTo(passwordTextField)
-               
-            }
-            passwordTextField.snp.makeConstraints {
-                $0.left.equalTo(email)
-                $0.top.equalTo(nameTextFieldLineView.snp.bottom).offset(margin2)
-                $0.right.equalTo(passwordTextFieldLineView)
-            }
-            passwordTextFieldLineView.snp.makeConstraints {
-                $0.left.equalTo(email)
-                $0.right.equalToSuperview().offset(-margin2 * 2)
-                $0.bottom.equalTo(passwordLbl).offset(5)
-                $0.size.height.equalTo(2)
-                $0.bottom.equalToSuperview().offset(-margin2 * 2)
-                $0.bottom.equalToSuperview()
-            }
+        subNameLbl.snp.makeConstraints {
+            $0.bottom.equalToSuperview().offset(-30)
         }
+        
      
         detailInfoView.snp.makeConstraints {
             $0.top.equalTo(originalInfoView.snp.bottom)
@@ -363,11 +391,11 @@ class EditProfileView: UIView, UITextFieldDelegate {
             $0.right.equalToSuperview()
         }
         genderLbl.snp.makeConstraints {
-            $0.top.equalTo(detailTitBackgroundView.snp.bottom).offset(margin2)
+            $0.top.equalTo(detailTitBackgroundView.snp.bottom).offset(30)
             $0.left.equalToSuperview().offset(margin2)
             
         }
-        let genderBtnSize = CGSize(width: 40, height: 30)
+        let genderBtnSize = CGSize(width: 40, height: 40)
         womanBtn.snp.makeConstraints {
             $0.left.equalTo(email)
             $0.centerY.equalTo(genderLbl)
@@ -388,22 +416,22 @@ class EditProfileView: UIView, UITextFieldDelegate {
             $0.left.equalTo(email)
         }
         ageLbl.snp.makeConstraints {
-            $0.top.equalTo(subGenderLbl.snp.bottom).offset(margin2)
+            $0.top.equalTo(subGenderLbl.snp.bottom).offset(30)
             $0.left.equalToSuperview().offset(margin2)
         }
         age.snp.makeConstraints {
             $0.left.equalTo(email)
             $0.centerY.equalTo(ageLbl)
-            $0.size.equalTo(CGSize(width: 100, height: 30))
+            $0.size.equalTo(CGSize(width: 100, height: 40))
         }
-        let skinTypeBtnSize = CGSize(width: 60, height: 30)
+        let skinTypeBtnSize = CGSize(width: 60, height: 40)
         skinTypeLbl.snp.makeConstraints {
             $0.centerY.equalTo(skinTypeBtns[0])
             $0.left.equalToSuperview().offset(margin2)
         }
         skinTypeBtns[0].snp.makeConstraints {
             $0.left.equalTo(email)
-            $0.top.equalTo(age.snp.bottom).offset(margin2)
+            $0.top.equalTo(age.snp.bottom).offset(30)
             $0.size.equalTo(skinTypeBtnSize)
         }
         for i in 1...3 {
@@ -413,14 +441,14 @@ class EditProfileView: UIView, UITextFieldDelegate {
                 $0.size.equalTo(skinTypeBtnSize)
             }
         }
-        let skinWorriesBtnSize = CGSize(width: 50, height: 30)
+        let skinWorriesBtnSize = CGSize(width: 50, height: 40)
         skinWorriesLbl.snp.makeConstraints {
             $0.centerY.equalTo(skinWorriesBtns[0])
             $0.left.equalToSuperview().offset(margin2)
         }
         skinWorriesBtns[0].snp.makeConstraints {
             $0.left.equalTo(email)
-            $0.top.equalTo(skinTypeBtns[0].snp.bottom).offset(margin2)
+            $0.top.equalTo(skinTypeBtns[0].snp.bottom).offset(30)
             $0.size.equalTo(skinWorriesBtnSize)
         }
         for i in 1...4 {

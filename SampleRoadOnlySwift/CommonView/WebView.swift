@@ -75,10 +75,10 @@ extension WebView: WKUIDelegate, WKNavigationDelegate{
 //
 //    }
     func webView(_ webView: WKWebView,decidePolicyFor navigationAction: WKNavigationAction,decisionHandler: @escaping (WKNavigationActionPolicy) -> Void){
-        print("hi")
+        print("들어옴")
         print(navigationAction.request.url?.absoluteString)
         print(navigationAction.request.url?.absoluteString.contains("http://110.165.17.124/sampleroad/db/surve"))
-        let bool = navigationAction.request.url?.absoluteString.contains("http://110.165.17.124/sampleroad/db/surve") ?? false
+        let bool = navigationAction.request.url?.absoluteString.contains("http://110.165.17.124") ?? false
         if (bool) {
             print("완료")
             let arr = navigationAction.request.url?.absoluteString.components(separatedBy: "http://110.165.17.124/sampleroad/db/survey.php?") ?? ["" , ""]
@@ -94,11 +94,20 @@ extension WebView: WKUIDelegate, WKNavigationDelegate{
                 dataDic.updateValue(c, forKey: a[0])
             }
             print(dataDic)
-            dataDic.updateValue(UserDefaults.standard.string(forKey: "customer_id") ?? "", forKey: "customer_id")
-            common.sendRequest(url: "http://110.165.17.124/sampleroad/db/survey.php", method: "post", params: dataDic, sender: ""){resultJson in
+            dataDic.updateValue(customerId2 , forKey: "customer_id")
+            common.sendRequest(url: "http://110.165.17.124/sampleroad/v1/survey.php", method: "post", params: dataDic, sender: ""){ resultJson in
+                print("피부고민,피부 타입")
                 print(resultJson)
                 let errorCode = resultJson as! [String: Any]
                 if errorCode["error"] as! String == "1"{
+                    guard let skinType = errorCode["skin_type"] as? String,
+                          let skinGomin = errorCode["skin_gomin"] as? String
+                    else {return}
+                    let skinTypeArr = skinType.components(separatedBy: " ")
+                    let convertSkinType = skinTypeArr[0]
+                    let skinGominArr = skinGomin.components(separatedBy: ",")
+                    UserDefaults.standard.set(skinGominArr, forKey: "user_skin_gomin")
+                    UserDefaults.standard.set(convertSkinType, forKey: "user_skin_type")
                     let vc = MainContentViewController()
                     self.parentViewController?.navigationController?.pushViewController(vc, animated: true)
                 }

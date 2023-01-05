@@ -14,10 +14,15 @@ class DeliveryListViewController: UIViewController {
         super.loadView()
         view = deliveryListView
     }
-
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        deliveryListView.getDeliveryList()
+        deliveryListView.deliveryListTableView.register(DeliveryListSampleTableViewCell.self, forCellReuseIdentifier: DeliveryListSampleTableViewCell.cellId)
+    }
     override func viewDidLoad() {
         super.viewDidLoad()
         setTarget()
+    
        
     }
     func setTarget(){

@@ -43,7 +43,6 @@ class JoinEmailViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         if UserDefaults.standard.value(forKey: "impId") != nil {
-
             guard let impId = UserDefaults.standard.value(forKey: "impId") else { return }
             UserDefaults.standard.set(nil, forKey: "impId")
             UserDefaults.standard.synchronize()

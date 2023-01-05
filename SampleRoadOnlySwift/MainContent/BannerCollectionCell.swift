@@ -12,6 +12,7 @@ class BannerCollectionCell: UICollectionViewCell {
     let screenBounds = UIScreen.main.bounds
     let bannerImgView = UIImageView().then{
         $0.backgroundColor = .white
+        $0.contentMode = .scaleAspectFit
     }
 
     override init(frame: CGRect) {
