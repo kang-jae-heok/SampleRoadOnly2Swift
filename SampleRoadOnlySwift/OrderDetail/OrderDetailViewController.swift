@@ -138,9 +138,11 @@ class OrderDetailViewController: UIViewController {
                 orderDetailView.paymentMethod.text = "실시간 계좌이체"
             }else if payMethod == "vbank" {
                 print(orderDic)
-                guard let vbankName = orderDetailDic["vbank_name"] as? String else {return}
-                guard let vbankNum = orderDetailDic["vbank_num"] as? String else {return}
-                orderDetailView.paymentMethod.text = "가상계좌\n\(vbankName) \(vbankNum)"
+                if let vbankName = orderDetailDic["vbank_name"] as? String{
+                    if let vbankNum = orderDetailDic["vbank_num"] as? String{
+                        orderDetailView.paymentMethod.text = "가상계좌\n\(vbankName) \(vbankNum)"
+                    }
+                }
             }
         }else {
             guard let pay =  orderDetailDic["emb_pg_provider"] as? String else {return}
@@ -314,9 +316,12 @@ class OrderDetailViewController: UIViewController {
         }
     }
     @objc func touchDeleteBtn(sender: UIButton){
-        let alert = UIAlertController(title: "삭제", message: "정말로 주문을 삭제하시나요?", preferredStyle: UIAlertController.Style.alert)
+        let alert = UIAlertController(title: "취소", message: "정말로 주문을 취소하시겠습니까?", preferredStyle: UIAlertController.Style.alert)
         let okAction = UIAlertAction(title: "네", style: .default) { (action) in
-            self.common.sendRequest(url: "https://api.clayful.io/v1/orders/\(self.orderId)", method: "delete", params: [:], sender: "") { _ in
+            var params = [String:Any]()
+            params.updateValue("customer", forKey: "by")
+            params.updateValue("결제 중 변심", forKey: "reason")
+            self.common.sendRequest(url: "https://api.clayful.io/v1/orders/\(self.orderId)/cancellation", method: "post", params: params, sender: "") { _ in
                 self.navigationController?.popViewController(animated: true)
             }
         }

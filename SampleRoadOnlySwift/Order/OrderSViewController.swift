@@ -76,10 +76,10 @@ class OrderSViewController: UIViewController {
             discountPrice = 0
         }
         if orderListDic["sample_list"] != nil {
+            UserDefaults.standard.set(true, forKey: "order_isSample")
             guard let sampleListDic = orderListDic["sample_list"] as? [[String:Any]] else {return}
             orderView.makeSampleInfoView(samples: sampleListDic)
             isSample = true
-            UserDefaults.standard.set(true, forKey: "order_isSample")
             orderView.amountValueLabel.text = "무료"
             orderView.deliveryFeeValueLabel.text = "3,500원"
             orderView.totalPaymentLabel.text = "총 3,500원"
@@ -200,10 +200,6 @@ class OrderSViewController: UIViewController {
                 present(common.alert(title: "", message: "상세주소를 입력하세요"), animated: true)
                 return
             }
-            if !isPickerChange {
-                present(common.alert(title: "", message: "배송 요청 사항을 선택해주세요"), animated: true)
-                return
-            }
             if orderView.firstPhonTextField.text?.count ?? 0 == 0  {
                 orderView.firstPhonTextField.text = "010"
             }
@@ -313,7 +309,15 @@ class OrderSViewController: UIViewController {
         params.updateValue(common.dicToJsonString(dic: setOrderInfo()), forKey: "address")
         params.updateValue("KRW", forKey: "currency")
         if orderView.requireTextField.isHidden {
-            params.updateValue(orderView.selectRequireButton.titleLabel?.text ?? "", forKey: "request")
+            if isPickerChange {
+                if orderView.selectRequireButton.titleLabel?.text ?? "" == "요청 사항 선택"{
+                    params.updateValue("요청 사항 없음", forKey: "request")
+                }else {
+                    params.updateValue(orderView.selectRequireButton.titleLabel?.text ?? "", forKey: "request")
+                }
+            }else {
+                params.updateValue("요청 사항 없음", forKey: "request")
+            }
         }else {
             params.updateValue(orderView.requireTextField.text, forKey: "request")
         }
@@ -367,7 +371,15 @@ class OrderSViewController: UIViewController {
         params.updateValue("KRW", forKey: "currency")
         print(params)
         if orderView.requireTextField.isHidden {
-            params.updateValue(orderView.selectRequireButton.titleLabel?.text ?? "", forKey: "request")
+            if isPickerChange {
+                if orderView.selectRequireButton.titleLabel?.text ?? "" == "요청 사항 선택"{
+                    params.updateValue("요청 사항 없음", forKey: "request")
+                }else {
+                    params.updateValue(orderView.selectRequireButton.titleLabel?.text ?? "", forKey: "request")
+                }
+            }else {
+                params.updateValue("요청 사항 없음", forKey: "request")
+            }
         }else {
             params.updateValue(orderView.requireTextField.text, forKey: "request")
         }
@@ -409,7 +421,16 @@ class OrderSViewController: UIViewController {
             params.updateValue(common.objectTojsonString(from: ["UHAWQN6P3Y8V"]) , forKey: "tags")
         }
         if orderView.requireTextField.isHidden {
-            params.updateValue(orderView.selectRequireButton.titleLabel?.text ?? "", forKey: "request")
+            if isPickerChange {
+                print(orderView.selectRequireButton.titleLabel?.text ?? "")
+                if orderView.selectRequireButton.titleLabel?.text ?? "" == "요청 사항 선택" {
+                    params.updateValue("요청 사항 없음", forKey: "request")
+                }else {
+                    params.updateValue(orderView.selectRequireButton.titleLabel?.text ?? "", forKey: "request")
+                }
+            }else {
+                params.updateValue("요청 사항 없음", forKey: "request")
+            }
         }else {
             params.updateValue(orderView.requireTextField.text, forKey: "request")
         }
@@ -467,7 +488,7 @@ class OrderSViewController: UIViewController {
     // 주문 정보 set
     func setOrderInfo() -> [String: Any]{
         //        var shippingDic = [String:Any]()
-        let phoneNum = (orderView.firstPhonTextField.text ?? "") + (orderView.secondPhonTextField.text ?? "") + (orderView.secondPhonTextField.text ?? "")
+        let phoneNum = (orderView.firstPhonTextField.text ?? "") + (orderView.secondPhonTextField.text ?? "") + (orderView.thirdPhonTextField.text ?? "")
         let addressInfoDic = [
             "postcode": orderView.firstAddressLabel.text ?? "",
             "country": "KR",
@@ -618,7 +639,6 @@ extension OrderSViewController: UITextFieldDelegate, UIPickerViewDelegate, UIPic
         }
         orderView.layoutIfNeeded()
         isPickerChange = true
-        
     }
 }
 

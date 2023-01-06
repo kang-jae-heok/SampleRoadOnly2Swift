@@ -437,11 +437,11 @@ class GetSampleView: UIView{
 //            $0.alpha = 0.3
 //        }
         if !UserDefaults.standard.bool(forKey: "PRDC_MODE"){
-            var param = [String:Any]()
-            param.updateValue(selectedDicArr, forKey: "sample_list")
-            let convertDic = NSMutableDictionary(dictionary: param)
-            let rootVc = OrderViewController(dic: convertDic)
-            parentViewController?.navigationController?.pushViewController(rootVc, animated: true)
+//            var param = [String:Any]()
+//            param.updateValue(selectedDicArr, forKey: "sample_list")
+//            let convertDic = NSMutableDictionary(dictionary: param)
+//            let rootVc = OrderViewController(dic: convertDic)
+//            parentViewController?.navigationController?.pushViewController(rootVc, animated: true)
         }else{
 //            var param = [String:Any]()
 //            param.updateValue(selectedDicArr, forKey: "sample_list")

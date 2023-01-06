@@ -127,7 +127,7 @@ class MyPageSView: UIView {
             }
             let newImg = UIImageView().then {
                 $0.image = UIImage(named: "new")
-                $0.isHidden = !myModel.newBool[i]
+                $0.isHidden = true
                 $0.contentMode = .center
             }
             let arrowImgView = UIImageView().then {
@@ -183,9 +183,9 @@ class MyPageSView: UIView {
         [profileBtn,editProfileBtn,nameLbl,settingBtn,getSampleBtn,likeSampleBtn,deliveryBtn,noticeBtn,cartImgView,cartLbl,topLine,middleLine,verticalMiddleLine,bottomLine].forEach {
             sclView.addSubview($0)
         }
-        [noticeLbl,noticeContentLbl,noticeArrow].forEach {
-            noticeBtn.addSubview($0)
-        }
+//        [noticeLbl,noticeContentLbl,noticeArrow].forEach {
+//            noticeBtn.addSubview($0)
+//        }
     }
     func setLayout(){
         sclView.snp.makeConstraints {

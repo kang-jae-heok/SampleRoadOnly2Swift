@@ -331,13 +331,13 @@ extension DeliveryListView: UITableViewDelegate, UITableViewDataSource {
                 }else {
                     guard let status = infoDeliveryListDic["status"] as? String else {return sampleCell}
                     if status == "placed" {
-                        sampleCell.situationBtn.setTitle("결제 대기", for: .normal)
+                        sampleCell.situationBtn.setTitle("결제대기", for: .normal)
                     }else if status == "paid" {
                             
                     }else if status == "cancelled" {
-                        sampleCell.situationBtn.setTitle("주문 취소", for: .normal)
+                        sampleCell.situationBtn.setTitle("주문취소", for: .normal)
                     } else {
-                        sampleCell.situationBtn.setTitle("결제 오류", for: .normal)
+                        sampleCell.situationBtn.setTitle("결제오류", for: .normal)
                     }
                 }
                 let itemsInfoDicArr = infoDeliveryListDic["items"] as! [[String:Any]]

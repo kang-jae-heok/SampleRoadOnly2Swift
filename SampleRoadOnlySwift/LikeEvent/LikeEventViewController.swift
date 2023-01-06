@@ -34,9 +34,14 @@ class LikeEventViewController: UIViewController {
     func getData(){
         var params = [String:Any]()
         params = ["customer_id":customerId]
-        common2.sendRequest(url: "http://110.165.17.124/sampleroad/v1/event.php", method: "post", params: params, sender: "") { resultJson in
+        common2.sendRequest(url: "http://110.165.17.124/sampleroad/v1/event.php", method: "post", params: params, sender: "") {[self] resultJson in
             guard let resultArr = resultJson as? [[String:Any]] else {return}
             self.eventArr = resultArr
+            if eventArr.count == 0 {
+                likeEventView.noneView.isHidden = false
+            }else {
+                likeEventView.noneView.isHidden = true
+            }
             self.likeEventView.likeEventTableView.reloadData()
         }
     }

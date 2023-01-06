@@ -37,6 +37,7 @@ class MainContentViewController: UIViewController {
     }
     override func viewDidLoad() {
         super.viewDidLoad()
+        checkAgree()
         getTopSampleId()
         mainContentView.sampleBtn.addTarget(self, action: #selector(touchSampleBtn), for: .touchUpInside)
         mainContentView.topView.cartBtn.addTarget(self, action: #selector(touchCartBtn), for: .touchUpInside)
@@ -59,6 +60,23 @@ class MainContentViewController: UIViewController {
               myVc.view.frame = CGRect(x: 0, y: 0, width: screenBounds2.width, height: screenBounds2.height - screenBounds2.width/4)
         mainContentView.layoutIfNeeded()
         printAllUserDefaults()
+    }
+    func checkAgree(){
+        let params = [
+            "customer_id" : customerId2
+        ]  as [String:Any]
+        common.sendRequest(url: "http://110.165.17.124/sampleroad/v1/user.php", method: "post", params: params, sender: "") { resultJson in
+            print(resultJson)
+            guard let resultDic = resultJson as? [String:Any],
+                  let terms = resultDic["terms"] as? String
+            else {return}
+            print(terms)
+            if terms == "0" {
+                let agreeVc = AgreeViewController()
+                agreeVc.isSocial = true
+                self.navigationController?.pushViewController(agreeVc, animated: true)
+            }
+        }
     }
     func printAllUserDefaults(){
         print("USERDEFUALTS")

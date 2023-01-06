@@ -10,7 +10,7 @@ import Foundation
 class MyReviewView: UIView {
 
     lazy var nameLbl = UILabel().then {
-        $0.text = UserDefaults.standard.string(forKey: "user_alias") ?? ""
+        $0.text = "\(UserDefaults.standard.string(forKey: "user_alias") ?? "")님"
         $0.font = common2.setFont(font: "bold", size: 15)
         $0.textColor = common2.gray()
     }

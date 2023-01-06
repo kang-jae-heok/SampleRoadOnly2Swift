@@ -65,7 +65,7 @@ class CommonS{
     }
     func isValidPass(testStr: String) -> Bool{
         //문자와 숫자 무조건 포함
-        let RegEx = "^(?=.*[A-Za-z])(?=.*[0-9]).{6,12}"
+        let RegEx = "^(?=.*[A-Za-z])(?=.*[0-9]).{8,12}"
         let Test = NSPredicate(format:"SELF MATCHES %@", RegEx)
         return Test.evaluate(with: testStr)
     }
@@ -515,7 +515,9 @@ class CommonS{
         self.userUpdateWithAddNcloud(customerId: customerId, params: params, sender: vc) { _ in
             vc.navigationController?.pushViewController(CheckNickViewController(), animated: true)
         }
-        
+    }
+    func checkAgree(vc: UIViewController,customerId: String) {
+       
     }
     func deleteUserClayfulAndNcloud(customerId: String){
         self.sendRequest(url: "https://api.clayful.io/v1/customers/\(customerId)", method: "delete", params: [:], sender: "") { resultJson in

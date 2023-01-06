@@ -57,6 +57,7 @@ class MyReviewTableViewCell: UITableViewCell {
     let commentImgView = UIButton().then {
         $0.setImage(UIImage(named: "readmore_btn"), for: .normal)
         $0.contentMode = .center
+        $0.isHidden = true
     }
     lazy var commentTextBtn = UIButton().then {
         $0.setTitle("댓글 달기", for: .normal)

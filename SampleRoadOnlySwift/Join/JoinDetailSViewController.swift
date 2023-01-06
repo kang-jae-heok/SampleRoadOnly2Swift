@@ -111,6 +111,7 @@ class JoinDetailSViewController: UIViewController {
         var params = [String:Any]()
         params.updateValue(customerId, forKey: "customer_id")
         params.updateValue(name, forKey: "nick")
+        params.updateValue(1, forKey: "terms")
         params.updateValue(1, forKey: "insert")
         common.sendRequest(url: "http://110.165.17.124/sampleroad/v1/user.php", method: "post", params: params, sender: ""){ [self] reusultJson in
             print(reusultJson)

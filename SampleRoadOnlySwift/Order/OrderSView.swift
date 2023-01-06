@@ -43,21 +43,22 @@ class OrderSView: UIView {
         let scrollView = UIScrollView()
         scrollView.bounces = false
         scrollView.showsVerticalScrollIndicator = false
-        
+        scrollView.addSubview(orderStackView)
+        orderStackView.snp.makeConstraints {
+            $0.width.equalToSuperview()
+            $0.edges.equalToSuperview()
+        }
+        return scrollView
+    }()
+    lazy var orderStackView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [
             ordererView, orderAddressView, requireView, couponView , sampleInfoView, checkAmountView,
             totalPaymentView, paymentMethodView, agreeView
         ])
-
         stackView.axis = .vertical
         stackView.spacing = 30
         stackView.alignment = .center
         stackView.distribution = .equalSpacing
-        scrollView.addSubview(stackView)
-        stackView.snp.makeConstraints {
-            $0.width.equalToSuperview()
-            $0.edges.equalToSuperview()
-        }
         let bounds = UIScreen.main.bounds
         ordererView.snp.makeConstraints {
             $0.leading.trailing.equalToSuperview().inset(35)
@@ -88,7 +89,7 @@ class OrderSView: UIView {
         agreeView.snp.makeConstraints {
             $0.leading.trailing.equalTo(ordererView)
         }
-        return scrollView
+        return stackView
     }()
     
     // MARK: -ordererView
@@ -781,6 +782,15 @@ class OrderSView: UIView {
     
    
     func makeSampleInfoView(samples: [[String: Any]]) {
+        if UserDefaults.standard.bool(forKey: "order_isSample") {
+            infoLabel.text = "무료 샘플 정보"
+            orderStackView.removeArrangedSubview(couponView)
+            couponView.isHidden = true
+        }else {
+            infoLabel.text = "선택하신 상품 정보"
+            orderStackView.insertArrangedSubview(couponView, at: 3)
+            couponView.isHidden = false
+        }
         sampleInfoView.isHidden = false
         let stackView = UIStackView()
         stackView.axis = .horizontal

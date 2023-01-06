@@ -20,9 +20,9 @@ class IntroViewController: UIViewController {
     
 
     @objc func touchStartBtn(){
-        let vc = MainViewSController()
-        self.navigationController?.pushViewController(vc, animated: true)
+        if introView.startBtn.backgroundColor == common2.pointColor() {
+            let vc = MainViewSController()
+            self.navigationController?.pushViewController(vc, animated: true)
+        }
     }
-
-
 }

@@ -16,6 +16,10 @@ class LikeEventView: UIView {
         tableView.separatorStyle = .none
         return tableView
     }()
+    let noneView = NoneView().then {
+        $0.tit.text = "찜한 이벤트가 없습니다"
+        $0.isHidden = true
+    }
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -27,7 +31,7 @@ class LikeEventView: UIView {
         fatalError("init-fail")
     }
     func addSubviewFunc(){
-        [topView,likeEventTableView].forEach {
+        [topView,likeEventTableView,noneView].forEach {
             self.addSubview($0)
         }
     }
@@ -39,6 +43,9 @@ class LikeEventView: UIView {
         likeEventTableView.snp.makeConstraints {
             $0.top.equalTo(topView.snp.bottom).offset(20)
             $0.left.right.bottom.equalToSuperview().inset(margin2)
+        }
+        noneView.snp.makeConstraints {
+            $0.edges.equalTo(likeEventTableView)
         }
     }
 }

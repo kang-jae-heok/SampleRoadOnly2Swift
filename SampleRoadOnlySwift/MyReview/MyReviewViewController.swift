@@ -144,24 +144,26 @@ class MyReviewViewController: UIViewController {
 //    }
     @objc func touchLastStamp(){
         let couponId = "DH8PZKCGBXCH"
-        common2.sendRequest(url: "https://api.clayful.io/v1/customers/\(customerId2)/coupons", method: "post", params: ["coupon":couponId], sender: "") { resultJson in
-            guard let resultDic = resultJson as? [String:Any] else {return}
-            print(resultJson)
-            print(resultDic["error"])
-            if resultDic["error"] == nil {
-                guard let couponId = resultDic["coupon"] as? String else {return}
-                self.common2.sendRequest(url: "http://110.165.17.124/sampleroad/v1/coupon.php", method: "post", params: ["customer_id":UserDefaults.standard.string(forKey: "customer_id") ?? "","coupon_id":couponId,"insert":1], sender: "") {[self] resultJson2 in
-                    print(resultJson2)
-                    guard let resultDic2 = resultJson2 as? [String:Any] else {return}
-                    guard let errorCode = resultDic2["error"] as? String else {return}
-                    if errorCode == "1" {
-                        addMyCoupon(couponId: couponId)
-                    }else {
-                        self.present(self.common2.alert(title: "에러", message: "잠시 후에 다시 시도해주세요"), animated: true)
+        if myReviewView.circleViews[9].imageView?.image == UIImage(named: "img_stamp_gift"){
+            common2.sendRequest(url: "https://api.clayful.io/v1/customers/\(customerId2)/coupons", method: "post", params: ["coupon":couponId], sender: "") { resultJson in
+                guard let resultDic = resultJson as? [String:Any] else {return}
+                print(resultJson)
+                print(resultDic["error"])
+                if resultDic["error"] == nil {
+                    guard let couponId = resultDic["coupon"] as? String else {return}
+                    self.common2.sendRequest(url: "http://110.165.17.124/sampleroad/v1/coupon.php", method: "post", params: ["customer_id":UserDefaults.standard.string(forKey: "customer_id") ?? "","coupon_id":couponId,"insert":1], sender: "") {[self] resultJson2 in
+                        print(resultJson2)
+                        guard let resultDic2 = resultJson2 as? [String:Any] else {return}
+                        guard let errorCode = resultDic2["error"] as? String else {return}
+                        if errorCode == "1" {
+                            addMyCoupon(couponId: couponId)
+                        }else {
+                            self.present(self.common2.alert(title: "에러", message: "잠시 후에 다시 시도해주세요"), animated: true)
+                        }
                     }
+                }else {
+                    self.present(self.common2.alert(title: "에러", message: "이미 발급된 쿠폰이 있습니다 \n확인해주세요"), animated: true)
                 }
-            }else {
-                self.present(self.common2.alert(title: "에러", message: "이미 발급된 쿠폰이 있습니다 \n확인해주세요"), animated: true)
             }
         }
     }

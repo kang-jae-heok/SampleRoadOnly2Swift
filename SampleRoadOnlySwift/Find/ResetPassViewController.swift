@@ -20,8 +20,8 @@ class ResetPassViewController: UIViewController {
         resetPassView.topView.homeBtn.addTarget(self, action: #selector(touchHomeBtn), for: .touchUpInside)
     }
     func resetPass() {
-        if common2.isValidPass(testStr: resetPassView.passTextField.textField.text ?? "") {
-            self.present(common2.alert(title: "에러", message: "비밀번호 형식에 맞춰서 입력해주세요(영문+숫자 6~12자"), animated: true)
+        if !common2.isValidPass(testStr: resetPassView.passTextField.textField.text ?? "") {
+            self.present(common2.alert(title: "에러", message: "비밀번호 형식에 맞춰서 입력해주세요(영문+숫자 8~12자"), animated: true)
             return
         }
         var params = [String:Any]()
@@ -44,10 +44,10 @@ class ResetPassViewController: UIViewController {
         }
     }
     @objc func touchResetPassBtn() {
-        if common2.isValidPass(testStr: resetPassView.passTextField.textField.text ?? "") {
-            resetPass()
-        }else {
+        if !common2.isValidPass(testStr: resetPassView.passTextField.textField.text ?? "") {
             present(common2.alert(title: "", message: "비밀번호 형식에 맞춰서 입력해주세요"), animated: true)
+        }else {
+            resetPass()
         }
     }
     @objc func touchHomeBtn() {

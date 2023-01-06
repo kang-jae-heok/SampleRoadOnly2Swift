@@ -103,6 +103,18 @@ extension AllReviewListViewController: UITableViewDataSource {
         cell.selectionStyle = .none
         cell.reviewInfo = reviews[indexPath.row]
         cell.setProperties()
+        cell.thumbBtnPressed = {[self] in
+               common2.sendRequest(url: "https://api.clayful.io/v1/products/reviews/\(self.reviews[indexPath.row].id)/helped/up", method: "post", params: ["customer":self.customerId2], sender: "") { [self] resultJson in
+                   print(resultJson)
+                   let resultDic = resultJson as? [String:Any] ?? [:]
+                   if let errorCode = resultDic["errorCode"] as? String {
+                       if errorCode == "duplicated-vote" {
+                           self.present(common2.alert(title: "공지", message: "이미 좋아요를 누른 제품입니다"), animated: true)
+                       }
+                   }
+                   self.getReviewList()
+               }
+        }
 //        let cell =  ReviewListTableViewCell()
 //        cell.setReviewImageView()
         

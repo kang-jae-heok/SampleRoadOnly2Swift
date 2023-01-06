@@ -17,14 +17,22 @@ class JoinEmailView: UIView{
     let bottomView = LoginBottomView()
     let phoneBtn = UIButton()
     let emailTextField = TextFieldView(frame: .zero, title: "이메일", placeholder: "이메일을 입력하세요")
-    let passTextField = TextFieldView(frame: .zero, title: "비밀번호", placeholder: "비밀번호를 입력해주세요 (영문+숫자 6~12자)").then{
+    let passTextField = TextFieldView(frame: .zero, title: "비밀번호", placeholder: "비밀번호를 입력해주세요 (영문+숫자 8~12자)").then{
         $0.textField.isSecureTextEntry = true
     }
     lazy var subPassTextLbl = UILabel().then{
-        $0.text = "영문+숫자 포함 6~12자 입력하셔야 합니다"
+        $0.text = "영문+숫자 포함 8~12자 입력하셔야 합니다"
+        $0.textColor = common.gray()
+        $0.font = common.setFont(font: "semiBold", size: 12)
     }
     let checkPassTextField = TextFieldView(frame: .zero, title: "비밀번호 확인", placeholder: "한번 더 입력해주세요").then{
         $0.textField.isSecureTextEntry = true
+    }
+    lazy var subCheckPassTextLbl = UILabel().then{
+        $0.text = "비밀번호가 맞지 않습니다."
+        $0.textColor = .red
+        $0.font = common.setFont(font: "semiBold", size: 12)
+        $0.isHidden = true
     }
     let phoneTextField = TextFieldView(frame: .zero, title: "핸드폰 번호", placeholder: "본인 확인을 위해 번호를 입력해주세요 (-없이)").then{
         $0.isUserInteractionEnabled = true
@@ -92,6 +100,14 @@ class JoinEmailView: UIView{
         phoneBtn.snp.makeConstraints{
             $0.edges.equalTo(phoneTextField.textField)
         }
+        subPassTextLbl.snp.makeConstraints {
+            $0.top.equalTo(passTextField.line.snp.bottom).offset(5)
+            $0.left.equalTo(passTextField.line)
+        }
+        subCheckPassTextLbl.snp.makeConstraints {
+            $0.top.equalTo(checkPassTextField.line.snp.bottom).offset(5)
+            $0.left.equalTo(checkPassTextField.line)
+        }
         sclView.layoutIfNeeded()
 //        phoneTextField.layoutIfNeeded()
 //        sclView.contentSize = CGSize(width: screenBounds.width, height: phoneTextField.frame.origin.y + phoneTextField.frame.size.height)
@@ -104,9 +120,11 @@ class JoinEmailView: UIView{
       
     }
     func addSubviewFunc(){
-        [emailTextField,passTextField,subPassTextLbl,checkPassTextField,phoneTextField, phoneBtn].forEach{
+        [emailTextField,passTextField,checkPassTextField,phoneTextField, phoneBtn].forEach{
             sclView.addSubview($0)
         }
+        passTextField.addSubview(subPassTextLbl)
+        checkPassTextField.addSubview(subCheckPassTextLbl)
         bottomView.addSubview(nextBtn)
         self.addSubview(topView)
         self.addSubview(bottomView)

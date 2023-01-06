@@ -103,7 +103,7 @@ class SplashViewController: UIViewController {
         DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
             if UserDefaults.contains("auto_login") {
                 if UserDefaults.standard.bool(forKey: "auto_login") {
-                    if UserDefaults.contains("naver_token") {   
+                    if UserDefaults.contains("naver_token") {
                         if Date().dateCompare(fromDate: UserDefaults.standard.object(forKey: "naver_expireAt") as! Date) != "Future" {
                             self.getRefreshToken()
                         }else {
@@ -119,7 +119,7 @@ class SplashViewController: UIViewController {
                                 }else{
                                     var vc = UIViewController()
                                     if !UserDefaults.standard.bool(forKey: "PRDC_MODE"){
-                                        vc = MainContentViewController()
+                                        vc = IntroViewController()
                                     }else{
                                         vc = WebViewViewController()
                                     }
@@ -129,10 +129,10 @@ class SplashViewController: UIViewController {
                         }
                     }
                 }else{
-                    self.navigationController?.pushViewController(MainViewSController(), animated: true)
+                    self.navigationController?.pushViewController(IntroViewController(), animated: true)
                 }
             }else{
-                self.navigationController?.pushViewController(MainViewSController(), animated: true)
+                self.navigationController?.pushViewController(IntroViewController(), animated: true)
             }
         }
     }
@@ -151,7 +151,7 @@ class SplashViewController: UIViewController {
                 let customerId = resultJson["customer"] as! String
                 self.common.getCustomerInfo(customerId: customerId,vc: self)
             }else {
-                self.navigationController?.pushViewController(MainViewSController(), animated: true)
+                self.navigationController?.pushViewController(IntroViewController(), animated: true)
             }
            
         }

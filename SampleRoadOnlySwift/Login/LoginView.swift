@@ -33,18 +33,14 @@ class LoginView: UIView{
         $0.setImage(UIImage(named: "login_kakao_btn"), for: .normal)
         $0.clipsToBounds = true
         $0.layer.cornerRadius = 10
-        if !UserDefaults.standard.bool(forKey: "PRDC_MODE"){
-            $0.isHidden = true
-        }
+        $0.isHidden = true
     }
     lazy var naverBtn = UIButton().then{
         $0.setImage(UIImage(named: "login_naver_btn"), for: .normal)
         $0.backgroundColor = common.setColor(hex: "#06be34")
         $0.clipsToBounds = true
         $0.layer.cornerRadius = 10
-        if !UserDefaults.standard.bool(forKey: "PRDC_MODE"){
-            $0.isHidden = true
-        }
+        $0.isHidden = true
     }
     let checkBtn = UIButton().then{
         $0.setImage(UIImage(named: "login_check_off_btn"), for: .normal)

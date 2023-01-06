@@ -12,20 +12,12 @@
 //  Copyright © 2022 CNKANG. All rights reserved.
 //
 
-#ifndef SampleRoadOnlySwift_Bridging_Header_h
-#define SampleRoadOnlySwift_Bridging_Header_h
+#ifndef sampleroad_Bridging_Header_h
+#define sampleroad_Bridging_Header_h
 
 #import "TermsViewController.h"
 #import "Common.h"
 #import "COMController.h"
-#import "HorizontalTableViewCell.h"
-#import "BWHorizontalTableView.h"
-#import "CustomTableViewCell.h"
-#import "OrderViewController.h"
-#import "ReviewListViewController.h"
-#import "ProductDetailViewController.h"
 #import "ComWebViewController.h"
 #import "HCSStarRatingView.h"
-#import "ProductDetailViewController.h"
-#import "ImageViewerViewController.h"
 #endif /* paran_Bridging_Header_h */

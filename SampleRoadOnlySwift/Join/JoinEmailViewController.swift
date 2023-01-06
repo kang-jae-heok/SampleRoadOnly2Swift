@@ -73,6 +73,8 @@ class JoinEmailViewController: UIViewController {
         joinEmailView.nextBtn.addTarget(self, action: #selector(touchNextBtn), for: .touchUpInside)
         joinEmailView.topView.homeBtn.addTarget(self, action: #selector(touchHomeBtn), for: .touchUpInside)
         joinEmailView.phoneBtn.addTarget(self, action: #selector(touchPhoneTextField(textField:)), for: .touchUpInside)
+        joinEmailView.passTextField.textField.delegate = self
+        joinEmailView.checkPassTextField.textField.delegate = self
     }
     
     @objc func touchNextBtn(){
@@ -112,7 +114,32 @@ class JoinEmailViewController: UIViewController {
         let vc = ComWebViewController(dic: convertDic )
         self.navigationController?.pushViewController(vc, animated: true)
     }
-    
+}
 
+extension JoinEmailViewController: UITextFieldDelegate {
+    func textFieldDidChangeSelection(_ textField: UITextField) {
+        common.checkMaxLength(textField:  joinEmailView.passTextField.textField, maxLength: 12)
+        common.checkMaxLength(textField:  joinEmailView.checkPassTextField.textField, maxLength: 12)
+        
+        if textField == joinEmailView.passTextField.textField {
+            if  joinEmailView.passTextField.textField.text!.count < 8 {
+                joinEmailView.subPassTextLbl.text = "8자 이상이어야 합니다."
+                joinEmailView.subPassTextLbl.textColor = .red
+            }else if !common.isValidPass(testStr: joinEmailView.passTextField.textField.text ?? "") {
+                joinEmailView.subPassTextLbl.text = "영문과 숫자를 모두 포함하여야 합니다."
+                joinEmailView.subPassTextLbl.textColor = .red
+            }else if common.isValidPass(testStr: joinEmailView.passTextField.textField.text ?? ""){
+                joinEmailView.subPassTextLbl.text = "유효한 비밀번호입니다."
+                joinEmailView.subPassTextLbl.textColor = common.pointColor()
+            }
+        }
+        if textField == joinEmailView.checkPassTextField.textField {
+            joinEmailView.subCheckPassTextLbl.isHidden = false
+            if joinEmailView.checkPassTextField.textField.text ?? "" == joinEmailView.passTextField.textField.text ?? ""{
+                joinEmailView.subCheckPassTextLbl.isHidden = true
+            }
+        }
+        
+    }
 }
 

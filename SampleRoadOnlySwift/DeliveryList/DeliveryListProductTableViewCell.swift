@@ -374,6 +374,11 @@ class DeliveryListProductTableViewCell: UITableViewCell {
                     
                 }else if order.status == "cancelled" {
                     situationBtn.setTitle("주문취소", for: .normal)
+                    exchangeBtn.isHidden = true
+                    deliveryTrackingBtn.isHidden = true
+                    deliveryTrackingBtn.snp.remakeConstraints {
+                        $0.edges.equalTo(exchangeBtn)
+                    }
                 }else {
                     situationBtn.setTitle("결제오류", for: .normal)
                     deliveryTrackingBtn.snp.remakeConstraints {

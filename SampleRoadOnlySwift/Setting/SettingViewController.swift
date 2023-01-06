@@ -92,14 +92,61 @@ class SettingViewController: UIViewController {
             if UserDefaults.contains("kakao_token") {
                 disconnectKakaoService()
             }else {
-                let settingCount = UserDefaults.standard.string(forKey: "setting-count")
                 for key in UserDefaults.standard.dictionaryRepresentation().keys {
                             UserDefaults.standard.removeObject(forKey: key.description)
                         }
-                UserDefaults.standard.set(settingCount, forKey: "setting-count")
-                self.navigationController?.pushViewController(SplashViewController(), animated: true)
+                getAdmin()
             }
+           
         }
+    }
+    func getAdmin(){
+        common2.sendRequest(url: "http://110.165.17.124/sampleroad/v1/setting.php", method: "post", params: [:], sender: "") { resultJson in
+            guard let resultDic = resultJson as? [String:Any],
+                  let admin = resultDic["admin"] as? [String:Any],
+                  let count = resultDic["count"] as? String,
+                  let banner = resultDic["banner"] as? [[String:Any]],
+                  let categories = resultDic["categories"] as? String,
+                  let newestVersion = admin["APP_VERSION"] as? String
+             else {return}
+            UserDefaults.standard.set(count, forKey: "setting-count")
+            UserDefaults.standard.set(banner, forKey: "setting-banner")
+            UserDefaults.standard.set(categories, forKey: "setting-categories")
+            guard let localVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String else {
+                return
+            }
+            UserDefaults.standard.set(localVersion, forKey: "current_version")
+            UserDefaults.standard.set(newestVersion, forKey: "newest_version")
+//            guard let verCheck = self.adminDic["REVIEW_VERSION"]!
+            if admin["REVIEW_VERSION"] is NSNull {
+                UserDefaults.standard.set(true, forKey: "PRDC_MODE")
+                print("유저 버전")
+                print(UserDefaults.standard.bool(forKey: "PRDC_MODE"))
+            }else{
+                if admin["REVIEW_VERSION"] as! String == localVersion {
+                    print("리뷰 버전")
+                    UserDefaults.standard.set(false, forKey: "PRDC_MODE")
+                }else {
+                    print("유저 버전")
+                    UserDefaults.standard.set(true, forKey: "PRDC_MODE")
+                }
+                print(UserDefaults.standard.bool(forKey: "PRDC_MODE"))
+               
+            }
+            if admin["BILLING_TEST_I"] as! String == "1" {
+                UserDefaults.standard.set(true, forKey: "BILLING_TEST")
+            }else {
+                UserDefaults.standard.set(false, forKey: "BILLING_TEST")
+            }
+            UserDefaults.standard.set("https://service.iamport.kr/payments/success?success=", forKey: "PAY_SUCCESS_URL")
+            UserDefaults.standard.set("https://service.iamport.kr/payments/fail?success=", forKey: "PAY_FAILED_URL")
+            UserDefaults.standard.set("https://service.iamport.kr/payments/vbank?imp_uid=", forKey: "VBANK_SUCCESS_URL")
+        
+            UserDefaults.standard.set("http://110.165.17.124/sampleroad/", forKey: "SERVER_URL")
+            UserDefaults.standard.set(nil, forKey: "sample_order")
+            self.navigationController?.pushViewController(SplashViewController(), animated: true)
+        }
+       
     }
     func disconnectKakaoService(){
         UserApi.shared.unlink {(error) in
@@ -112,9 +159,8 @@ class SettingViewController: UIViewController {
                 for key in UserDefaults.standard.dictionaryRepresentation().keys {
                             UserDefaults.standard.removeObject(forKey: key.description)
                         }
-                UserDefaults.standard.set(settingCount, forKey: "setting-count")
-                self.navigationController?.pushViewController(SplashViewController(), animated: true)
             }
+            self.getAdmin()
         }
     }
     @objc func touchBackBtn(){
