@@ -21,6 +21,7 @@ class OrderSViewController: UIViewController {
     var isFailed = false
     var isCart = false
     var isPickerChange = false
+    var discountDic = [String:Any]()
     
     init (orderListDic: [String:Any]) {
         super.init(nibName: nil, bundle: nil)
@@ -39,6 +40,7 @@ class OrderSViewController: UIViewController {
     }
     override func viewDidLoad() {
         super.viewDidLoad()
+        UserDefaults.standard.removeObject(forKey: "coupon")
         bindAction()
         setPickerBtn()
         orderView.firstPhonTextField.delegate = self
@@ -60,8 +62,17 @@ class OrderSViewController: UIViewController {
         }
         if UserDefaults.contains("coupon"){
             addedItemArr.removeAll()
-            setOrderText(disCount: UserDefaults.standard.integer(forKey: "coupon") , type: "deliveryFee")
-            orderView.couponDiscountPriceLabel.text = "\(common.numberFormatter(number: UserDefaults.standard.integer(forKey: "coupon")))원"
+            guard let discountDic = UserDefaults.standard.value(forKey: "coupon") as? [String:Any],
+                  let price = discountDic["price"] as? Int,
+                  let id = discountDic["_id"] as? String
+            else {return}
+            if id == "RBB6ZETT5EU8" {
+                setOrderText(disCount: price , type: "productFee")
+            }else if id == "DH8PZKCGBXCH" {
+                setOrderText(disCount: price , type: "deliveryFee")
+            }
+            orderView.couponDiscountPriceLabel.text = "\(common.numberFormatter(number: price))원"
+           
 //            UserDefaults.standard.removeObject(forKey: "coupon")
         }else {
             addedItemArr.removeAll()
@@ -103,12 +114,22 @@ class OrderSViewController: UIViewController {
                     orderView.deliveryFeeValueLabel.text = "3,500원"
                     orderView.totalPaymentLabel.text = "총 \(common.numberFormatter(number: totalPrice + 3500 - discountPrice))원"
                 }
+                if type == "productFee" {
+                    orderView.amountValueLabel.text = "\(common.numberFormatter(number: totalPrice))원"
+                    orderView.deliveryFeeValueLabel.text = " \(common.numberFormatter(number: 3500))원"
+                    orderView.totalPaymentLabel.text = "총 \(common.numberFormatter(number: totalPrice + 3500 - discountPrice))원"
+                }
             }else {
                 orderView.amountValueLabel.text = "\(common.numberFormatter(number: totalPrice))원"
                 orderView.deliveryFeeValueLabel.text = "무료"
                 orderView.totalPaymentLabel.text = "총 \(common.numberFormatter(number: totalPrice))원"
-                orderView.getCouponButton.backgroundColor = common.gray()
+                if type == "productFee" {
+                    orderView.amountValueLabel.text = "\(common.numberFormatter(number: totalPrice))원"
+                    orderView.deliveryFeeValueLabel.text = " \(common.numberFormatter(number: 3500))원"
+                    orderView.totalPaymentLabel.text = "총 \(common.numberFormatter(number: totalPrice - discountPrice))원"
+                }
             }
+           
             isSample = false
             isCart = false
             UserDefaults.standard.set(false, forKey: "order_isSample")
@@ -139,7 +160,11 @@ class OrderSViewController: UIViewController {
                 orderView.deliveryFeeValueLabel.text = "무료"
                 orderView.totalPaymentLabel.text = "총 \(common.numberFormatter(number: rawPrice))원"
             }
-            
+            if type == "productFee" {
+                orderView.amountValueLabel.text = "\(common.numberFormatter(number: rawPrice))원"
+                orderView.deliveryFeeValueLabel.text = " \(common.numberFormatter(number: 3500))원"
+                orderView.totalPaymentLabel.text = "총 \(common.numberFormatter(number: rawPrice + 3500 - discountPrice))원"
+            }
             print("####addedItem")
             print(addedItemArr)
             isSample = false
@@ -165,7 +190,64 @@ class OrderSViewController: UIViewController {
     
     @objc func getCouponButtonTapped() {
         if orderView.getCouponButton.backgroundColor == common.pointColor() {
-            self.navigationController?.pushViewController(OrderCouponViewController(), animated: true)
+            let vc = OrderCouponViewController()
+            var convertDicArr = [[String:Any]]()
+            if orderListDic["product_list"] != nil {
+                let item = (orderListDic["product_list"] as! [[String:Any]])[0]
+                let variantsArr = item["variants"] as! [[String:Any]]
+                guard let quantity = item["quantity"] as? Int else {return}
+                var sellingItem:[String:Any]!
+                var price: Int!
+                for x in 0...variantsArr.count - 1 {
+                    guard let typesArr = variantsArr[x]["types"] as? [[String:Any]],
+                          let variationDic = typesArr[0]["variation"] as? [String:Any],
+                          let variantValue = variationDic["value"] as? String,
+                          let variantId = variantsArr[x]["_id"] as? String
+                    else {return}
+                    if variantValue != "샘플" {
+                        sellingItem = variantsArr[x]
+                        guard let priceDic = variantsArr[x]["price"] as? [String:Any],
+                              let sale = priceDic["sale"] as? [String:Any],
+                              let raw = sale["raw"] as? Int
+                        else {return}
+                        price = raw
+                        break
+                    }
+                }
+                guard let itemId = item["_id"] else {return}
+                let convertDic = [
+                    "_id": "",
+                    "product": itemId,
+                    "price": price,
+                    "quantity": quantity
+                ] as [String:Any]
+                convertDicArr = [convertDic]
+            }
+            else if orderListDic["cart_list"] != nil {
+                let cartList = orderListDic["cart_list"] as! [[String:Any]]
+                for i in 0...cartList.count - 1 {
+                    
+                    guard let id = cartList[i]["_id"] as? String,
+                          let product = cartList[i]["product"] as? [String:Any],
+                          let productId = product["_id"] as? String,
+                          let variant = cartList[i]["variant"] as? [String:Any],
+                          let price = variant["price"] as? [String:Any],
+                          let sale = price["sale"] as? [String:Any],
+                          let raw = sale["raw"] as? Int,
+                          let quantity = cartList[i]["quantity"] as? [String:Any],
+                          let rawQuantity = quantity["raw"] as? Int
+                    else {return}
+                    let convertDic = [
+                        "_id": id,
+                        "product": productId,
+                        "price": raw,
+                        "quantity": rawQuantity
+                    ] as [String:Any]
+                    convertDicArr.append(convertDic)
+                }
+            }
+            vc.orderList = convertDicArr
+            self.navigationController?.pushViewController(vc, animated: true)
         }
     }
     @objc func backBtnTapped(_ sender: UIButton) {
@@ -204,7 +286,6 @@ class OrderSViewController: UIViewController {
                 orderView.firstPhonTextField.text = "010"
             }
             setUserDefaults()
-           
                 if isSample {
                     guard let productInfoArr = orderListDic["sample_list"] as? [[String:Any]] else {return}
                     orderItemCount = productInfoArr.count
@@ -213,11 +294,27 @@ class OrderSViewController: UIViewController {
                     print(productInfoArr)
                 }else {
                     if isCart {
-                        guard let cartInfoArr = orderListDic["cart_list"] as? [[String:Any]],
-                              let product = cartInfoArr[0]["product"] as? [String:Any],
-                              let id = cartInfoArr[0]["_id"] as? String
+                        var mostExpPrice = 0
+                        var mostExpId = String()
+                        guard let cartInfoArr = orderListDic["cart_list"] as? [[String:Any]]
                         else {return}
-                        insertOrder(itemId: id)
+                        for i in 0...cartInfoArr.count - 1 {
+                            guard let variant = cartInfoArr[i]["variant"] as? [String:Any],
+                                  let price = variant["price"] as? [String:Any],
+                                  let sale = price["sale"] as? [String:Any],
+                                  let raw = sale["raw"] as? Int,
+                                  let id = cartInfoArr[i]["_id"] as? String,
+                                  let quantity = cartInfoArr[i]["quantity"] as? [String:Any],
+                                  let rawQuantity = quantity["raw"] as? Int
+                             else {return}
+                            if rawQuantity == 1 {
+                                if mostExpPrice < raw {
+                                    mostExpPrice = raw
+                                    mostExpId = id
+                                }
+                            }
+                        }
+                        insertOrder(itemId: mostExpId)
                     }else {
                         guard let productInfoArr = orderListDic["product_list"] as? [[String:Any]] else {return}
                         orderItemCount = productInfoArr.count
@@ -296,14 +393,29 @@ class OrderSViewController: UIViewController {
     func insertOrder2(paramsArr: [[String:Any]]) {
         var params = [String:Any]()
         if UserDefaults.contains("coupon") {
-            let coupon = [
-                "coupon": "DH8PZKCGBXCH",
-                "item": "orderId0"
-            ] as [String:String]
-            print("#itemId")
-            let shipping = [coupon] as [[String:Any]]
-            let discount = ["shipping": shipping] as [String:Any]
-            params.updateValue(common.dicToJsonString(dic: discount), forKey: "discount")
+            guard let couponDic = UserDefaults.standard.value(forKey: "coupon") as? [String:Any],
+                  let id = couponDic["_id"] as? String,
+                  let price = couponDic["price"] as? Int
+            else {return}
+            if id == "RBB6ZETT5EU8" {
+                let coupon = [
+                    "coupon": id,
+                    "item": "orderId0"
+                ]as [String:String]
+                print("#itemId")
+                let items = [coupon] as [[String:Any]]
+                let discount = ["items": items] as [String:Any]
+                params.updateValue(common.dicToJsonString(dic: discount), forKey: "discount")
+            }else if id == "DH8PZKCGBXCH" {
+                let coupon = [
+                    "coupon": id,
+                    "item": "orderId0"
+                ] as [String:String]
+                print("#itemId")
+                let shipping = [coupon] as [[String:Any]]
+                let discount = ["shipping": shipping] as [String:Any]
+                params.updateValue(common.dicToJsonString(dic: discount), forKey: "discount")
+            }
         }
         params.updateValue("clayful-iamport", forKey: "paymentMethod")
         params.updateValue(common.dicToJsonString(dic: setOrderInfo()), forKey: "address")
@@ -321,7 +433,6 @@ class OrderSViewController: UIViewController {
         }else {
             params.updateValue(orderView.requireTextField.text, forKey: "request")
         }
-       
         if isSample {
             params.updateValue(common.objectTojsonString(from: ["UHAWQN6P3Y8V"]) , forKey: "tags")
         }
@@ -355,15 +466,27 @@ class OrderSViewController: UIViewController {
     // 주문 만들기
     func insertOrder(itemId: String) {
         var params = [String:Any]()
-        if UserDefaults.contains("coupon") {
+        guard let couponDic = UserDefaults.standard.value(forKey: "coupon") as? [String:Any],
+              let id = couponDic["_id"] as? String,
+              let price = couponDic["price"] as? Int
+        else {return}
+        if id == "RBB6ZETT5EU8" {
             let coupon = [
-                "coupon": "DH8PZKCGBXCH",
+                "coupon": id,
+                "item": itemId
+            ]as [String:String]
+            print("#itemId")
+            let items = [coupon] as [[String:Any]]
+            let discount = ["items": items] as [String:Any]
+            params.updateValue(common.dicToJsonString(dic: discount), forKey: "discount")
+        }else if id == "DH8PZKCGBXCH" {
+            let coupon = [
+                "coupon": id,
                 "item": itemId
             ] as [String:String]
             print("#itemId")
-            print(itemId)
-            let shipping = [coupon]
-            let discount = ["shipping": shipping]
+            let shipping = [coupon] as [[String:Any]]
+            let discount = ["shipping": shipping] as [String:Any]
             params.updateValue(common.dicToJsonString(dic: discount), forKey: "discount")
         }
         params.updateValue("clayful-iamport", forKey: "paymentMethod")

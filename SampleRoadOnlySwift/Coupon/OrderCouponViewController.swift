@@ -10,16 +10,19 @@ import UIKit
 class OrderCouponViewController: UIViewController {
     let orderCouponView = OrderCouponView()
     var myCouponInfoDicArr = [[String:Any]]()
-    #warning("추후에 추가해야됨")
-    let availableCouponId = ["DH8PZKCGBXCH"]
+    var orderList = [[String:Any]]()
+    var availableCouponId = [String]()
     var selectedIndex = IndexPath()
+    var selectedCouponId = String()
+    var discountPrice = Int()
+    var mostExpOrder = [String:Any]()
     override func loadView() {
         super.loadView()
         view = orderCouponView
     }
     override func viewDidLoad() {
         super.viewDidLoad()
-        getCoupon()
+        getExpensiveItem()
         setTarget()
     }
     func setTarget() {
@@ -60,15 +63,41 @@ class OrderCouponViewController: UIViewController {
     func setApplyBtn(price: Int) {
         orderCouponView.applyBtn.setTitle("\(common2.numberFormatter(number: price))원 적용하기", for: .normal)
     }
+    func getExpensiveItem() {
+        var mostExpPrice = 0
+        var orderTotalPrice = Int()
+        for i in 0...orderList.count - 1 {
+            guard let price = orderList[i]["price"] as? Int,
+                  let quantity = orderList[i]["quantity"] as? Int
+            else {return}
+            
+            if quantity == 1 {
+                if mostExpPrice < price {
+                    mostExpPrice = price
+                    mostExpOrder = orderList[i]
+                }
+            }
+            orderTotalPrice += price * quantity
+        }
+        if mostExpPrice >= 10000 {
+            availableCouponId.append("RBB6ZETT5EU8")
+        }
+        if orderTotalPrice < 50000 {
+            availableCouponId.append("DH8PZKCGBXCH")
+        }
+        
+        getCoupon()
+    }
+    
     @objc func touchBackBtn() {
         self.navigationController?.popViewController(animated: true)
     }
     @objc func touchApplyBtn(sender: UIButton){
         if sender.backgroundColor == common2.pointColor() {
-            let rawPrice = sender.titleLabel?.text?.components(separatedBy: "원")[0]
-            let convertRawPrice = rawPrice?.components(separatedBy: ",").joined() ?? "0"
-            print(Int(convertRawPrice) ?? 0)
-            UserDefaults.standard.set(Int(convertRawPrice) ?? 0, forKey: "coupon")
+            var couponDic = [String:Any]()
+            couponDic.updateValue(discountPrice, forKey: "price")
+            couponDic.updateValue(selectedCouponId, forKey: "_id")
+            UserDefaults.standard.set(couponDic, forKey: "coupon")
             self.navigationController?.popViewController(animated: true)
         }
     }
@@ -117,7 +146,19 @@ extension OrderCouponViewController: UICollectionViewDelegate, UICollectionViewD
                 self.orderCouponView.applyBtn.backgroundColor = self.common2.pointColor()
                 //배송비
                 if couponId == "DH8PZKCGBXCH"{
+                    self.discountPrice = 3500
                     self.setApplyBtn(price: 3500)
+                    self.selectedCouponId = "DH8PZKCGBXCH"
+                }else if couponId == "RBB6ZETT5EU8" {
+                    guard let price = self.mostExpOrder["price"] as? Int else {return}
+                    print("")
+                    if price/10 > 2000 {
+                        self.discountPrice = 2000
+                    }else {
+                        self.discountPrice = price/10
+                    }
+                    self.selectedCouponId = "RBB6ZETT5EU8"
+                    self.setApplyBtn(price: self.discountPrice)
                 }
                 self.orderCouponView.couponCollectionView.reloadData()
             }else {

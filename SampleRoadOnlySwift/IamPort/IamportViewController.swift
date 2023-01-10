@@ -84,7 +84,7 @@ import WebKit
         guard let merchantUid = infoDic["merchant_uid"] as? String else {return}
         UserDefaults.standard.set("failed-customer", forKey: "pay_callback")
         UserDefaults.standard.set(merchantUid, forKey: "merchant_uid")
-        deleteOrder()
+        cancelOrder()
     }
     
     func callIamport() {
@@ -214,7 +214,7 @@ extension IamportViewController: WKNavigationDelegate {
             // popviewcontroller ->
             UserDefaults.standard.set("failed-store", forKey: "pay_callback")
             UserDefaults.standard.set(nil, forKey: "sample_order")
-            deleteOrder()
+            cancelOrder()
             
         }
         if (webUrl.contains(vUrl)) {
@@ -241,9 +241,7 @@ extension IamportViewController: WKNavigationDelegate {
             UserDefaults.standard.removeObject(forKey: "pay_callback")
             common2.sendRequest(url: "https://api.clayful.io/v1/orders/\(orderId)/cancellation", method: "post", params: params, sender: "") { resultJson in
                 print(resultJson)
-                UserDefaults.standard.removeObject(forKey: "merchant_uid")
-                UserDefaults.standard.removeObject(forKey: "coupon")
-                self.navigationController?.popViewController(animated: false)
+                self.deleteOrder()
             }
         }
     }

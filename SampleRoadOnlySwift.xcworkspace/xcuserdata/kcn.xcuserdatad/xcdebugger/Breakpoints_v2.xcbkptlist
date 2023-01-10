@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Bucket
+   uuid = "0990DDFC-C282-4D9D-AB20-52E9C82B28BE"
+   type = "0"
+   version = "2.0">
+   <Breakpoints>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "956828E6-1404-47E3-BC8E-57C719A611C0"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "SampleRoadOnlySwift/EditProfile/EditProfileView.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "259"
+            endingLineNumber = "259"
+            landmarkName = "init(frame:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "956828E6-1404-47E3-BC8E-57C719A611C0 - a1bfb8ccc01c401d"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "SampleRoadOnlySwift.EditProfileView.__allocating_init(frame: __C.CGRect) -&gt; SampleRoadOnlySwift.EditProfileView"
+                  moduleName = "SampleRoadOnlySwift"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/kcn/Documents/workspace/SampleRoadOnlySwift%202%20/SampleRoadOnlySwift/EditProfile/EditProfileView.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "0"
+                  endingLineNumber = "0"
+                  offsetFromSymbolStart = "32">
+               </Location>
+               <Location
+                  uuid = "956828E6-1404-47E3-BC8E-57C719A611C0 - f914095dc803b7c8"
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "SampleRoadOnlySwift.EditProfileView.init(frame: __C.CGRect) -&gt; SampleRoadOnlySwift.EditProfileView"
+                  moduleName = "SampleRoadOnlySwift"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/kcn/Documents/workspace/SampleRoadOnlySwift%202%20/SampleRoadOnlySwift/EditProfile/EditProfileView.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "10"
+                  endingLineNumber = "10"
+                  offsetFromSymbolStart = "488">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "BF1BEC96-A968-4F72-8055-7D305727118C"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "SampleRoadOnlySwift/EditProfile/EditProfileViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "108"
+            endingLineNumber = "108"
+            landmarkName = "touchYesBtn()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+   </Breakpoints>
+</Bucket>

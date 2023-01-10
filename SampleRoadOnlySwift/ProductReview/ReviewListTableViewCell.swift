@@ -253,12 +253,18 @@ class ReviewListTableViewCell: UITableViewCell {
         }
          
         evaluationStarView.value = CGFloat(reviewInfo.rating.raw)
-        let format = DateFormatter()
-        format.dateFormat = "yyyy.MM.dd"
-        if let date = format.date(from: reviewInfo.createdAt.raw) {
-            let st = format.string(from: date)
-            dateLabel.text = st
-        }
+//        let from = DateFormatter()
+//        from.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.sss'Z'"
+//        let format = DateFormatter()
+//        format.dateFormat = "yyyy.MM.dd"
+//        print("여기")
+//        print(reviewInfo.createdAt.raw)
+//        if let date = from.date(from: reviewInfo.createdAt.raw) {
+//            let st = format.string(from: date)
+//            dateLabel.text = st
+//        }
+        let date = reviewInfo.createdAt.raw.components(separatedBy: "T")[0]
+        dateLabel.text =  date.replacingOccurrences(of: "-", with: ".")
         skinTypeValueLabel.text = reviewerSkinType.replacingOccurrences(of: "피부", with: "")
         skinWorryValueLabel.text = reviewerSkinWorry
         positiveReviewLabel.text = positiveReview
